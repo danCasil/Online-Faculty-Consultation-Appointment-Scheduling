@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+/*const bcrypt = require('bcrypt');
 const pool = require('./postdb');
 function queryDatabase(query, params = []) { 
   return new Promise((resolve, reject) => {
@@ -9,20 +9,20 @@ function queryDatabase(query, params = []) {
           resolve(res.rows); }); 
       });
   } 
-
+*/
 
 async function encryptThis(password) {
-  const saltRounds = 10;
-  const hashedPassword = await bcrypt.hash(password, saltRounds);
+ // const saltRounds = 10;
+ // const hashedPassword = await bcrypt.hash(password, saltRounds);
   return hashedPassword;
 }
 async function verifyThis(plainPassword, hashedPassword) { 
-const match = await bcrypt.compare(plainPassword, hashedPassword);
+//const match = await bcrypt.compare(plainPassword, hashedPassword);
 return match;
     }
 
 
-
+/*
     async function encryptALL() {
   const result=await queryDatabase("SELECT password,id_number FROM info")
   result.forEach(async account => {
@@ -33,5 +33,5 @@ return match;
 
 }
 encryptALL()
- 
+ */
 module.exports = {encryptThis, verifyThis};
