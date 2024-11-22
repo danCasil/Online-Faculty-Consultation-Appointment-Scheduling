@@ -1,0 +1,105 @@
+#calendar {
+    width: 100%;
+}
+
+
+.calendar-head{
+width: 10%;
+padding: 0;
+text-align: center;
+}
+
+#calendar-body {
+    margin-top: 15px;
+    display: grid;
+width: 100%;
+padding: 0px;
+    text-align: center;
+ margin-left: auto;
+ margin-right: auto;
+}
+
+.day{
+    font-size: 10px;
+    background-color:#ffffff ;
+    text-align: center;
+    padding: 0;
+    border: 0;
+    height: 55px;
+    max-height: 55px;
+  
+}
+#ScheduleCreatorForm{
+    border: none;
+
+
+}
+.day.available:hover{
+    background-color: rgb(255, 255, 255);
+    border-color: rgb(130, 130, 130);
+    border-style: groove;
+    border-width: .25px;
+}
+
+.present{
+   border:  lightgreen solid;
+}
+.holiday{
+    background-color: #bbbbbb   ;
+  }
+ .event{
+    background-color: #bbbbbb;
+  }
+  .available {
+    background-color: rgb(5, 255, 5);
+  }
+
+#calendar-nav{
+    position: relative;
+    width: 100%;
+
+}
+
+#prev,#next{
+    position: absolute;
+    width: fit-content;
+    top: 0;
+    @media (max-width:500px) {
+        top: -5px;
+    }
+}
+#prev{
+    left: 30%;
+    @media (max-width:500px) {
+        left: 5%;
+    }
+}
+#next{
+    right: 30%;
+    @media (max-width:500px) {
+        right: 5%;
+    }
+}
+
+#schedules_table{
+    width: 100%;
+}
+.selected-time{
+    background-color:  rgb(5, 255, 5);
+}
+.currentDate{
+    text-align: center;
+    padding: 50px;
+}
+#purpose{
+    max-height: 200px;display: block;width: 100%;margin-top: 30px;
+margin-bottom: 30px;
+}
+#monthtitle{
+    padding: 0;
+}
+.day.available>div{
+text-align: center;
+width: 100%;
+padding: 0;
+}

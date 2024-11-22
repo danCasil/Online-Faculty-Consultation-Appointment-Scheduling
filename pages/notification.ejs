@@ -1,0 +1,149 @@
+<%- include('head.ejs') %>
+
+    
+    
+ 
+     <style>
+#notifDel{
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+}
+#notifSys{
+  position: absolute;
+  bottom: 20px;
+  left: 100px;
+}
+#accordionExample{
+  overflow:auto;
+  position: absolute;
+  margin-top: 10px;
+  position: relative;
+ 
+
+  padding: 5px;
+  @media (max-width:500px) {
+   
+  }
+
+}
+#System{
+  overflow:auto;
+  margin-top: 10px;
+  position: relative;
+  @media (max-width:500px) {
+margin-bottom: 0;
+  }
+}
+#notifContainer{
+  height: 85%;
+margin-top: 10px;
+  overflow: auto;
+  @media (max-height:500px) {
+    height: 90%;
+  }
+}
+
+     </style>
+    <div class="col-10" id="content">
+
+
+      <div class="form-control" id="maincontent" style="overflow: hidden;">
+
+      <div id="notifContainer">
+        <div id="noData" >
+          No Notification
+        </div>
+          <div class="accordion" id="System" onclick="">
+        
+           
+           
+          </div>
+      
+          <div class="accordion" id="accordionExample"  >
+          
+            
+           
+        </div>
+            <button class="btn-danger btn" id="notifDel" >Delete</button>
+           
+          </div>
+      </div>
+      </div>
+
+
+    </div>
+    
+    
+    </div>
+  </div>
+  <div class="toast-container  position-fixed end-0 p-3 top-0 start-50 translate-middle-x" >
+    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" style="border:solid black 1px;border-radius: 2.5;">
+      <div class="toast-header bg-light">
+        <strong class="me-auto"id='toasttitle'>Deleted A Notification</strong>
+        <small id="toasttime"></small>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div class="toast-body bg-light" id="toastbody">
+        Successfully deleted a notification
+      </div>
+    </div>
+  </div>
+<script>
+  const main=document.getElementById("maincontent")
+  const accord=document.getElementById("accordionExample")
+  const notifDel=document.getElementById("notifDel")
+  document.addEventListener("DOMContentLoaded",function(){
+
+    notifDel.disabled=true
+
+  })
+
+
+
+</script>
+  
+
+
+  <div class="modal fade" id="Notifmodal" tabindex="-1"data-bs-backdrop="true"data-bs-keyboard="false"role="dialog"aria-labelledby="modalTitleId"aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-md"role="document">
+      <div class="modal-content">
+        <form action="/notify" class="" id="notif_sender" method="post">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalTitleId">
+            Student Notifier
+          </h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close" onclick="notif_close()"
+          ></button>
+        </div>
+        <div class="modal-body">
+           
+            <label for="receiver_id" >Student ID/Name</label>
+            <input type="text"class="form-control input" name="R_id" id="receiver_id"required list="studentList">  
+    
+            <label for="msg" >Message</label>
+          
+            <textarea class="form-control input-text"  placeholder="" name="msg" id="msg" cols="30"required></textarea>
+    
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal" onclick="notif_close()">
+            Close
+          </button>
+          <button type="submit" id="notifsub"  class="btn btn-primary">Submit</button></form>
+        </div>
+      </div>
+    </div>
+
+    <script src="../bootjs/boostrap.js"></script>
+   <script src="../notification_script.js"></script>
+   <script src="../responsive_script.js"></script>
+</body>
+</html>

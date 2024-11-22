@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../bootcss/bootstrap.min.css">
+    <link rel="stylesheet" href="../logincssdean.css">
+    <link rel="stylesheet" href="../OTP.css">
+</head>
+<body>
+<div class="container-fluid">
+     <div class="row" style="margin-left: auto;margin-right: auto;">
+        <div class="col-sm-8">
+           
+        </div>
+        <div class="col-sm-4">
+           
+            <form action="/secret/login" method="post" id="login_form" class="form-control form"> <h4 class="web-app"><img src="../img/OCAS-logo.png" alt="" style="height: 150px;width: 150px;"><br>Dean Login</h4>
+                
+<div style="position: relative;">
+    
+                    <label for="id"  id="namelabel" class="inputslabel">Username</label>
+                    <input type="text"name="id" class="form-control"style="padding-top: 15px;margin-top:30px;width: 90%;margin-left: auto;margin-right: auto;"id="id"required>
+    
+</div>
+<div style="position: relative;">
+    <img src=""id="eyeimg"  style="background-color: white;position: absolute;top: 18%;left: 81%;width: 10%;" alt="">
+              <label for="pass "class="inputslabel" >Password</label>
+              <input type="password"name="pass"  class="form-control"style="padding-top: 15px;margin-top:30px;width: 90%;margin-left: auto;margin-right: auto;"id="pass"required>
+</div>
+<div id="loginErr" >It seems that you entered your credentials wrong. Please check and try again.</div>
+                <button type="submit" class="inputs btn_form" style="margin-top: 30px;">Login</button>
+                <div class="form-control hr"></div>
+                <button type="button" class="inputs btn_form" id="register">Register</button>
+                </form>
+        </div>
+     </div>
+</div>
+
+<div
+    class="modal fade"
+    id="modalId"
+    tabindex="-1"
+    data-bs-backdrop="static"
+    data-bs-keyboard="false"
+    
+    role="dialog"
+    aria-labelledby="modalTitleId"
+    aria-hidden="true"
+>
+    <div
+        class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm"
+        role="document"
+    >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitleId">
+                 Register
+                </h5>
+         
+            </div>
+   <form action="/secret/reg" method="post" id="deanReg">
+             <div class="modal-body">
+                <div class="input-group" style="margin-bottom: 10px;">
+                    <span class="input-group-text"> Id-Number</span>
+                    <input type="text" class="form-control" name="id">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-text"> Password</span>
+                    <input type="text" class="form-control" name="pass">
+                </div>
+            </div>
+             <div class="modal-footer">
+                 <button
+                     type="submit"
+                     class="btn btn-success"
+                     data-bs-dismiss="modal"
+                 >
+                     Submit
+                 </button>
+                 <button
+                     type="button"
+                     class="btn btn-secondary"
+                     data-bs-dismiss="modal"
+                 >
+                     Cancel
+                 </button>
+                 
+             </div>
+   </form>
+        </div>
+    </div>
+</div>
+
+
+
+    <script src="../bootjs/boostrap.js"></script>
+    <script src="secret_script.js"></script>
+
+</body>
+</html>

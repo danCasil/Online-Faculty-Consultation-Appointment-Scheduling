@@ -1,0 +1,110 @@
+
+.form-control.mybtn:hover{
+background-color: #21b043;
+color: white;
+}
+#back{
+    text-align: left;
+}
+@media (max-width:500px) {
+    .form-control.mybtn{
+        color: rgb(0, 0, 0);
+        margin-bottom: 10px;
+        }
+    #showgraph{
+        position:absolute;
+        right:25px;
+        top: 105px;
+        padding-left: 30px;
+    }
+        #TheContainer{
+            
+             height: 815px;
+            max-height: 915px;
+            padding-top: 0;
+           }
+           #back{
+            position: absolute;
+            top: 105px;
+            right: 25px;
+            width: 135px;
+            padding-left: 30px;
+            }
+            #collegeName{
+                padding-top: 15px;
+                padding-bottom: 10px;
+                width: 55%;
+               }
+            #studentList{
+                height: 600px;
+                overflow-x: hidden;
+                overflow-y: auto;
+               }
+               #facultyList{
+                height: 650px;
+              
+               }
+               .mybtn-icon{
+                width: 20px;
+               position: absolute;
+            top: 8px;
+            left: 5px;
+              }
+              #logout{
+                position: absolute;
+                right:25px;
+                padding-left: 30px;
+                top: 150px;
+               width: 135px;
+               text-align: left;
+              }
+}
+@media (min-width:500px) {
+  #showgraph{
+    position: absolute;
+    right:140px;
+    top: 70px;
+    padding-left: 30px;
+  }
+  .mybtn-icon{
+    width: 20px;
+   position: absolute;
+top: 8px;
+left: 5px;
+  }
+  #logout{
+    position: absolute;
+    right:40px;
+    padding-left: 30px;
+    top: 70px;
+  }
+    #facultydetail,#facultyList{
+        height: 80vh;
+    }
+   #TheContainer{
+    
+    max-height: 480px;
+    padding-top: 0;
+   }
+   #facultyList{
+    height:400px;
+    overflow-x: hidden;
+    overflow-y: auto;
+   }
+   #collegeName{
+    padding-top: 20px;
+    padding-bottom: 10px;
+   }
+   #studentList{
+    height: 270px;
+    overflow-x: hidden;
+    overflow-y: auto;
+   }
+#back{
+    position: absolute;
+    top: 70px;
+    right: 140px;
+    padding-left: 30px;
+    width: fit-content;
+    }
+}

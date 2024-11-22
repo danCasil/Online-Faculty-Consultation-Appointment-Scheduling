@@ -1,0 +1,450 @@
+
+#Rbtn{
+    position: absolute;
+    left: 50%;
+    bottom:1px;
+    transform: translate(-50%, -50%);
+       background-color: transparent;
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    border: 0;
+    border-radius: 5px;
+    text-decoration: underline;
+    
+}
+.form-control.form{
+    margin-top: 1vh;
+    margin-bottom: 1vh;
+    height: 98vh;
+    background-color:rgba(255, 255, 255, 0.71);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+   
+   
+}
+#welcome{
+    font-size: 25px;
+    font-weight: bold;
+}
+
+       body{
+        height: 100%;
+        width: 100%;
+        background-image: url(../img/isu.jpg);
+        background-size: 100%;
+        background-repeat: no-repeat;
+    }
+    .row{
+        margin-right: 0;
+    }
+    #NextBTN{
+        right:40%;
+      left:40%;
+     border-radius:50%;
+    padding:5px;
+     background-color: #b6d8a0 ;
+       color:#f9f9fa;
+       position: absolute;
+        bottom: 8%;
+     
+    }
+    #NextBTN:disabled{
+      opacity: 60%;
+    }
+
+
+    #line_nav{
+        width: 100%;
+        height: 5px;
+        display: flex;
+        justify-content: center; 
+
+    }
+    .line{
+        
+        width: 15%;
+        margin-left:5px;
+        margin-right:5px;
+        background-color: #f9f9fa ;
+    }
+   .label_title{
+    font-size: 20px;
+    text-align: center;
+    color: #375623 ;
+    margin-top: 5px;
+    margin-bottom: 5px;
+   }
+   .label_sub_title{
+    margin-bottom: 10px;
+    font-size: 15px;
+    text-align: center;
+    color: #375623    ;
+   }
+   #section1_input{
+    padding: 0;
+    margin-top: 15px;
+   
+   }
+   .namelabel{
+    position: absolute;
+    font-size: 15px;
+    font-weight: bold;
+    top: 12px;
+
+}
+
+   @media (max-width:500px) {
+    #section1_input{
+        padding: 0;
+        margin-top: 15px;
+        margin-top: 30px;
+       }
+       #NextBTN{
+        bottom: 70px;
+       }
+ .form-control.form{
+    margin-top: 1.8%;
+    margin-bottom: 5%;
+        margin-left: 1.8%;
+    height:630px;
+    max-height: 100%;
+    background-color:rgba(255, 255, 255, 0.445);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+ }
+ #Rbtn{
+    bottom:-20px;
+ }
+#birth{
+    position: absolute;
+    left: 58px;
+    transform: translate(-50,50);
+    top: 8px;
+    width: 80%;
+    margin-right: 20%;
+}
+#welcome{
+    margin-bottom: 10px;margin-top: 130px;color: #375623;
+}
+#birthday{
+    width: 80%;
+    margin-left: 20%;
+ }
+ #inputLabelidnum{
+    position: absolute;
+    top: 12px;
+    left: 113px;
+    font-size: 15px;
+    font-weight: bold;
+    color: #37562373;
+    }
+ 
+    #course1{
+    position: absolute;
+    top: 63%;
+    }
+    #course2{
+        position: absolute;
+        top: 63%;
+        }
+        #course3{
+            position: absolute;
+            top: 63%;
+            }
+            #emaillabel{
+                position: absolute;
+                top:61%
+                
+            }
+
+           #confirmpasscon {
+                margin-top:20px
+               }
+}
+
+
+@media (min-width:500px) {
+ 
+    #inputLabelidnum{
+        position: absolute;
+        top: 12px;
+        left: 125px;
+       
+        }
+       
+      
+        
+
+    #birth{
+      display: none;
+    } 
+    #birthday{
+        margin-left: auto;
+        margin-right: auto;
+        width: 70%;
+    }
+    #welcome{
+        margin-bottom: 20px;
+        margin-top: 110px;color: #375623;
+    }
+    
+
+
+
+}
+.form-control{
+    padding-bottom: 3px;
+}
+#emaillabel{
+    position: absolute;
+   top:25%;
+   left: 4%;
+}
+#usernamelabel{
+    position: absolute;
+   top:25%;
+   left: 4%;
+}
+#course1{
+    position: absolute;
+    top: 25%;
+    }
+#course2{
+ position: absolute;
+ top: 25%;
+ left: 60%;
+ width: fit-content;
+        }
+#course3{
+    width: fit-content;
+position: absolute;
+top: 25%;
+left: 75%;
+}
+
+
+
+.inputslabels{
+    font-size: 15px;
+    font-weight: bold;
+    color: #37562373; 
+    width: fit-content;
+    height: 0;
+}
+#email,#user{
+    padding-top: 15px;
+}
+#gender{
+
+    width: 80%;
+}
+#civil{
+    width: 40%;
+    position:absolute;
+    left: 30%;
+    top: 70px;
+}
+#civil_label{
+    position:absolute;
+    left: 36%;
+    top: 36px;
+}
+#idnum{
+    width: 40%;
+    margin-left: auto;
+    margin-right: auto;
+}
+select[name="college"] {
+  width: 40%;
+  margin-left: auto;
+    margin-right: auto;
+}
+#college{
+    margin-left: auto;
+    margin-right: auto;
+}
+input.form-control#idnum,.myflex>input{
+    padding-top: 15px;
+}
+#courserow{
+
+    margin-left: auto;
+ margin-right: auto;
+    }
+    
+#courserow>input{
+width: auto;
+padding-top: 15px;
+
+}
+#n1,#n2,#n3{
+    color: #37562373;
+}
+label#n1{
+    left:  3%
+    
+}
+label#n2{
+    left: 36.5%;
+}
+label#n3{
+    left: 70%;
+}
+#labelpass,#labelconfpass{
+    position: absolute;
+    top:25%;
+    left: 4%;
+    @media (min-width:500px) {
+        left: 3%;
+    }
+}
+#pass,#passcheck{
+padding-top: 15px;
+
+}
+
+#passchecker{
+    position: relative;
+}
+input[type="checkbox"] {
+    display: block;
+    width: 20px;
+    height: 20px;
+    border-radius:50px;
+    margin-top: 5px;
+    accent-color: #538135  ;
+    color: #b6d8a0 ;
+}
+input[type="checkbox"]:disabled {
+    accent-color: #538135  ;
+    color: #b6d8a0 ;
+    opacity: 100%;  
+}
+#passstatus,#passstatus1{
+    border: 0;
+    background-image: url('../img/passhide.png');
+    background-size: 50%; /* Or cover, depending on your need */
+    background-repeat: no-repeat; /* Prevents the image from repeating */
+    background-position: center; /* Centers the image within the element */
+}
+#passstatus.show,#passstatus1.show{
+    border: 0;
+    background-image: url('../img/passshow.png');
+    background-size: 50%;
+    background-repeat: no-repeat; /* Prevents the image from repeating */
+    background-position: center; /* Centers the image within the element */ 
+    
+}
+
+
+#passchecker label{
+    position: absolute;
+    left: 8%;
+    font-weight: bold;
+    font-size: 10.5px;
+    @media (max-width:500px) {
+        left: 10%;
+    }
+}
+#labelstrenght{
+position: absolute;
+font-weight: bold;
+font-size: 12px;
+top: 25%;
+
+left:70%;
+
+}
+#note.hide{
+ display: none;
+}
+#note.show{
+    position: absolute;
+    font-weight: bold;
+    font-size: 12px;
+    top: 100%;
+    color: red;
+}
+#labelstrenght.weak{
+    color: red;
+}
+#labelstrenght.avg{
+    color: #ff9900; 
+}
+#labelstrenght.str{
+    color: #538135 ;
+}
+#labelstrenght.default{
+    color: transparent;
+}
+
+.requiredItems{
+    color:red;
+    font-weight: bold;
+    font-size: 10px;
+}
+#mailButton{
+    border-radius: 5px;
+    margin-left: auto;
+    margin-right: auto;
+    border:none;
+    position: absolute;
+    top: 3%;
+    
+    left: 79.80%;
+ width: 20%;
+ height: 94%;  
+
+}
+
+.otp-input{
+    width: 30px;
+    border: none;
+    text-align: center;
+    border-bottom: 1px solid #000;
+    margin-right: 5px;
+    outline: none;
+  }
+  /* Chrome, Safari, Edge, Opera */
+
+input[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+#otp-input-holder{
+    display: flex;
+    justify-content: center;
+     align-items: center; 
+  }
+
+  #ofcasLoad{
+   
+    position: absolute;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.511);
+    animation: animate 0.5s; 
+    height: 100%;
+    z-index: 100; 
+     backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  } 
+  #ofcasLoad>img{
+    position: absolute;
+    padding: 50px;
+    top: 50%;
+    left: 50%;
+    width: 500px;
+    height: auto;
+    transform: translate(-50%, -50%) scale(0.5);
+  }
+  @keyframes animate {
+    0% {
+        opacity: 0;
+        transform: scale(0.5);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+  }

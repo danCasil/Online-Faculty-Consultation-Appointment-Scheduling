@@ -1,0 +1,289 @@
+
+.icon{
+   width: 25px;
+    margin-bottom: auto;
+    margin-top: auto;
+}
+a.form-control{
+    position: relative;
+    margin-bottom: 20px;
+    text-decoration: none;
+    text-align: left;
+    padding-left: 30px;
+    font-size: 15px;
+}
+sup{
+   
+    padding-top: 5px;
+    border-radius:10px;
+    width:13px;
+    height: 13px;
+    text-align: center;
+    position: absolute;
+    top: 7px;
+    left: 16px;
+}
+sup.normal{
+    background-color:rgb(0, 0, 0);color
+    :white;
+}
+sup.active{
+    background-color:rgb(255, 255, 255);color
+    :rgb(0, 0, 0);
+}
+sup.new{
+    background-color:red;color
+    :white;
+}
+#icon3{
+    position: absolute;
+    top:38%;
+    height: 20px;
+    left: 6px;
+    @media (max-width:500px) {
+        position: absolute;
+        top:22%;
+        height: 20px;
+        left: 6px;
+    }
+   
+}
+.navbaricon{
+    height: 20px;
+    position: absolute;
+    left:7px;
+    top: 7px;
+}
+b{
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+a.active{
+    background-color:#538135   ;
+    color: white;
+}
+body{
+    background-color: #e5e5e5;
+
+}
+@media (min-width:760px) {
+.mymodal{
+    position: fixed;
+    border-radius: 4px 4px 4px 4px;
+    width: 50%;
+    left: 25%;
+    right: 25%;
+   
+}
+.mymodalhd{
+    background-color: white;
+   border-radius: 4px 4px 0px 0px;
+   padding: 10px;
+}
+.mymodalbd{
+    padding-left: 10px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    border-top: none;
+    background-color: white;
+}
+.mymodalbd,.mymodalhd{ border: solid black;}
+.grouper{
+    width: 80%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+}
+.form-control.input{
+    width: 80%;
+    margin-bottom: 10px;
+}
+.form-control.input-text{
+    width: 100%;
+    max-height: 150px;
+    text-align: start;
+}
+.col-sm-2{
+    text-align: center;
+    padding: 0;
+}
+
+.accordiontime,.accordion-button{
+   
+@media (max-width:500px) {
+    font-size: small;
+}
+}
+
+.accordion-button.collapsed.old {
+            background-color: #b6d8a0 ; /* Color for collapsed state */
+            color: #375623  ;
+        }
+.accordion-button.collapsed.new {
+            background-color: #538135 ; /* Color for collapsed state */
+            color: #ffffff  ;
+        }
+        .accordion-button:not(.collapsed) {
+            background-color: #b6d8a0 ; /* Color for expanded state */
+            color: #000000;
+        }
+        #schedule_maker{
+            position: absolute;
+            bottom: 10px;
+            padding-left: 30px;
+        }
+        #schedule_maker img{
+            position: absolute;
+            top: 5px;
+            left: 6px;
+            width: 21px;
+            @media (min-width:500px) {
+                top: 7px;
+            }
+          
+        }
+
+
+        @media (max-width:500px) { 
+          /*  #myChart{
+                min-height: 300px;
+            }*/
+          #OFCASlogo{
+            width: 200px;
+          }
+            #menuBTN{
+                width: 50px;
+            }
+            #menu{
+                position: absolute;
+                top:10px;
+               right: 5px;
+                padding:.25px 5px .25px 5px;
+                font-size: 30px;
+                border-radius: 10px;
+                width: 60px;
+                display: "";
+         }
+         header{
+            padding-right: 40px;
+            color: #dbe5d4 ;
+            height: fit-content;
+            text-align: center;
+            padding-bottom: 10px;
+            padding-top: 5px;
+            margin-bottom: 10px;
+            background: radial-gradient(circle, #538135  , #375623 );  
+           box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.354);
+        }
+      
+            }
+            @media (min-width:500px) {
+                #OFCASlogo{width: 90%;height: auto;}
+                header{
+                    
+                    width: 100%;
+                   height: 45px;
+                    text-align: center;
+                    padding-bottom: 5px;
+                    padding-top: 5px;
+                    color: #dbe5d4 ;
+                    margin-bottom: 10px;
+                    background: radial-gradient(circle, #538135  , #375623 );  
+                   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.354);
+                }
+                #sidenavbar{
+                    height: 87vh;
+                }
+                #navbar{height: 100%;}
+         #menu{display: none;}
+ 
+            }
+    #maincontent{
+        position: relative;
+        height: 80vh;
+    }
+          
+    #Searcher{
+        position: absolute;
+        top: 20%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 90%;
+    
+    }
+
+    #addbutt{
+        position: absolute;
+        bottom: 10px;
+        width: 45%;
+    }
+    #removebutt{
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        width: 45%; 
+      background-color: red;
+      color: white;
+    }
+    #removebutt:disabled{
+        opacity: 50%;
+    
+      color: rgb(255, 255, 255);
+    }
+    #ofcasLoad{
+   
+        position: absolute;
+        width: 100%;
+        background-color: rgb(255, 255, 255);
+
+        height: 100%;
+        z-index: 100; 
+         backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+      } 
+      #ofcasLoad>img{
+        position: absolute;
+        padding: 50px;
+        top: 50%;
+        left: 50%;
+        width: 500px;
+        height: auto;
+        transform: translate(-50%, -50%) scale(0.5);
+      }
+
+      .systemButtonYesNo{
+        padding: 5px;
+        border-style: none;
+        width: 50px;
+        text-align: center;
+        margin-right: 10px;
+        border-radius: 5px;
+      }
+      .systemButtonYesNo.No{
+        background-color: #cf3030    ;
+        color: white;
+      }
+      .systemButtonYesNo.Yes{
+        background-color: #538135  ;
+        color: white;
+        margin-left: 50%;
+      }
+     
+      #availability{
+        font-size: 13px;
+        width: 30%;
+        border-top-right-radius:5px;
+        border-bottom-right-radius:5px;
+      }
+     
+      #noData{
+        position: absolute;
+        transform: translate(-50%, -50%);
+        top: 50%;
+        left: 50%;
+        font-weight: bold;
+      }

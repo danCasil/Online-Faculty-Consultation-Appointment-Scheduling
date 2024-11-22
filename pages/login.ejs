@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="currentpg">OFCAS</title>
+
+    <link rel="icon" type="image/png" sizes="32x32" href="../img/OCAS-icon.png" >
+    <link rel="stylesheet" href="../bootcss/bootstrap.min.css">
+    <link rel="stylesheet" href="../logincss.css">
+    <link rel="stylesheet" href="../OTP.css">
+</head>
+<body><div id="ofcasLoad"> <img src="../img/loading.gif" alt="" ></div>
+<div class="container-fluid">
+     <div class="row"style="margin-left: auto;margin-right: auto;">
+        <div class="col-sm-9">
+           
+        </div>
+        <div class="col-sm-3" >
+           
+            <form action="/OTP" method="post" id="login_form" class="form-control form"> <h4 class="web-app"><img src="../img/OCAS-logo.png" alt="" style="height: 150px;width: 150px;"></h4>
+            
+<div style="position: relative;">
+    
+                    <label for="id" id="namelabel" class="inputslabel">Username</label>
+                    <input type="text"name="id" id="user_name" class="form-control" style="padding-top: 15px;width: 90%;margin-left: auto;margin-right: auto;">
+    
+</div>
+<div style="position: relative;">
+    <img src=""id="eyeimg"  style="background-color: white;position: absolute;left: 10px;top:24%;left: 80%;width: 10%;" alt="">
+              <label for="pass" class="inputslabel">Password</label>
+              <input type="password"name="pass" class="form-control"id="user_pass"style="padding-top: 15px;margin-top:30px;width: 90%;margin-left: auto;margin-right: auto;">
+              
+    
+</div>
+<div id="loginErr" >It seems that you entered your credentials wrong. Please check and try again.</div>
+                <button type="submit" class="inputs "  style="margin-top: 30px;"id="loginBTN">Login</button>
+                <div class="form-control hr"></div>
+                <button type="button" class="inputs " id="register">Register</button>
+                <a type="button" class="inputs "style="text-align:center;margin-left:auto;margin-right:auto" id="forgot">forgot password?</a>
+            </form>
+               
+        </div>
+     </div>
+</div>
+
+<div
+    class="modal fade"
+    id="modalId"
+    tabindex="-1"
+    data-bs-backdrop="static"
+    data-bs-keyboard="false"
+    
+    role="dialog"
+    aria-labelledby="modalTitleId"
+    aria-hidden="true"
+>
+    <div
+        class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm"
+        role="document"
+    >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitleId">
+                 Register as ?
+                </h5>
+         
+            </div>
+            <div class="modal-body">
+                <button class="inputs" onclick="window.location.href='/faculty/reg'">Faculty</button>
+                <button class="inputs" onclick="window.location.href='/student/reg'">Student</button>
+
+           </div>
+            <div class="modal-footer">
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                onclick="window.location.reload()"
+                    >
+                    Cancel
+                </button>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<div
+    class="modal fade"
+    id="OTPmodal"
+    tabindex="-1"
+    data-bs-backdrop="static"
+    data-bs-keyboard="false"
+    
+    role="dialog"
+    aria-labelledby="modalTitleId"
+    aria-hidden="true"
+>
+    <div
+        class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm"
+        role="document"
+    >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitleId"style="margin-left:auto;margin-right:auto">
+                Enter Verification Code
+                </h5>
+         
+            </div>
+            <form action="/OTP/Authenticate" method="post" id="OTP_FORM">
+            <div class="modal-body" style="position: relative;height: 180px;">
+                <div class="row" style="width: 80%;position: absolute; top: 0;
+                left: 14%;">
+                 <center>
+                    <h6 style="margin-top:30px;text-align: center;" id="msg_otp">We have sent OTP on your email</h6>
+                    <div id="otp-input-holder">
+                    <input type="number" class="otp-input"name="otp1" id="otp1" min="1" max="9">
+                    <input type="number"class="otp-input" name="otp2" id="otp2">
+                    <input type="number" class="otp-input"name="otp3" id="otp3">
+                    <input type="number"class="otp-input" name="otp4" id="otp4">
+                    <input type="number" class="otp-input"name="otp5" id="otp5">
+                    <input type="number"class="otp-input" name="otp6" id="otp6">
+               </div>
+
+               <p style="font-size: 11px;text-align: center;margin-top: 15px;">Didn't receive a OTP?  <button type="button" style="border: none;background-color: white;color: rgb(24, 129, 0);text-decoration: underline;"  id="Resend_botton">Resend OTP</button> </p>
+              
+                    </center>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button
+                type="submit"
+                class="btn btn-success"
+                
+                id="OTP_confirm"
+            >
+                Confirm
+            </button>
+                <button
+                style="position: absolute;float: left; left: 10px;"
+            
+                    type="button"
+                    class="btn btn-danger"
+                    data-bs-dismiss="modal"
+                >
+                    Cancel
+                </button>
+                
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
+
+
+<div
+    class="modal fade"
+    id="forgotModal"
+    tabindex="-1"
+    data-bs-backdrop="static"
+    data-bs-keyboard="false"
+    
+    role="dialog"
+    aria-labelledby="modalTitleId"
+    aria-hidden="true"
+>
+    <div
+        class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm"
+        role="document"
+    >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitleId">
+                   Enter your id-number
+                </h5>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                ></button>
+            </div>
+          <form id="forgotForm">
+              <div class="modal-body">
+              <input type="text" id="id_number" name="id_number" class="form-control">
+              </div>
+              <div class="modal-footer">
+                  <button
+                      type="button"
+                      class="btn btn-danger"
+                      data-bs-dismiss="modal"
+                  >
+                      Close
+                  </button>
+                  <button type="submit" class="btn btn-primary">Submit</button>
+              </div>
+          </form>
+        </div>
+    </div>
+</div>
+
+<!-- Optional: Place to the bottom of scripts -->
+
+
+    <script src="../bootjs/boostrap.js"></script>
+    <script src="OTP.js"></script>
+    <script src="login_script.js"></script>
+  
+
+</body>
+</html>

@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="currentpg">OFCAS</title>
+
+    <link rel="icon" type="image/png" sizes="32x32" href="../img/OCAS-icon.png" >
+    <link rel="stylesheet" href="../bootcss/bootstrap.min.css">
+    <link rel="stylesheet" href="../reg.css">
+
+  </head>
+
+<body>
+ 
+  <div id="ofcasLoad"> <img src="../img/loading.gif" alt=""></div>
+ <div class="row">
+ <div class="col-sm-8"></div>
+ <div class="col-sm-4"> 
+<form action="/<%= role %>/reg/new"  method="post" class="form-control form"id="registrationForm">
+        
+    <img src="../img/OCAS-logo.png" style="position: absolute;top: 0;width: 150px;height: 150px; left: 50%;
+  transform: translateX(-50%);" alt="">
+        <center><h5  id="welcome"><b>Welcome to faculty registration</b></h5></center>
+        <div class="label_sub_title" >Don't worry your information will be kept privately</div>
+        <input type="hidden" id="role" value="<%= role %>">
+        <div id="line_nav">
+            <div class="line " id="l1" onclick="showOtherForm(1,'nav')"></div>  
+            <div class="line" id="l2" onclick="showOtherForm(2,'nav')"></div>  
+            <div class="line" id="l3" onclick="showOtherForm(3,'nav')"></div>  
+            <div class="line" id="l4" onclick="showOtherForm(4,'nav')"></div> 
+            <div class="line" id="l5" onclick="showOtherForm(5,'nav')"></div>
+          </div>
+<div id="section3" class="input_section">
+            <div class="label_title" ><b>What's is your ID Number?</b></div>
+             
+            <div class="row" style="width: 100%; margin-left: auto;
+    margin-right: auto;">
+                <div class="col-12" style="margin: 0;padding: 0;position: relative;">
+                    <label for="idnum" id="inputLabelidnum" class="inputslabels">Id-number</label>
+                       <input type="text" class="form-control"  name="userid" id="idnum">
+                    
+                </div>
+            </div>
+                <div class="row"id="college" style="margin-top: 10px;">
+                    <div class="label_title" ><b>Your College Department?</b></div>
+            
+                     
+                   <select class="form-select" type="text" name="college"id="collegesel">
+                    <option value="" disabled selected>Select here..</option>
+                       <option value="CDCAS">CDCAS</option>
+                       <option value="CCSICT">CCSICT</option>
+                       <option value="CCJE">CCJE</option>
+                       <option value="CED">CED</option>
+                       <option value="PTIA">PTIA</option>
+                   </select>
+                
+                
+             </div><div class="label_title student"style="margin-top:20px" ><b>Your Course, Year and Section</b></div>
+          <div class="row" id="courserow" style="position: relative;">
+        
+           
+          
+              
+           
+    <select type="text" class="student form-select"  name="course" id="course" style="width: 50%;border-top-right-radius: 0;
+              border-bottom-right-radius: 0; font-size: 10px;">
+                  <option value="" disabled selected>Course</option>
+          <option value="Bachelor of Science in Agriculture">Bachelor of Science in Agriculture</option>
+          <option value="Bachelor of Science in Forestry">Bachelor of Science in Forestry</option>
+          <option value="Bachelor of Science in Environmental Science">Bachelor of Science in Environmental Science</option>
+          <option value="Bachelor of Science in Development Communication">Bachelor of Science in Development Communication</option>
+          <option value="Bachelor of Science in Computer Engineering">Bachelor of Science in Computer Engineering</option>
+          <option value="Bachelor of Science in Information Technology">Bachelor of Science in Information Technology</option>
+          <option value="Bachelor of Science in Business Administration">Bachelor of Science in Business Administration</option>
+          <option value="Bachelor of Science in Hospitality Management">Bachelor of Science in Hospitality Management</option>
+          <option value="Bachelor of Science in Criminology">Bachelor of Science in Criminology</option>
+          <option value="Bachelor of Science in Fisheries">Bachelor of Science in Fisheries</option>
+          <option value="Bachelor of Science in Industrial Technology">Bachelor of Science in Industrial Technology</option>
+          <option value="Bachelor of Science in Nursing">Bachelor of Science in Nursing</option>
+          <option value="Bachelor of Science in Education">Bachelor of Science in Education</option>
+          <option value="Bachelor of Science in Social Work">Bachelor of Science in Social Work</option>
+          <option value="Bachelor of Science in Public Administration">Bachelor of Science in Public Administration</option>
+          <option value="Bachelor of Science in Accountancy">Bachelor of Science in Accountancy</option>
+          <option value="Bachelor of Science in Psychology">Bachelor of Science in Psychology</option>
+          <option value="Bachelor of Science in Electronic Engineering">Bachelor of Science in Electronic Engineering</option>
+                    </select>
+             
+                   
+                     <select type="text" class="student form-select" name="year" id="year" style="width: 25%;border-radius: 0;font-size: 10px;
+                      ">
+                        <option value="" disabled selected>Year</option>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>  
+                    </select>
+                 
+                 
+                     <select class="student form-select" name="section" id="section" style="width: 25%;border-top-left-radius: 0;
+                     border-bottom-left-radius: 0;font-size: 10px;padding: 15px;">
+                     <option value="" disabled selected>Section</option>
+                       <option value="A">A</option>
+                       <option value="B">B</option>
+                       <option value="C">C</option>
+                    </select>
+                 
+      
+          </div>
+      
+            
+            
+         </div>
+    <div id="section1"class="input_section">
+        <div class="label_title" ><b>What's your name?</b></div>
+
+          <div class="myflex" style="margin-left: auto;
+    margin-right: auto;position: relative;display:flex; "id="section1_input" >
+          
+        
+                <label for="first"class="namelabel" id="n1">First</label>
+            <input class="form-control" type="text" name="first" id="first" style="border-top-right-radius: 0;
+    border-bottom-right-radius: 0;">
+         
+            <label for="mid" class="namelabel"id="n2"  >Middle</label>
+         
+            <input class="form-control"  type="text" name="mid"id='mid' style="border-radius: 0;" >
+           
+            <label for="last"class="namelabel"id="n3">Last</label>
+            <input class="form-control"  type="text" name="last" id="last"style=" border-top-left-radius: 0;
+    border-bottom-left-radius: 0;">
+
+        
+          </div>
+          </div>
+          <div id="section2" class="input_section">
+          <div class="row">
+           <div class="label_title" ><b>Your Birthday and Gender</b></div> 
+           <div class="col-7" style="position: relative;padding: 0;">
+         
+                
+                <label for="birthday" id="birth">MM    /    DD    /    YYYY</label>
+                <input class="form-control " type="date" name="birthday" id="birthday">
+
+           </div>
+           <div class="col-5" style="position: relative;">
+          
+        
+              
+            <center>
+                <select name="gender" id="gender" class="form-select">
+                  <option value="" disabled selected>Select here..</option>
+                    <option value="M">Male</option>
+                    <option value="F">Female</option>
+                </select>
+            </center>
+    </div>
+          </div>
+          <div class="row" style="position: relative;">
+            <center>
+                <div class="label_title" id="civil_label" ><b>Civil Status</b></div>
+                <select name="civil" id="civil" class="form-select">
+                  <option value="" disabled selected>Select here..</option>
+
+                    <option value="Single">Single</option>
+                    <option value="Married">Married</option>
+                   
+                </select>
+            </center>
+          </div>
+          </div>
+
+<div id="section4" class="input_section">
+  <div class="row" style="margin-left: auto;margin-right: auto;padding: 0px 6px;">
+    <div class="label_title" >
+      <b>
+        What's your email?
+      </b>
+    </div>
+    <div style="position: relative;padding: 0;margin-bottom: 10px;">
+      <label class=" inputslabels" id="emaillabel"onclick="focuson('email')">
+        Email
+      </label>
+        <input class="form-control" type="email" name="email" id="email" >
+        <input type="hidden" name="ninja_username" id="ninja">
+    </div>
+    <div class="label_title" ><b>Create your Unique Username</b>
+    </div>
+      <div  style="position: relative;padding: 0;">
+        <label class=" inputslabels" id="usernamelabel" onclick="focuson('user')">
+          Username
+        </label>
+          <input type="text"  class="form-control" name="user_name" id="user"> 
+    </div>                 
+  </div>
+</div>
+       <div  id="section5" class="input_section">
+        <div class="label_title"  ><b>Create your password</b></div>
+      
+         <div class="row">
+            <div class="col-12">
+              <div class=""style="position: relative;">
+                <label class=" inputslabels" id="labelpass" onclick="focuson('passcheck')">Password</label>
+                   <input class="form-control" type="password" name="passcheck" id="passcheck">
+                   <button style="width: 15%;position: absolute; top: 1%;left: 85%;height: 97%;background-color: white;border-radius: 5px;" id="passstatus"type="button" ></button>
+                   <label for="passcheck" id="labelstrenght" class="default">weak</label>
+             
+            </div> 
+            <div style="padding: 5px;" id="passchecker">
+              <input type="checkbox" name="" id="passstrenght" class="">
+              <label for="passlength" style="top: 10px;"id="chk1">Must be Okay strength or better.</label>
+              <input type="checkbox" name="" id="passlength" class="">
+              <label for="passlength" style="top: 36px;" id="chk2">Password is at least 8 characters long.</label>
+              <input type="checkbox" name="" id="passcharacter" class="">
+              <label for="passcharacter" style="top: 62px;"id="chk3">Password includes two of the following: letter, number, or symbol.</label>
+            </div>
+        
+              </div>
+           <div class="col-12" id="confirmpasscon"> 
+             <div class="" style="position: relative;">
+                 <label class=" inputslabels" id="labelconfpass"onclick="focuson('pass')">Confirm Password</label>
+                    <input class="form-control similar" type="password" name="pass" id="pass">
+                    <button style="width: 15%;position: absolute;  top: 2%;left: 85%;height: 97%;background-color: white;border-radius: 5px;" id="passstatus1" type="button"  ></button>
+                    <label for="passcheck" id="note" class="hide">Must be the same to the first password you input</label>
+             </div>
+           </div>
+            
+         </div>
+       </div>       
+       <center>
+       <button type="button" onclick="" id="NextBTN"><img src="../img/download.png"width="30px"height="40px"   alt=""></button>
+       <div class="form_btn"></center>  
+
+         <button type="button" onclick="window.location.href='/'"  id="Rbtn">Already have an account</button> 
+        </form>
+       </div>
+ 
+  </div> 
+ </div> 
+ <div
+ class="modal fade"
+ id="OTPmodal"
+ tabindex="-1"
+ data-bs-backdrop="static"
+ data-bs-keyboard="false"
+ 
+ role="dialog"
+ aria-labelledby="modalTitleId"
+ aria-hidden="true"
+>
+ <div
+     class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm"
+     role="document"
+ >
+     <div class="modal-content">
+         <div class="modal-header">
+             <h5 class="modal-title" id="modalTitleId" style="margin-left:auto;margin-right:auto">
+             Enter Verification Code
+             </h5>
+      
+         </div>
+         <form action="/OTP/Authenticate" method="post" id="Email_Verify">
+         <div class="modal-body" style="position: relative;height: 180px;">
+             <div class="row" style="width: 80%;position: absolute; top: 0;
+             left: 14%;">
+              <center>
+                 <h6 style="margin-top:30px;text-align: center;" id="msg_otp">We have sent OTP on your email</h6>
+                 <div id="otp-input-holder">
+                 <input type="number" class="otp-input"name="otp1" id="otp1" min="1" max="9">
+                 <input type="number"class="otp-input" name="otp2" id="otp2">
+                 <input type="number" class="otp-input"name="otp3" id="otp3">
+                 <input type="number"class="otp-input" name="otp4" id="otp4">
+                 <input type="number" class="otp-input"name="otp5" id="otp5">
+                 <input type="number"class="otp-input" name="otp6" id="otp6">
+            </div>
+
+            <p style="font-size: 11px;text-align: center;margin-top: 15px;">Didn't receive a OTP?  <button type="button" style="border: none;background-color: white;color: rgb(24, 129, 0);text-decoration: underline;" onclick="sendOTP('resend')" id="Resend_botton">Resend OTP</button> </p>
+           
+                 </center>
+             </div>
+
+         </div>
+         <div class="modal-footer">
+             <button
+             type="submit"
+             class="btn btn-success"
+             
+    
+             id="OTP_confirm"
+         >
+             Confirm
+         </button>
+             <button
+             style="position: absolute;float: left; left: 10px;"
+                 type="button"
+                 class="btn btn-danger"
+                 data-bs-dismiss="modal"
+             >
+                 Cancel
+             </button>
+             
+         </div>
+     </form>
+     </div>
+ </div>
+</div>
+<script src="../bootjs/boostrap.js"></script>
+<script src="../OTP.js"></script>
+    <script src="../registration_script.js"></script>
+</body>
+
+</html> 

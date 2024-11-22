@@ -1,0 +1,529 @@
+<%- include('head.ejs') %>
+  <style>
+    table {
+      width: 100%;
+
+      padding-right: 10px;
+      border-collapse: collapse;
+    }
+
+    tr {
+      height: 10px;
+      max-height: 10px;
+      position: relative;
+    }
+
+    .timeAvailable {
+      width: 80%;
+      margin-left: auto;
+      margin-right: auto;
+      border-radius: 5px;
+      margin-bottom: 5px;
+    }
+    #tableHolder {
+        height:90%;
+        border: solid .2px black;
+        border-radius: 5px;
+        overflow-y:auto;
+        overflow-x: hidden;
+        @media (max-width:500px) {
+          
+        }
+      }
+      #section1{
+        height: 100%;
+      }
+    @media (min-width:500px) {
+  
+
+      #tableHolder::-webkit-scrollbar {
+        width: 5px;
+        /* Width of the scrollbar */
+        background-color: #f1f1f1;/
+      }
+
+      #tableHolder::-webkit-scrollbar-thumb {
+        background-color: #888;
+        /* Color of the scrollbar thumb */
+        border-radius: 10px;
+        /* Round corners of the scrollbar thumb */
+      }
+    }
+
+    @media (max-width:500px) {
+      #Searcher {
+        width: 300px;
+      }
+
+      #Searcher button {
+        width: 30%;
+        font-size: 12px;
+        padding: 0;
+      }
+
+      .btn {
+        font-size: 12px;
+
+      }
+     thead{
+      z-index: 100;
+     }
+      th,
+      td {
+        padding: 10px;
+        font-size: 12px;
+        border: 1px solid #ccc;
+        text-align: left;
+      }
+
+      th:nth-child(4),
+      td:nth-child(4) {
+        width: 10%;
+        /* Adjust the width as needed */
+      }
+
+    }
+
+    @media (min-width:500px) {
+
+      th,
+      td {
+        padding: 8px;
+        border: 1px solid #ccc;
+        text-align: left;
+      }
+
+      th:nth-child(4),
+      td:nth-child(4) {
+        width: 20%;
+        /* Adjust the width as needed */
+      }
+    }
+
+    .createSched_btn {
+      @media (max-width:500px) {
+        font-size: 13px;
+      }
+    }
+    #dateANDtime{
+      @media (max-width:500px) {
+        margin-top: 10px;
+      }
+    }
+    #schedule_maker{
+      position: fixed;
+      bottom: 7.5%;   
+      @media (max-width:500px) {
+       bottom: 4%;   
+      }
+      
+    }
+    .overLay{
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: rgba(255, 255, 255, 0.502);
+      height: 100%;
+      width: 100%;
+      border: solid .2px rgb(0, 0, 0);
+      backdrop-filter: blur(2px);
+      border-top:  solid .1px rgba(155, 155, 155, 0.493);
+      border-bottom: solid .1px rgba(155, 155, 155, 0.493);
+      border-left: none;
+      border-right: none;
+      text-align: center;
+    color: red;
+      padding-top: auto;
+      padding-bottom: auto;
+      display: flex; 
+      justify-content: center; 
+      align-items: center;
+      font-weight: bold;
+    
+    }
+    .overLay.Finish{
+      color: #538135;
+    }
+  @media (min-width:500px) {
+    .overLay:hover{
+      color:transparent;
+      backdrop-filter: blur(0px);
+      background-color: transparent;
+      transition: background-color .2s,backdrop-filter .2s;
+    }
+  }
+  @media (max-width:500px) {
+    .overLay.show{
+      color:transparent;
+      backdrop-filter: blur(0px);
+      background-color: transparent;
+      transition: background-color .2s,backdrop-filter .2s;
+    }
+  }
+  </style>
+
+
+  <link rel="stylesheet" type="text/css" href="../calendar/calendar.css" />
+
+
+
+  <div class="col-10" id="content">
+    <div class="form-control" id="maincontent" style=" padding: 20px;">
+
+      <div id="section1">
+        <div class="btn btn-success" id="schedule_maker"><img
+            src="../img/schedulemake.png" id="" class="navbaricon" alt="">Make Schedule</div>
+
+        <div id="tableHolder">
+          <table id="schedules_table">
+            <div id="noData" >
+             <div style="text-align: center;">No Schedule</div>
+             <div style="text-align: center;font-size: 12px;font-weight: normal;" >(To create a schedule click the "Make Schedule" button assigned below)</div>
+            
+            </div>
+            <thead style="position: sticky;top: 0;background-color: white;">
+              <th scope="col">Name</th>
+              <th scope="col">Time</th>
+              <th scope="col">Date</th>
+              <th sscope="col">Status</th>
+            </thead>
+            <tbody id="tablebd"></tbody>
+          </table>
+        </div>
+
+      </div>
+      <div id="section2">
+        <form action="/createSchedule" method="post" class="form-control" id="ScheduleCreatorForm">
+          <div style="text-align: center;margin-bottom: 30px;">
+            <h4>Consultation Purpose</h4>
+          </div>
+          <div class="row">
+            <div class="col-sm-4">
+              <div class="input-group ">
+                <span class="input-group-text">
+                  ID
+                </span>
+                <input type="hidden" id="resched_status" name="reSched">
+                <input type="text" id="ScheduledID" class="form-control" name="ScheduledID">
+                <span class="input-group-text">
+                  Name
+                </span>
+                <input type="text" class="form-control" id="ScheduledNAME" name="ScheduledNAME">
+              </div>
+            </div>
+
+            <div class="col-sm-2">
+
+            </div>
+<div class="col-sm-6" id="dateANDtime">
+  <div class="row">
+    
+                <div class="col-sm-6">
+    
+                  <div class="input-group">
+                    <span class="input-group-text">Date</span>
+                    <input type="text" class="form-control" id="PreferredDate" name="PreferredDate">
+                  </div>
+                </div>
+                <div class="col-sm-6" style="margin-top: 10px;">
+                  <div class="input-group">
+                    <input type="text" class="form-control" id="PreferredTin" name="PreferredTin">
+                    <span class="input-group-text">
+                      -
+                    </span>
+                    <input type="text" class="form-control" id="PreferredTout" name="PreferredTout">
+                  </div>
+                </div>
+    
+  </div>
+</div>
+
+          </div>
+
+          <textarea class="form-control" placeholder="Purpose." name="purpose" id="purpose" rows="5"
+            cols="30"></textarea>
+          <div class="row">
+            <div class="col-4">
+              <button type="button" class="createSched_btn form-control btn-primary"
+                onclick="showThis(3);">Back</button>
+            </div>
+            <div class="col-4"></div>
+            <div class="col-4">
+              <button type="submit" class="form-control btn-success createSched_btn">Submit</button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div id="section3">
+
+        <div id="calendarMain">
+
+          <center>
+            <div id="calendar-nav">
+              <button id="prev" class="form-control" onclick="prevWeekBtn()">&lt</button>
+              <h4 class="currentDate" id="monthtitle"></h4>
+              <button id="next" class="form-control" onclick="nextWeekBtn()">&gt</button>
+            </div>
+          </center>
+
+
+          <div id="calendar-body">
+            
+          </div>
+          <div style="margin-top: 5%;margin-left: auto;margin-right: auto;text-align: center;font-size: 13px;">(Click the highligted date to view the available time for the remaining slots)</div>
+        </div>
+        <button style="position: absolute;bottom: 15px;left: 15px;" class="btn-primary btn"
+          onclick="showThis(1)">Back</button>
+        <button style="position: absolute;bottom: 15px;right: 15px;" class="btn-primary btn"
+          onclick="makeSched.show()">Search Again</button>
+      </div>
+
+    </div>
+  </div>
+
+
+  </div>
+  </div>
+
+
+  <div class="modal fade" id="finishForm" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog"
+    aria-labelledby="modalTitleId" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalTitleId">
+            Consultation Completion Form
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="/update/completed" method="post" id="completionForm">
+
+          <div class="modal-body" id="completionFormBody">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+              No
+            </button>
+            <button type="submit" class="btn btn-success">Yes</button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container  position-fixed end-0 p-3 top-0 start-50 translate-middle-x">
+    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true"
+      style="border:solid black 1px;border-radius: 2.5;">
+      <div class="toast-header bg-light">
+        <strong class="me-auto" id='toasttitle'>Attention</strong>
+        <small id="toasttime"></small>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div class="toast-body bg-light" id="toastbody">
+
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="modal fade" id="makeSched" tabindex="-1" data-bs-backdrop="true" data-bs-keyboard="false" role="dialog"
+    aria-labelledby="modalTitleId" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-md" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalTitleId">
+           See Available Time
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <style>
+#labelForid{
+position: absolute;
+z-index: 5;
+height: 5px;
+left:2.5%;
+top: 50%;
+font-size: 12px;
+font-weight: bold;
+opacity: 50%;
+}
+        </style>
+        <div class="modal-body" style="height: 100px;position: relative;"> 
+         
+          <div class="input-group" id="Searcher" style="padding-top:15px ;">
+            <label for="target_id" id="labelForid">ID Number or Name</label>
+           
+            <input type="text" class="form-control" list="list_id_number" name="" id="target_id"style="padding-top:15px ;" >
+            
+            <input type="hidden" id="forNameSearch">
+            <button id="availability" class="btn btn-primary">Search</button>
+            <datalist id="list_id_number">
+
+            </datalist>
+          </div>
+          <div id="helpTEXT1" style="text-align: center;font-size: 10px;font-weight: bold;margin-left: auto;margin-right: auto;" >"Please input the <div style="display: inline;" id="targets">faculty member's</div> name or ID number to view their available time."</div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="AvailableTimeModal" tabindex="-1" data-bs-backdrop="true" data-bs-keyboard="false"
+    role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalTitleId">
+            Available Consultation Time
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            onclick="closeremove()"></button>
+        </div>
+        <div class="modal-body" id="FacultyTimeContainer">
+
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="closeremove()">
+            Cancel
+          </button>
+          <button type="button" class="btn btn-primary" id="submitscheduletime" onclick="ScheduleTime()">Select
+            Time</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <input type="hidden" id="loginDate" value=<%=date %>>
+
+  <input type="hidden" id="loginRole" value=<%=role %>>
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded",function(){
+  if(window.innerWidth<500){
+    document.getElementById('helpTEXT1').style.marginTop='12%'
+  }else{
+     document.getElementById('helpTEXT1').style.marginTop='10%'
+  }
+})
+</script>
+
+
+
+
+  <div class="modal fade" id="declineForm" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
+    role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalTitleId">
+            Decline Form
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+
+
+
+          <textarea class="form-control" placeholder="reason" name="reason" id="reason" rows="5" cols="30"></textarea>
+
+
+
+
+        </div>
+        <div class="modal-footer">
+          <button id="cancelbtn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Close
+          </button>
+          <button id="confirmbtn" class="btn btn-primary">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Optional: Place to the bottom of scripts -->
+
+
+
+
+
+
+
+
+
+
+
+  <div class="modal fade" id="Notifmodal" tabindex="-1" data-bs-backdrop="true" data-bs-keyboard="false" role="dialog"
+    aria-labelledby="modalTitleId" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-md" role="document">
+      <div class="modal-content">
+        <form action="/notify" class="" id="notif_sender" method="post">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalTitleId">
+              Student Notifier
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+              onclick="notif_close()"></button>
+          </div>
+          <div class="modal-body">
+
+            <label for="receiver_id">Student ID/Name</label>
+            <input type="text" class="form-control input" list="studentList" name="R_id" id="receiver_id" required>
+
+            <label for="msg">Message</label>
+
+            <textarea class="form-control input-text" placeholder="" name="msg" id="msg" cols="30" required></textarea>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="notif_close()">
+              Close
+            </button>
+            <button type="submit" id="notifsub" class="btn btn-primary">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="confirmationModal" tabindex="-1" data-bs-backdrop="true" data-bs-keyboard="false" role="dialog"
+aria-labelledby="modalTitleId" aria-hidden="true">
+<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-md" role="document">
+  <div class="modal-content">
+    
+      <div class="modal-header">
+        <h4 class="modal-title" style="text-align: center;margin-left: auto;margin-right: auto;" id="modalTitleId">
+          Attention!
+        </h4>
+        
+      </div>
+      <div class="modal-body">
+        <div id="msgForConfirm"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" id="noBtn" style="position: absolute;left: 4%;">
+          No
+        </button>
+        <button type="submit" id="yesBtn" class="btn btn-primary">Yes</button>
+  </div>
+</div>
+</div>
+
+
+
+  <script src="../bootjs/boostrap.js"></script>
+  <script src="../home_script.js"></script>
+  <script src="../responsive_script.js"></script>
+  <script src="../calendar/calendar.js"></script>
+
+  </body>
+
+  </html>

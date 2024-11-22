@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TABLE</title>
+    <link rel="stylesheet" href="../bootcss/bootstrap.min.css">
+</head>
+<div class="container" style="position: absolute;top: 50%;left: 50%;transform: translate(-50%,-50%);height: 90vh;">
+    <div class="table-responsive">
+        <table class="table table-primary">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Password</th>
+                    <th scope="col">Remove</th>
+                </tr>
+            </thead>
+            <tbody id="dataContainer" style="height: 100%;overflow: auto;">
+              
+            </tbody>
+        </table>
+    </div>
+</div>
+<div style="position: absolute;bottom: 5%;">
+    <h1>Download File</h1> 
+    <button id="downloadBtn">Download PDF</button> 
+</div>
+<script> document.getElementById('downloadBtn').addEventListener('click', () => {
+     fetch('/download') .then(response => response.blob()) .then(blob => { 
+const url = window.URL.createObjectURL(blob); 
+const link = document.createElement('a'); 
+link.href = url;
+link.download = 'schedulerData.db';
+document.body.appendChild(link); 
+link.click();
+ document.body.removeChild(link); 
+window.URL.revokeObjectURL(url); 
+}).catch(err => 
+console.error('Error downloading file:', err));
+ }); 
+
+</script>
+<body>
+    <script>
+        document.addEventListener('DOMContentLoaded',function(){
+            fetch("/get/all/user").then(response=>response.json()).then(data=>{
+                const container=document.getElementById('dataContainer')
+                container.innerHTML=''
+                data.raw.forEach(element => {
+                    const row=document.createElement('tr')
+                    const td1=document.createElement('td')
+                    const td2=document.createElement('td')
+                    const td3=document.createElement('td')
+                    const td4=document.createElement('td')
+                    const btn=document.createElement('button')
+                    td2.textContent=`${element.username}`
+                    td1.textContent=`${element.id_number}`
+                    td3.textContent=`${element.password}`
+                    btn.textContent=`Delete`
+                    btn.onclick = function() { 
+                    fetch(`/deleteThisUser/${element.id_number}`).then(response=>response.json()).then(status=>{
+                        if(status==true){
+                            window.location.reload()
+                        }
+                    }).catch(err=>{
+
+                    })
+                     };
+                     
+                    td4.appendChild(btn)
+                    row.appendChild(td1)
+                    row.appendChild(td2)
+                    row.appendChild(td3)
+                    row.appendChild(td4)
+                    container.appendChild(row)
+                });
+
+            }).catch(err=>{
+                
+            })
+        })
+   
+    </script>
+</body>
+</html>

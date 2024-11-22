@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../bootcss/bootstrap.min.css">
+</head>
+<body>
+
+<div
+    class="modal fade"
+    id="modalId"
+    tabindex="-1"
+    data-bs-backdrop="static"
+    data-bs-keyboard="false"
+    
+    role="dialog"
+    aria-labelledby="modalTitleId"
+    aria-hidden="false"
+>
+    <div
+        class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm"
+        role="document"
+    >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitleId">
+                    Reset Password
+                </h5>
+            </div>
+          <form method="post" action="/resetTHIS" id="passForm">
+              <div class="modal-body">
+                <input type="hidden" id="secure" name="secure" value="<%= secretToken %>">
+                  <input type="hidden" id="stat" name="stat" value="<%= changepass %>">
+                 <div id="changePart">
+                     <label for="old">Your Old Password</label>
+                     <input type="password" class="form-control" id="old" name="old">
+                 </div>
+                  <label for="old">Your New Password</label>
+                  <input type="password"  class="form-control" id="new">
+                  <label for="old">Comfirm Password</label>
+                  <input type="password" name="pass" class="form-control" id="pass">
+              </div> 
+              <div class="modal-footer">
+                  <button
+                      onclick="window.location.href='/'"
+                      type="button"
+                      class="btn btn-danger"
+                      data-bs-dismiss="modal"
+                  >
+                      Close
+                  </button>
+                  <button type="submit" class="btn btn-primary">Submit</button>
+              </div>
+          </form>
+        </div>
+    </div>
+</div>
+<script src="../bootjs/boostrap.js"></script>
+<script> 
+function getE(id){
+    return document.getElementById(id)
+}
+document.addEventListener('DOMContentLoaded', function () { 
+    var myModal = new bootstrap.Modal(document.getElementById('modalId'), { 
+        backdrop: 'static', keyboard: false }); myModal.show(); 
+alert(getE('stat').value)
+    if(getE('stat').value=="true"){
+    getE('changePart').style.display=""
+     getE('modalTitleId').textContent="Change Password"
+    }else{
+    getE('modalTitleId').textContent="Reset Password"
+    getE('changePart').style.display="none"
+    }
+    
+    }); 
+getE('passForm').addEventListener("submit",function(e){
+e.preventDefault()
+
+const pass1=getE('pass').value
+const pass2=getE('new').value
+console.log(pass1 +"/"+pass2)
+if(pass1===pass2){
+ 
+
+    const formdata=new FormData(this)
+    fetch('/resetTHIS',{
+        method:'POST',
+        body:formdata
+    })
+    .then(response=>response.json())
+    .then(data=>{
+
+        
+if(data.status==false){
+    alert("You inputted a incorrect password")
+}else{
+    window.location.href='/'
+}
+    }).catch(err=>{
+
+    })}else{
+        alert("Password dont match")
+    }
+}) 
+
+
+
+        </script>
+
+</body>
+</html>

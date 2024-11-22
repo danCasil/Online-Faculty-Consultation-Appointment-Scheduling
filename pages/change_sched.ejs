@@ -1,0 +1,256 @@
+<%- include('head.ejs') %>
+ <style>
+  .col-sm{
+    text-align: center;
+  }
+  #timeContainer{
+    height: 80%;
+    border: solid rgba(0, 0, 0, 0.495) .2px;
+    padding: 15px;
+    border-radius: 5px;
+  }
+ </style>
+<div class="col-10" id="content">
+    <div class="form-control" id="maincontent">
+      <center>
+        <h5 id="titleHr1">Consultation Hour</h5>
+      </center>
+      <div class="container-fluid"id="timeContainer">
+        <div class="row" >
+         
+          <div class="col-sm" id="mond">Monday</div>
+          <div class="col-sm" id="tues">Tuesday</div>
+          <div class="col-sm" id="wedn">Wednesday</div>
+          <div class="col-sm" id="thur">Thursday</div>
+          <div class="col-sm" id="frid">Friday</div>
+         
+        </div>
+      </div>
+      
+          <button type="button" class="form-control btn-success" id="addbutt"  data-bs-toggle="modal"
+            data-bs-target="#exampleModal">
+            Add
+          </button>
+          <button type="button" class="form-control " id="removebutt" >
+          Remove
+        </button>
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+          aria-hidden="true">
+          <div class="modal-dialog modal-md ">
+            <form action="/editSchedule" method="post" name="facultyconsult" id="editScheduleF">
+        
+          <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-6" id="exampleModalLabel" class="1038">Add Consultation hours</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  <div class="row">
+                    
+                  </div>
+                  <div class="row">
+
+                    <div class="col-sm-7">
+                      <div class="input-group mb-3">
+                        <span class="input-group-text">Time</span><select name="timein" onchange="checkconflict()" id="time1am"
+                          class="form-select">
+
+                          <option value="8:30">8:30</option>
+                          <option value="9:00">9:00</option>
+                          <option value="9:30">9:30</option>
+                          <option value="10:00">10:00</option>
+                          <option value="10:30">10:30</option>
+                          <option value="11:00">11:00</option>
+                      
+                          <option value="pm">PM</option>
+                        </select>
+                        <span class="input-group-text">-</span>
+                        <select name="timeout" id="time2am"onchange="checkconflict()" class="form-select">
+
+                          <option value="9:30" selected>9:30</option>
+                          <option value="10:00">10:00</option>
+                          <option value="10:30">10:30</option>
+                          <option value="11:00">11:00</option>
+                        </select>
+                      </div>
+
+                    </div>
+
+                    <div class="col-sm-5">
+                      <div class="input-group ">
+                        <span class="input-group-text">Day</span> <select name="day"onchange="checkconflict()" id="daychooser"
+                          class="form-select">
+                          <option value="1">Monday</option>
+                          <option value="2">Tuesday</option>
+                          <option value="3">Wednesday</option>
+                          <option value="4">Thursday</option>
+                          <option value="5">Friday</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <style>
+                    .custom-scrollbar::-webkit-scrollbar {
+                      width: 12px;
+                    }
+
+                    .custom-scrollbar::-webkit-scrollbar-track {
+                      background: #f1f1f1;
+                    }
+
+                    .custom-scrollbar::-webkit-scrollbar-thumb {
+                      background: #888;
+                    }
+
+                    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+                      background: #555;
+                    }
+                  </style>
+                  <div class="container mt-5">
+                    <div class="custom-scrollbar" style="height: 180px; overflow-y: scroll;">
+                      <center>
+                        <div id="scrowablebodya">
+                          <table class="table table-striped" id="data-table"> 
+                            <thead>
+                              <tr>
+                                <th style="text-align: center;">Day</th>
+                                <th style="text-align: center;">Time</th>
+                          
+                              </tr>
+                            </thead>
+                            <tbody id="tbodys">
+                              <!-- Data will be inserted here -->
+                            </tbody>
+                          </table>
+                        </div>
+                      </center>
+                    </div>
+                  </div>
+
+
+
+
+
+              
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-success" id="saveChanges">Save changes</button>
+              </div>
+            </div>  </form>
+          </div>
+        </div>
+
+
+  
+  
+
+
+
+
+
+
+
+
+<div
+  class="modal fade"
+  id="declineForm"
+  tabindex="-1"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  
+  role="dialog"
+  aria-labelledby="modalTitleId"
+  aria-hidden="true"
+>
+  <div
+    class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm"
+    role="document"
+  >
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalTitleId">
+          Decline Form
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+
+
+
+        <textarea class=""  placeholder="reason" name="reason" id="reason"rows="5" cols="30"></textarea>
+
+        <input type="checkbox" class="" name="msgfiller" id="msgfiller">
+        autofill 
+
+
+      </div>
+      <div class="modal-footer">
+        <button id="cancelbtn" type="button"class="btn btn-secondary"data-bs-dismiss="modal">
+          Close
+        </button>
+        <button id="confirmbtn"class="btn btn-primary">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+  
+
+<div class="modal fade" id="Notifmodal" tabindex="-1"data-bs-backdrop="true"data-bs-keyboard="false"role="dialog"aria-labelledby="modalTitleId"aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-md"role="document">
+    <div class="modal-content">
+      <form action="/notify" class="" id="notif_sender" method="post">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalTitleId">
+          Student Notifier
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+         
+          <label for="receiver_id" >Student ID/Name</label>
+          <input type="text"class="form-control input" name="R_id" id="receiver_id"required list="studentList">  
+  
+          <label for="msg" >Message</label>
+        
+          <textarea class="form-control input-text"  placeholder="" name="msg" id="msg" cols="30"required></textarea>
+  
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-bs-dismiss="modal">
+          Close
+        </button>
+        <button type="submit" id="notifsub"  class="btn btn-primary">Submit</button></form>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
+<script src="./bootjs/boostrap.js"></script>
+<script src="./change_script.js"></script>
+<script src="./responsive_script.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,85 @@
+
+
+.otp-input{
+    width: 30px;
+    border: none;
+    text-align: center;
+    border-bottom: 1px solid #000;
+    margin-right: 5px;
+    outline: none;
+  }
+  
+  
+  input[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  
+  
+  
+  #otp-input-holder{
+    display: flex;
+    justify-content: center;
+     align-items: center; 
+  }
+  .inputslabel{
+    position: absolute;
+    top:25%;
+    left: -15px;
+    font-weight: bold;
+    opacity: 60%;
+  }
+  #ofcasLoad{
+     
+      position: absolute;
+      width: 100%;
+      background-color: rgba(255, 255, 255, 0.511);
+      animation: animate 0.5s ; 
+      height: 100%;
+      z-index: 100; 
+       backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    } 
+    #ofcasLoad>img{
+      position: absolute;
+      padding: 50px;
+      top: 50%;
+      left: 50%;
+      width: 500px;
+      height: auto;
+      transform: translate(-50%, -50%) scale(0.5);
+    }
+    @keyframes animate {
+      0% {
+          opacity: 0;
+          transform: scale(0.5);
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+    }
+    #loginErr{
+      text-align: center;
+      color: red;
+      font-size: 12px;
+      margin-top: 20px;
+      font-weight: bold;
+      background-color: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);border-radius: 5px;
+      width: 90%; 
+      animation: animateErr 0.5s ease-in-out; 
+      margin-left: auto;
+      margin-right: auto;
+      padding: 7px;
+      transform:scale(1);
+    }
+    @keyframes animateErr {
+      0% {
+          transform: scale(0.5);
+        }
+        100% {
+          transform: scale(1);
+        }
+    }
