@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcryptjs");
 /*const pool = require('./postdb');
 function queryDatabase(query, params = []) { 
   return new Promise((resolve, reject) => {
