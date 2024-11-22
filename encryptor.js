@@ -1,5 +1,5 @@
-/*const bcrypt = require('bcrypt');
-const pool = require('./postdb');
+const bcrypt = require('bcrypt');
+/*const pool = require('./postdb');
 function queryDatabase(query, params = []) { 
   return new Promise((resolve, reject) => {
       pool.query(query, params, (err, res) => { 
@@ -12,12 +12,12 @@ function queryDatabase(query, params = []) {
 */
 
 async function encryptThis(password) {
- // const saltRounds = 10;
- // const hashedPassword = await bcrypt.hash(password, saltRounds);
+  const saltRounds = 10;
+  const hashedPassword = await bcrypt.hash(password, saltRounds);
   return hashedPassword;
 }
 async function verifyThis(plainPassword, hashedPassword) { 
-//const match = await bcrypt.compare(plainPassword, hashedPassword);
+const match = await bcrypt.compare(plainPassword, hashedPassword);
 return match;
     }
 
