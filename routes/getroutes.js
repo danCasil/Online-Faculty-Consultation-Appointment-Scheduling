@@ -161,7 +161,7 @@ const type=req.query.type
    }else{   
     tok=false
    }
-   console.log(type=="change")
+  
    res.render('reset',{secretToken:secret,changepass:tok})
    
  

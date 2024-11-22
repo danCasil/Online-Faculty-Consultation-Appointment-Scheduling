@@ -65,7 +65,7 @@ function getE(id){
 document.addEventListener('DOMContentLoaded', function () { 
     var myModal = new bootstrap.Modal(document.getElementById('modalId'), { 
         backdrop: 'static', keyboard: false }); myModal.show(); 
-alert(getE('stat').value)
+
     if(getE('stat').value=="true"){
     getE('changePart').style.display=""
      getE('modalTitleId').textContent="Change Password"

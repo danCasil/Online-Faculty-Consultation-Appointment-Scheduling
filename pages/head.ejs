@@ -166,15 +166,18 @@ getElm('profReset').addEventListener("mouseleave",function(){
           this.innerHTML= ' <img src="../img/resetPass_normal.png"id="icon5"class="navbaricon" alt="">Change Password'
 })
       }
+      
          if(data.role=='student'){
- 
+       
         if(window.location.pathname=='/change'){
         chg.innerHTML='<img src="../img/change_active.png"id="icon3" style="top:7px" class="" style="" alt="">Add Freetime'
 
         getElm('titleHr1').textContent='Free Time'
         getElm('exampleModalLabel').textContent='Add Free Time'
 
-      }else{chg.innerHTML='<img src="../img/change_normal.png"id="icon3" style="top:7px" class="" style="" alt="">Add Freetime'
+      }else{
+       
+        chg.innerHTML='<img src="../img/change_normal.png"id="icon3" style="top:7px" class="" style="" alt="">Add Freetime'
         }
 
 

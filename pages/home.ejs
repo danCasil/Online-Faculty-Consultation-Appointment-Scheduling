@@ -183,7 +183,7 @@
             
             </div>
             <thead style="position: sticky;top: 0;background-color: white;">
-              <th scope="col">Name</th>
+              <th scope="col" id="HeadName">Name</th>
               <th scope="col">Time</th>
               <th scope="col">Date</th>
               <th sscope="col">Status</th>
@@ -517,7 +517,26 @@ aria-labelledby="modalTitleId" aria-hidden="true">
 </div>
 </div>
 
+<script>
+  document.addEventListener("DOMContentLoaded",function(){
+    fetch('/load/pg_role').then(response=>response.json()).then(data=>{
+      const the_head=document.getElementById('HeadName')
+     
+if(data.role=='student'){
+  alert()
+          the_head.innerHTML=`Name of Faculty`
+        
+}else{   
+  the_head.innerHTML=`Name of Student
+  `}
+}).catch(err=>{
 
+})
+  })
+
+
+  
+</script>
 
   <script src="../bootjs/boostrap.js"></script>
   <script src="../home_script.js"></script>
