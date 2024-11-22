@@ -99,7 +99,7 @@ route.get("/home",authenticate, (req, res)=>{
     res.render("home",{id,date,role})
 })
 
-route.get( "/change",test,(req, res)=>{
+route.get( "/change",authenticate,(req, res)=>{
  
     const id=req.session.user_id
     res.render("change_sched")
