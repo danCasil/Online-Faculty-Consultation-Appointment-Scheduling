@@ -18,6 +18,7 @@ async function encryptThis(password) {
 }
 async function verifyThis(plainPassword, hashedPassword) { 
 const match = await bcrypt.compare(plainPassword, hashedPassword);
+console.log( match);
 return match;
     }
 
