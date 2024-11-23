@@ -161,8 +161,9 @@ col_6B.classList.add('col-sm-6')
 const A=create_Button("Accept")
 const B=create_Button("Declined")
 if(data.remark=='new'){
+  if(loginDate<currentDate){
 if(data.nagsched==curr_id){
-col4.textContent='Pending'
+col4.textContent='WAITING FOR CONFIRMATION'
 }else{
   
   col_6A.appendChild(A)
@@ -176,6 +177,14 @@ col4.textContent='Pending'
   newRow.appendChild(col_6A)
   newRow.appendChild(col_6B)
   col4.appendChild(newRow)
+}
+}else{
+ 
+  over=overLay(`overlay${data.sched_id}`,'Missed')
+
+  fetch(`/update/missed?id=${data.sched_id}`,{method:"PATCH"})
+
+  col4.textContent="MISSED"
 }
 
 }else if(data.remark=='declined'){
@@ -290,6 +299,7 @@ fetch(`/update/schedule/accept?id=${encodeURI(id)}`,{method:'PATCH'}).then(respo
 //old
 function insertcomplete(senddata) {
   console.table(senddata)
+
   const dataString=JSON.stringify(senddata)
   fetch(`/update/record?data=${encodeURI(dataString)}&&type=${'consulted'}`, {
     method: 'PATCH',
@@ -329,7 +339,13 @@ async function cancelSched(params) {
   const confirmation = await yesORno()
   if (confirmation) {
     window.location.reload()
-    fetch(`/update/cancel?data=${encodeURIComponent(data)}`, { method: "PATCH" })
+    fetch(`/update/cancel?data=${encodeURIComponent(data)}`, { method: "PATCH" }).then((response) => response.json()).then(data=>{
+if(data.status == true){
+  window.location.reload()
+}
+    }).catch(err=>{
+console.log('Cancel Fail')
+    })
   }
 }
 
@@ -357,7 +373,7 @@ document.getElementById('noBtn').textContent=`No, I'll reschedule `
       fetch(`/load/declineSched?data=${encodeURIComponent(data)}`)
       .then(response => response.json())
         .then(data => {
-          alert(data.success)
+     
           if (data.success == true) {
 
             

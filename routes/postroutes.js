@@ -398,14 +398,16 @@ type=`accepted`
 type=`cancelled`
     }else if(status=='new Sched'){
 type="Schedule"
-const name=await queryDatabase("SELECT first,last,mid,email FROM info WHERE id_number=$1",[scheduler])
+
+const result=await queryDatabase("SELECT first,last,mid,email FROM info WHERE id_number=$1",[scheduled])
+const name=result[0]
 const mailOptions = {
     to: name.email,
     from: 'OFCAS <ofcas.system@gmail.com>',
     subject: `New Schedule`,
     text:` Set by ${name.first} ${name.last} \n on ${formatThis(timedate)} \n Purpose:${txtmsg}`
 };
-
+console.log(mailOptions)
 await transporter.sendMail(mailOptions, (err) => {
     if (err) {
         console.error(err);

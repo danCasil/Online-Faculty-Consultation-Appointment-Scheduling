@@ -213,7 +213,9 @@ fetch(`/load/availabletime?data=${encodeURIComponent(data)}`).then(response=>res
   TimeContainer.innerHTML=""
    target_name=`${data.result2[0].last},${data.result2[0].first} ${data.result2[0].mid}`
    console.table(data.result3)
+   console.log(data.result1)
   data.result1.forEach(element=>{
+    console.log(element)
   if(data.result3.length>0) {
   
     data.result3.forEach(checker =>{
@@ -278,11 +280,14 @@ btn.classList.add("btnTime")
 })
 }
 function conflict(id,data){
+ 
   const btn = document.getElementById(`time${id}`);
 
 if(data.length==1){
   const midInit = data[0].mid.charAt(0);
       btn.textContent = `Conflict with your schedule with ${data[0].last}, ${data[0].first} ${midInit}.`;
+    }else{
+      btn.textContent = `Conflict with your schedule.`; 
     }
  
             

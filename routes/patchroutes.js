@@ -3,6 +3,7 @@ const route = express.Router()
 const db = require('../postdb');
 const transporter = require("../emailConfig.js");
 const { commitAndPush } = require('../gitPusher.js');
+
 function queryDatabase(query, params = []) { 
     return new Promise((resolve, reject) => {
          db.query(query, params, (err, res) => { 
@@ -50,10 +51,10 @@ route.patch("/update/record",async(req,res)=>{
    const bd=req.query.data
    const data=JSON.parse(bd)
     const date=new Date()
-console.log(type)
-console.table(data)
+
+
 let learn,teach
-console.log(req.session.role)
+
 if(data.scheduler_role=='student'){
     learn=data.nagsched
     teach=data.nasched
@@ -61,9 +62,20 @@ if(data.scheduler_role=='student'){
     teach=data.nagsched
     learn=data.nasched
 }
+
  if(type=='consulted'){
-    try { // Delete the entry 
-        await queryDatabase("INSERT INTO record(id_number, exc_date, type, learner_id,sched_id) VALUES ($1,$2,$3,$4,$5)",[teach,date,'consulted',learn,data.sched_id]);
+    try {  
+      
+  const info={
+    teach:teach,
+    learn:learn,
+    type:type,
+    date:data.date,
+    time_in:data.time_in,
+    time_out:data.time_out
+  }
+ 
+  await updateRecord(info)
         await queryDatabase("UPDATE sched SET remark='finished' WHERE sched_id=$1",[data.sched_id]);
         mailSendNotif(data,'finish',req)
         commitAndPush()
@@ -136,7 +148,7 @@ route.patch("/update/schedule/accept",async(req,res)=>{
     const id=req.query.id
    try {
     await queryDatabase("UPDATE sched SET remark='accepted' WHERE sched_id=$1",[id])
-    commitAndPush()
+
     const schedResult=await queryDatabase("SELECT * FROM sched WHERE sched_id=$1",[id])
             const data={
             nagsched:schedResult[0].nasched,
@@ -155,40 +167,61 @@ route.patch("/update/schedule/accept",async(req,res)=>{
         res.status(500).json({ error: 'Failed to fetch records' }); 
         }  
 })
+route.patch(`/update/missed`,async (req,res)=>{
+    const id= req.query.id
+    await queryDatabase("UPDATE sched set remark='missed' WHERE sched_id=$1",[id])
+    const result=await queryDatabase("SELECT scheduler_role,nasched,date,nagsched,time_in,time_out FROM sched WHERE sched_id=$1",[id])
+    let teach,learn
+    const data=result[0]
+    if(data.scheduler_role=='student'){
+    learn=data.nagsched
+    teach=data.nasched
+    }else{
+    teach=data.nagsched
+    learn=data.nasched
+    }
+
+  const info={
+    teach:teach,
+    learn:learn,
+    type:'missed',
+    date:data.date,
+    time_in:data.time_in,
+    time_out:data.time_out
+  }
+  await updateRecord(info)
+})
 route.patch(`/update/cancel`,async(req,res)=>{
     const type=req.query.type
     const bd=req.query.data
     const data=JSON.parse(bd)
      const date=new Date()
- console.log(type)
- console.table(data)
+
  let learn,teach
- console.log(req.session.role)
- if(data.scheduler_role=='student'){
-     learn=data.scheduler
-     teach=data.scheduled
- }else{
-     teach=data.scheduler
-     learn=data.scheduled
- }
   if(req.session.role=='faculty'){
  
   try{
-    await queryDatabase("INSERT INTO record(id_number, exc_date, type, learner_id,sched_id) VALUES ($1,$2,$3,$4,$5)",[teach,date,'cancelled',learn,data.id])
-    commitAndPush()
-  }catch (err) {  
-        console.error('Failed to fetch records:', err);
-         res.status(500).json({ error: 'Failed to fetch records' }); 
+   
+    if(data.scheduler_role=='student'){
+    learn=data.scheduler
+    teach=data.scheduled
+    }else{
+    teach=data.scheduler
+    learn=data.scheduled
     }
+    
+  const info={
+    teach:teach,
+    learn:learn,
+    type:'cancelled',
+    date:data.schedDate,
+    time_in:data.timeIn,
+    time_out:data.timeOut
   }
-  try{
+  console.table(info)
+  await updateRecord(info)
    await queryDatabase("UPDATE sched SET remark='cancelled' WHERE sched_id=$1",[data.id])
-   commitAndPush()
-  }
-  catch (err) {  
-    console.error('Failed to fetch records:', err);
-     res.status(500).json({ error: 'Failed to fetch records' }); 
-}
+
   const datas={
     nagsched:data.scheduled,
     nasched:data.scheduler,
@@ -199,8 +232,13 @@ route.patch(`/update/cancel`,async(req,res)=>{
 }
 
   mailSendNotif(datas,'cancelled',req)
-    res.json({success:true})
+    res.json({status:true})
+}catch (err) {  
+        console.error('Failed to fetch records:', err);
+         res.status(500).json({ error: 'Failed to fetch records' }); 
+    }}
 })
+
 function formatTime(time) { 
     const [hours, minutes, seconds] = time.split(':'); const period = hours >= 12 ? 'PM' : 'AM';
      const formattedHours = hours % 12 || 12; 
@@ -221,7 +259,11 @@ try{
 }
 }   
 
-
+async function updateRecord(data){
+  
+    const date=new Date()
+    await queryDatabase("INSERT INTO record(id_number, exc_date, type, learner_id,consulted_date,consulted_time_in,consulted_time_out) VALUES ($1,$2,$3,$4,$5,$6,$7)",[data.teach,date,data.type,data.learn,data.date,data.time_in,data.time_out])
+}
 
 async function mailSendNotif(data,txt,req){
     let mailtxt,subj

@@ -47,13 +47,13 @@ route.get("/",checkLogSession, (req, res)=>{
 
 //start development
 const test=(req,res,next)=>{
-    req.session.user_id='1234'
+    req.session.user_id='54321'
    req.session.role='faculty'
      req.session.college='0'
    next()
   }
   const test2=(req,res,next)=>{
-    req.session.user_id='21-01812'
+    req.session.user_id='21-01298'
     req.session.role='Bachelor of Science in Information Technology'
      req.session.college='0'
    next()
