@@ -378,18 +378,28 @@ makeSched.hide()
   sched_shower()
 })
 
-function sched_shower(){
+async function sched_shower(){
   let target
-showThis(3)
+
  if(element("forNameSearch").value!=""){
 target=element("forNameSearch").value
  }else{
     target=document.getElementById("target_id").value; }
+await fetch(`/check/id_number/${target}`).then(response=>response.json()).then(data=>{
+ 
 
-
-  monthtitle.textContent=months[currentMonth]+" "+currentYear
-  generateCalendar(currentYear,currentMonth,target);
-
+  if(data.idL==1&&data.timeL>0){
+    monthtitle.textContent=months[currentMonth]+" "+currentYear
+    generateCalendar(currentYear,currentMonth,target);
+    showThis(3)
+  }else if(data.idL==0){
+    alert("INVALID ID")
+  }else{
+    alert("NO AVAILABLE TIME")
+  }
+}).catch(err=>{
+  console.log("Retrieve Data ERROR")
+})
 }
 
 

@@ -91,7 +91,7 @@ route.get( "/creator/logout",(req, res)=>{
 //end of development
 
 
-route.get("/home",authenticate, (req, res)=>{
+route.get("/home",test, (req, res)=>{
    
   const id=req.session.user_id
     const date=req.session.userlogindate
@@ -176,7 +176,7 @@ route.get( "/notification",authenticate,(req, res)=>{
 route.get("/secret",(req, res)=>{
     res.render("DeanLogin")
 })
-route.get("/home/dean",authenticateDean,(req, res)=>{
+route.get("/home/dean",(req, res)=>{
     res.render("DeanHome")
 })
 route.get('/dean_logout',(req,res)=>{
@@ -200,6 +200,24 @@ route.get('/logout',(req, res)=>{
     req.session.destroy()
     res.redirect('/')
 })
+route.get('/check/id_number/:id',async (req, res)=>{
+    const id=req.params.id
+    const available_id=await queryDatabase("SELECT id_number FROM info WHERE id_number=$1;",[id])
+    var timeLength=0
+    const id_num=available_id.length
+    if(id_num==1){
+    let table
+    if(req.session.role=='student'){
+    table="facultytime"
+    }else{
+    table="studenttime"
+    }
 
+   const  available_time=await queryDatabase("SELECT * FROM "+table+" WHERE id=$1;",[id])
+   timeLength=available_time.length
+}
+
+    res.json({idL:id_num,timeL:timeLength})
+})
 
 module.exports = route

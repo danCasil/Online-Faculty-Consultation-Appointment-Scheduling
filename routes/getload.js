@@ -205,7 +205,7 @@ const id=req.query.id
 try{
     const record_type=await queryDatabase("SELECT type FROM record WHERE id_number=$1", [id]) 
   const user_data=await queryDatabase("SELECT last,first,mid,id_number FROM info WHERE id_number=$1",[id])
-    const studentdata=await queryDatabase("SELECT info.last,info.first,info.mid,record.record_id,sched.date FROM record JOIN  info ON record.learner_id=info.id_number JOIN sched ON sched.sched_id=record.sched_id WHERE record.id_number=$1 AND type='consulted'",[id])
+    const studentdata=await queryDatabase("SELECT info.last,info.first,info.mid,record.* FROM record JOIN  info ON record.learner_id=info.id_number  WHERE record.id_number=$1 AND type='consulted'",[id])
     const counts = record_type.reduce((acc, record) => {
     acc[record.type] = (acc[record.type] || 0) + 1;
     return acc;
@@ -315,14 +315,17 @@ route.get("/load/graphdata", async (req, res) => {
 
     try {
         const name_and_id = await queryDatabase("SELECT last, id_number,first FROM info WHERE college=$1 and course='faculty'", [college])
+    console.log("dasdasdasdasdasd")
         for (const element of name_and_id) {
             const counts = await queryDatabase("SELECT COUNT(type) AS Count FROM record WHERE id_number = $1 AND type='consulted';", [element.id_number]) 
-            for(let i=0;i<15;i++){
+            console.log(counts)
             xValues.push(element.last + ", " + element.first);
-            yValues.push(counts[0].Count);}
+            const countTOINT=parseInt(counts[0].count)
+            yValues.push(countTOINT);
         }
 
         console.table(xValues);
+        console.table(yValues);
         res.json({ xValues: xValues, yValues: yValues });
     }catch (err) { 
         console.error('Failed to fetch records:', err);

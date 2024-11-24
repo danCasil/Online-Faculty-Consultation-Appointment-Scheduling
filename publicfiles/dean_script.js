@@ -108,7 +108,7 @@ data.studentdata.forEach(element=>{
   name.classList.add("col-6")
   const date=document.createElement("div")
   date.classList.add("col-6")
-  const D=new Date(element.date)
+  const D=new Date(element.consulted_date)
   const dd=D.getDate()
   const mm=D.getMonth()+1
   const yyyy=D.getFullYear()
