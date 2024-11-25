@@ -184,7 +184,7 @@ document.getElementById("student_notifier").addEventListener("click", ()=>{
    
   
 
-    if(respond.results=='success'){
+    if(respond.status==true){
         
         if (notifModal) {
             this.reset();
