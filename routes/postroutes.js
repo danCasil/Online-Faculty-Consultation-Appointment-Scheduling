@@ -311,8 +311,10 @@ route.post("/editSchedule",async(req,res)=>{
     timein=timein+':00'
     timeout=timeout+':00'
     let id=req.session.user_id
+
 if(req.session.role=='faculty'){
     try {  
+        console.log(id,timein,timeout,day)
         const result=await queryDatabase("INSERT INTO facultytime(id, timein, timeout, day) VALUES ($1,$2,$3,$4)",[id,timein,timeout,day]);
         commitAndPush()
          res.json({result}); 

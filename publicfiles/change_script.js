@@ -1,14 +1,18 @@
 
-
+var num1
  document.addEventListener('DOMContentLoaded', function (e) {
+  document.getElementById("time2am").disabled=true
   document.getElementById("removebutt").disabled=true
     document.getElementById("ofcasLoad").style.display = ""
     getsched()
   })
+  
 document.getElementById("editScheduleF").addEventListener("submit", function (e) {
 e.preventDefault()
+document.getElementById("time2am").disabled=false
 const editForm=new FormData(this)
-const num1 = editForm.get("timein").replace(/:/g, ''); 
+ num1 = editForm.get("timein").replace(/:/g, ''); 
+ 
 const num2 = editForm.get("timeout").replace(/:/g, '')
 const total=num2-num1
 
@@ -143,7 +147,7 @@ const newStrs=formatTime(data.timeout)
     checkconflict()
   }
 
-  const am_options = ['8:30', '9:00', '9:30', '10:00', '10:30', '11:00','11:30','12:00','pm']
+  const am_options = ['7:30','8:00','8:30', '9:00', '9:30', '10:00', '10:30', '11:00','11:30','12:00','pm']
   
   const pm_options = ['1:00', '2:00','3:00','4:00','5:00']
   const btn1 = document.getElementById('time1am')
@@ -161,12 +165,15 @@ const newStrs=formatTime(data.timeout)
     timein="1:00:00"
     timeout="2:00:00"
   }else if(document.getElementById("time1am").value=='am'){
-     timein="8:30:00"
-    timeout="9:30:00"
+    if(day==1){
+    timein="8:00:00"
+    timeout="9:00:00"
+    }
+    
   }
   else if(convertToTime(document.getElementById("time1am").value)>convertToTime('5:00')){
     timein=`${document.getElementById("time1am").value}:00`
-    timeout=`${am_options[document.getElementById("time1am").selectedIndex+2]}:00`
+    timeout=`${am_options[document.getElementById("time1am").selectedIndex+3]}:00`
   
   }else{
 timein=`${document.getElementById("time1am").value}:00`
@@ -289,7 +296,7 @@ function resetoption(num) {
   }
   function createoptionAM(num1) {
 
-    const newOption = new Option(am_options[num1+1], am_options[num1+1]);
+    const newOption = new Option(am_options[num1+2], am_options[num1+2]);
     btn2.add(newOption);
       
   }
@@ -317,7 +324,7 @@ function resetoption(num) {
        .then(response => response.json())
        .then(data => {
          document.getElementById("ofcasLoad").style.display = "none"
-         if (data.msg != null) {
+         if (data.result.length>0) {
           console.table(data.result)
            tablecreator(data.result)
 

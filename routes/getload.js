@@ -175,9 +175,11 @@ table='studenttime'
 route.get("/load/change_sched",async(req,res)=>{
 
  const userid=req.session.user_id
+ 
  if(req.session.role=='faculty'){
   try{
-    const result=await queryDatabase("SELECT * FROM studenttime WHERE id = '21-01298' ORDER BY timein asc;",[userid])
+    const result=await queryDatabase("SELECT * FROM facultytime WHERE id = $1 ORDER BY timein asc;",[userid])
+    
         res.json({msg:"es",result})
      }
      catch (err) { 

@@ -55,7 +55,8 @@
                       <div class="input-group mb-3">
                         <span class="input-group-text">Time</span><select name="timein" onchange="checkconflict()" id="time1am"
                           class="form-select">
-
+                          
+                          <option value="8:00">8:00</option>
                           <option value="8:30">8:30</option>
                           <option value="9:00">9:00</option>
                           <option value="9:30">9:30</option>
@@ -66,12 +67,10 @@
                           <option value="pm">PM</option>
                         </select>
                         <span class="input-group-text">-</span>
-                        <select name="timeout" id="time2am"onchange="checkconflict()" class="form-select">
+                        <select name="timeout" id="time2am"onchange="checkconflict()" class="form-select" >
 
-                          <option value="9:30" selected>9:30</option>
-                          <option value="10:00">10:00</option>
-                          <option value="10:30">10:30</option>
-                          <option value="11:00">11:00</option>
+                          <option value="9:00" selected>9:00</option>
+                         
                         </select>
                       </div>
 

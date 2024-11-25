@@ -91,7 +91,7 @@ route.get( "/creator/logout",(req, res)=>{
 //end of development
 
 
-route.get("/home",test, (req, res)=>{
+route.get("/home",authenticate, (req, res)=>{
    
   const id=req.session.user_id
     const date=req.session.userlogindate
