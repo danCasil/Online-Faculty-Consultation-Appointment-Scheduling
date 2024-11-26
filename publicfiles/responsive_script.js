@@ -187,6 +187,7 @@ document.getElementById("student_notifier").addEventListener("click", ()=>{
     if(respond.status==true){
         
         if (notifModal) {
+            alert("Successfully Notified")
             this.reset();
             notifModal.hide();
    

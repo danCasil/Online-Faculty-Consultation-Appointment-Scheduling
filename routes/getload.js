@@ -117,11 +117,12 @@ route.get("/load/declineSched",async(req, res)=>{
     const {id,scheduler,scheduled,timeIn,timeOut,schedDate}=data
    
 
-   
+   console.table(data)
         if(req.session.role=='faculty'){
      
          try { 
-             await queryDatabase("INSERT INTO record(id_number,  exc_date, type, learner_id,sched_id) VALUES ($1,$2,$3,$4,$5)",[scheduled,new Date(),'declined',scheduler,id])
+            const pur=await queryDatabase("SELECT purpose FROM sched WHERE sched_id=$1",[id])
+             await queryDatabase("INSERT INTO record(id_number,  exc_date, type, learner_id,consulted_date,consulted_time_in,consulted_time_out,consultation_purpose) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)",[scheduled,new Date(),'declined',scheduler,schedDate,timeIn,timeOut,pur[0].purpose])
              await queryDatabase("UPDATE sched SET remark='declined' WHERE sched_id=$1",[id])
              commitAndPush()
              notif(data,'declined',req)
@@ -153,18 +154,14 @@ table='facultytime'
 table='studenttime'
     }
     console.log(tin+""+tout)
-    console.log(`SELECT * FROM ${table} WHERE id = ${user_id} AND day = ${day} AND ((timein <= ${tout} AND timeout >= ${tin}) OR (timein < ${tin} AND timeout > ${tout}) OR (timein >= ${tin} AND timeout <= ${tout}) ) ; `)
+    console.log(`SELECT FROM ${table} WHERE id = ${user_id} AND day = ${day} AND ((timein <= ${tout} AND timeout >= ${tin}) OR (timein <= ${tin} AND timeout >= ${tout}) OR (timein >= ${tin} AND timeout <= ${tout}) ) ; `)
       try { 
-       const result=await queryDatabase(` SELECT * FROM ${table} WHERE id = $1 AND day = $2 AND 
-        (  (timein < $3 AND timeout > $4)
-        OR (timein < $5 AND timeout > $6) 
-        OR (timein >= $7 AND timeout <= $8)) ; `, [user_id, day, tout, tin, tin, tout, tin, tout])
+       const result=await queryDatabase(` SELECT  timein,timeout FROM ${table} WHERE id = $1 AND day = $2 
+         ; `, [user_id, day])
        console.table(result)
-        if (result.length > 0) { // Conflict found 
-        res.json({ conflict:true,datas:result});
-     } else { // No conflict 
-        res.json({ conflict:false })
-    }
+         // Conflict found 
+        res.json({ datas:result});
+    
     }catch (err) { 
             console.error('Failed to fetch records:', err);
             res.status(500).json({ error: 'Failed to fetch records' }); 

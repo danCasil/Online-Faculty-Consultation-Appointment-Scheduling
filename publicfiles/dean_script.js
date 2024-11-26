@@ -26,7 +26,7 @@ function getfaculty(){
       col_sm.onclick=()=>show(element.id_number)
       form_control.classList.add("form-control","mybtn")
    
-      form_control.innerHTML=` ${element.id_number} <br> ${element.last}, ${element.first} ${element.last}`
+      form_control.innerHTML=` ${element.id_number} <br> ${element.last}, ${element.first}`
       col_sm.appendChild(form_control)
       row.appendChild(col_sm)
 
@@ -44,6 +44,7 @@ function show(id){
       facultydetail.style.display=""
  
 fetch(`/load/record?id=${id}`).then(response=>response.json()).then(data=>{
+  console.table(data)
 const countdata=data.counts
 const userD=data.user_data[0]
 document.getElementById("collegeName").style.display="none"
@@ -83,10 +84,13 @@ ${countdata.missed}
 <div class="container-fluid">
 <div  id="studentList">
 <div class="row" style="position: sticky;top: 0;backdrop-filter: blur(5px);">
-  <div class="col-6">
+  <div class="col-4">
     Name
   </div>
-  <div class="col-6">
+  <div class="col-4">
+   Purpose
+  </div>
+   <div class="col-4">
     Consulted Date
   </div>
 </div>
@@ -105,17 +109,20 @@ data.studentdata.forEach(element=>{
   row.style.marginTop="5px"
   formC.classList.add("form-control")
   const name=document.createElement("div")
-  name.classList.add("col-6")
+  name.classList.add("col-4")
+  const purpose=document.createElement("div")
+  purpose.classList.add("col-4")
   const date=document.createElement("div")
-  date.classList.add("col-6")
+  date.classList.add("col-4")
   const D=new Date(element.consulted_date)
   const dd=D.getDate()
   const mm=D.getMonth()+1
   const yyyy=D.getFullYear()
-  
-  date.textContent=`${dd}-${mm}-${yyyy}`
+  purpose.textContent=element.consultation_purpose
+  date.textContent=` ${convertTime((element.consulted_time_in))} - ${convertTime((element.consulted_time_out))} ${dd}-${mm}-${yyyy} `
   name.textContent=`${element.last}, ${element.first} ${element.mid}`
   row2.appendChild(name)
+  row2.appendChild(purpose)
   row2.appendChild(date)
   formC.appendChild(row2)
   row.appendChild(formC)
@@ -198,3 +205,11 @@ function createGraph(xValues, yValues){
     }
   });
 }
+
+
+function convertTime(time) { // Split the time string into hours, minutes, and seconds 
+  let [hours, minutes, seconds] = time.split(':'); // Convert hours to a number
+   hours = parseInt(hours); // Determine AM or PM suffix
+    const suffix = hours >= 12 ? 'PM' : 'AM'; // Adjust hours for 12-hour format
+     hours = hours % 12 || 12; // Return the formatted time 
+     return `${hours}:${minutes} ${suffix}`; }

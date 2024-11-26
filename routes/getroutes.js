@@ -176,7 +176,12 @@ route.get( "/notification",authenticate,(req, res)=>{
 route.get("/secret",(req, res)=>{
     res.render("DeanLogin")
 })
-route.get("/home/dean",(req, res)=>{
+const deanTest=(req, res,next)=>{
+    req.session.college='CCSICT'
+    req.session.user_id='54321'
+    next()
+}
+route.get("/home/dean",authenticateDean,(req, res)=>{
     res.render("DeanHome")
 })
 route.get('/dean_logout',(req,res)=>{

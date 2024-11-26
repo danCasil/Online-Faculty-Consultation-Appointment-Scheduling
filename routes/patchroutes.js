@@ -65,9 +65,10 @@ if(data.scheduler_role=='student'){
 
  if(type=='consulted'){
     try {  
-      
+console.table(data)      
   const info={
     teach:teach,
+    id:data.id,
     learn:learn,
     type:type,
     date:data.date,
@@ -182,6 +183,7 @@ route.patch(`/update/missed`,async (req,res)=>{
     }
 
   const info={
+    id:data.id,
     teach:teach,
     learn:learn,
     type:'missed',
@@ -198,7 +200,8 @@ route.patch(`/update/cancel`,async(req,res)=>{
      const date=new Date()
 
  let learn,teach
-  if(req.session.role=='faculty'){
+
+ if(req.session.role=='faculty'){
  
   try{
    
@@ -211,6 +214,7 @@ route.patch(`/update/cancel`,async(req,res)=>{
     }
     
   const info={
+    id:data.id,
     teach:teach,
     learn:learn,
     type:'cancelled',
@@ -260,9 +264,10 @@ try{
 }   
 
 async function updateRecord(data){
-  
+const R=await queryDatabase("SELECT purpose FROM sched WHERE sched_id=$1",[data.id])
+console.table(R)
     const date=new Date()
-    await queryDatabase("INSERT INTO record(id_number, exc_date, type, learner_id,consulted_date,consulted_time_in,consulted_time_out) VALUES ($1,$2,$3,$4,$5,$6,$7)",[data.teach,date,data.type,data.learn,data.date,data.time_in,data.time_out])
+    await queryDatabase("INSERT INTO record(id_number, exc_date, type, learner_id,consulted_date,consulted_time_in,consulted_time_out,consultation_purpose) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)",[data.teach,date,data.type,data.learn,data.date,data.time_in,data.time_out,R[0].purpose])
 }
 
 async function mailSendNotif(data,txt,req){

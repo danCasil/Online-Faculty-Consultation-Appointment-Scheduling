@@ -1,7 +1,7 @@
 
 var num1
  document.addEventListener('DOMContentLoaded', function (e) {
-  document.getElementById("time2am").disabled=true
+
   document.getElementById("removebutt").disabled=true
     document.getElementById("ofcasLoad").style.display = ""
     getsched()
@@ -147,7 +147,7 @@ const newStrs=formatTime(data.timeout)
     checkconflict()
   }
 
-  const am_options = ['7:30','8:00','8:30', '9:00', '9:30', '10:00', '10:30', '11:00','11:30','12:00','pm']
+  const am_options = ['8:00','8:30', '9:00', '9:30', '10:00', '10:30', '11:00','11:30','12:00','pm']
   
   const pm_options = ['1:00', '2:00','3:00','4:00','5:00']
   const btn1 = document.getElementById('time1am')
@@ -155,7 +155,7 @@ const newStrs=formatTime(data.timeout)
   const btn3 = document.getElementById('daychooser')
   let day = btn3.value
 
-  createoptionAM(6)
+
   function checkconflict(){
     const day=document.getElementById("daychooser").value
     let timein
@@ -173,11 +173,11 @@ const newStrs=formatTime(data.timeout)
   }
   else if(convertToTime(document.getElementById("time1am").value)>convertToTime('5:00')){
     timein=`${document.getElementById("time1am").value}:00`
-    timeout=`${am_options[document.getElementById("time1am").selectedIndex+3]}:00`
+   timeout=`${am_options[btn1.selectedIndex+2]}:00`
   
   }else{
-timein=`${document.getElementById("time1am").value}:00`
-timeout=`${pm_options[document.getElementById("time1am").selectedIndex+1]}:00`
+timein=`${btn2.value}:00`
+timeout=`${pm_options[btn1.selectedIndex+1]}:00`
   }
 
     fetch(`/load/checkConflict?tin=${timein}&tout=${timeout}&Day=${day}`)
@@ -185,32 +185,11 @@ timeout=`${pm_options[document.getElementById("time1am").selectedIndex+1]}:00`
     .then(data => {
       
       console.log(data.datas)
-      if(data.conflict){
+      if(data){
       let isConflict=false
-     if(data.datas&&data.datas.length>0) {
-      data.datas.forEach(frag => {
-        const tin1=convertToTime(timein)
-        const tin2=convertToTime(frag.timein)
-        const tout1=convertToTime(timeout)
-        const tout2=convertToTime(frag.timeout)
-        if ((tin2 < tout1 && tout2 > tin1) || (tin2 < tin1 && tout2 > tout1) || (tin2 >= tin1 && tout2 <= tout1)) {
-         isConflict=true
-
-        } 
-      })
-    }
-   
-   
-if(isConflict){  document.getElementById("saveChanges").textContent="Conflicted Time"
-   document.getElementById("saveChanges").disabled=true}
-   else{
-    document.getElementById("saveChanges").textContent="Save changes"
-    document.getElementById("saveChanges").disabled=false
-   }
-}else{
-  document.getElementById("saveChanges").textContent="Save changes"
-  document.getElementById("saveChanges").disabled=false
-}
+      if (data.datas && data.datas.length > 0) { const tin1 = convertToTime(timein); const tout1 = convertToTime(timeout); data.datas.forEach(frag => { const tin2 = convertToTime(frag.timein); const tout2 = convertToTime(frag.timeout); // Check if there is any overlap
+         if ((tin2 < tout1 && tout2 > tin1) || (tin2 < tin1 && tout2 > tout1) || (tin2 >= tin1 && tout2 <= tout1)) { isConflict = true; } }); } // Update UI based on conflict status
+         const saveChangesButton = document.getElementById("saveChanges"); if (isConflict) { saveChangesButton.textContent = "Conflicted Time"; saveChangesButton.disabled = true; } else { saveChangesButton.textContent = "Save changes"; saveChangesButton.disabled = false; }}
     })
     .catch(err => {
       console.error('Error fetching account data:', err);
@@ -260,7 +239,7 @@ function  changepm(){
   }else if(timechange=='AM'){
    resetoption()
 
-    createoptionAM(selected + 1)
+    createoptionAM(selected +2)
   }else{
     
     resetoption()
@@ -296,9 +275,10 @@ function resetoption(num) {
   }
   function createoptionAM(num1) {
 
-    const newOption = new Option(am_options[num1+2], am_options[num1+2]);
+    const newOption = new Option(am_options[num1], am_options[num1]);
+
     btn2.add(newOption);
-      
+
   }
 
   function createoptionPM(num1) {

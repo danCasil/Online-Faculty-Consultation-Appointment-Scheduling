@@ -161,6 +161,7 @@ col_6B.classList.add('col-sm-6')
 const A=create_Button("Accept")
 const B=create_Button("Declined")
 if(data.remark=='new'){
+
   if(loginDate<currentDate){
 if(data.nagsched==curr_id){
 col4.textContent='WAITING FOR CONFIRMATION'
@@ -187,6 +188,9 @@ col4.textContent='WAITING FOR CONFIRMATION'
   col4.textContent="MISSED"
 }
 
+}else if(data.remark=='missed'){
+  over=overLay(`overlay${data.sched_id}`,'Missed')
+col4.textContent = "Missed"
 }else if(data.remark=='declined'){
   over=overLay(`overlay${data.sched_id}`,'Declined')
 col4.textContent = "Declined"
@@ -338,7 +342,7 @@ async function cancelSched(params) {
   const data = JSON.stringify(params);
   const confirmation = await yesORno()
   if (confirmation) {
-    window.location.reload()
+
     fetch(`/update/cancel?data=${encodeURIComponent(data)}`, { method: "PATCH" }).then((response) => response.json()).then(data=>{
 if(data.status == true){
   window.location.reload()
@@ -346,6 +350,8 @@ if(data.status == true){
     }).catch(err=>{
 console.log('Cancel Fail')
     })
+  }else{
+    yesORnoModal.hide()
   }
 }
 
@@ -365,7 +371,7 @@ document.getElementById('noBtn').textContent=`No, I'll reschedule `
 
     const txt = document.getElementById("reason")
     const result = await waitForConfirmation();
-    if (result == true && txt.value != "") {
+    if (result == true) {
       rawdata.txtmsg = txt.value
       const data = JSON.stringify(rawdata);
       alert("Confirmed")

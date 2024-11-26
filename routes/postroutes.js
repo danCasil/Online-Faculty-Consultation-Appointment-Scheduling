@@ -352,7 +352,7 @@ if(reSched==''){
         if(result&&result.length>0){
             res.json({status:false})
         }else{
-    await queryDatabase("INSERT INTO sched(nagsched, nasched, time_in, time_out, date, remark,scheduler_role) VALUES ($1,$2,$3,$4,$5,'new','"+role+"')",[scheduler_id,ScheduledID,PreferredTin,PreferredTout,PreferredDate]);
+    await queryDatabase("INSERT INTO sched(nagsched, nasched, time_in, time_out, date, remark,scheduler_role,purpose) VALUES ($1,$2,$3,$4,$5,'new','"+role+"',$6)",[scheduler_id,ScheduledID,PreferredTin,PreferredTout,PreferredDate,purpose]);
     commitAndPush()
     notif(data,'new Sched')
     res.json({status:true}); 
