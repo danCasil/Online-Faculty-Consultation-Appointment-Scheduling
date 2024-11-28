@@ -10,6 +10,13 @@
     <link rel="stylesheet" href="../logincss.css">
     <link rel="stylesheet" href="../OTP.css">
 </head>
+<style>
+#forgot{
+font-size: 13px;
+flex:1
+}
+
+</style>
 <body><div id="ofcasLoad"> <img src="../img/loading.gif" alt="" ></div>
 <div class="container-fluid">
      <div class="row"style="margin-left: auto;margin-right: auto;">
@@ -18,8 +25,8 @@
         </div>
         <div class="col-sm-3" >
            
-            <form action="/OTP" method="post" id="login_form" class="form-control form"> <h4 class="web-app"><img src="../img/OCAS-logo.png" alt="" style="height: 150px;width: 150px;"></h4>
-            
+            <form action="/OTP" method="post" id="login_form" class="form-control form"> <h4 class="web-app" style="margin-top: 0;margin-bottom: 0;"><img src="../img/OCAS-logo.png" alt="" style="height: 130px;width: 210px;margin-bottom: 10px;"></h4>
+            <h6 style="text-align: center;">Faculty and Student Login</h6>
 <div style="position: relative;">
     
                     <label for="id" id="namelabel" class="inputslabel">Username</label>
@@ -29,15 +36,27 @@
 <div style="position: relative;">
     <img src=""id="eyeimg"  style="background-color: white;position: absolute;left: 10px;top:24%;left: 80%;width: 10%;" alt="">
               <label for="pass" class="inputslabel">Password</label>
-              <input type="password"name="pass" class="form-control"id="user_pass"style="padding-top: 15px;margin-top:30px;width: 90%;margin-left: auto;margin-right: auto;">
+              <input type="password"name="pass" class="form-control"id="user_pass"style="padding-top: 15px;margin-top:15px;width: 90%;margin-left: auto;margin-right: auto;">
               
     
 </div>
-<div id="loginErr" >It seems that you entered your credentials wrong. Please check and try again.</div>
-                <button type="submit" class="inputs "  style="margin-top: 30px;"id="loginBTN">Login</button>
+<div id="loginErr" style="margin-top: 10px;">It seems that you entered your credentials wrong. Please check and try again.</div>
+                <div class="row" style="margin-top: 10px;">
+                  <div class="col-6">
+                      <button type="submit" class="inputs "  style="margin-bottom:0;"id="loginBTN">Login</button> 
+                  </div>
+                  <div class="col-6">
+                    <a type="button" class="inputs "style="text-align:center;flex:1;padding-top:0;margin-bottom:0;" id="forgot">Forgot Password?</a>
+                  </div>
+                </div>
                 <div class="form-control hr"></div>
-                <button type="button" class="inputs " id="register">Register</button>
-                <a type="button" class="inputs "style="text-align:center;margin-left:auto;margin-right:auto" id="forgot">forgot password?</a>
+
+               <div style="display: flex;width: 100%;">
+                 <button type="button" class="inputs " id="register" style="flex:1;">Register</button>
+                
+               </div>
+                 <button type="button" class="inputs " onclick="window.location.href='/secret'"><img src="../img/dean.png" alt="" style="height: 30px;width: 30px;margin-right: 10px;">Login As Dean</button></div>
+       
             </form>
                
         </div>

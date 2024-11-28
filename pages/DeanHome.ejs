@@ -18,28 +18,109 @@
             background: radial-gradient(circle, #538135  , #375623 );  
            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.354);
         }
-</style>
+        input[type="checkbox"]{
+          margin-right: 5%;
+        }
+        #cancelled,#declined,#consulted,#missed{
+          margin-left: 12%;
+        }
+        .col-3{
+          @media (max-width:500px) {
+                      font-size:10px ;
+          }
+
+        }
+</style><div id="ofcasLoad" style="z-index: 100000000000000000;"> <img src="../img/loading.gif" alt=""></div>
 </head>  <header>
 
         <h4>Online Faculty Consultation Appointment Scheduling</h4>
        </header>
 <body>
+  
 <div class="container-fluid">
   <div class="form-control"id="TheContainer" >
     
-    <h5 style="position: sticky;top: 0;backdrop-filter: blur(5px);" id="collegeName">College of Computing Studies, Information and Communication Technology </h5>
-    <button id="showgraph" class="btn-primary btn" ><img src="../img/chart.png" class="mybtn-icon" alt="">Show Graphs</button>
+  
+    
+     <div id="section1">
+      <h5 style="position: sticky;top: 0;backdrop-filter: blur(5px);" id="collegeName">College of Computing Studies, Information and Communication Technology </h5>
+      <button id="showgraph" class="btn-primary btn " ><img src="../img/chart.png" class="mybtn-icon" alt="">Show Report</button>
     <button type="button" id="logout" class="btn-danger btn" ><img src="../img/logout.png" class="mybtn-icon" alt="">Logout</button>
-      <div  id="facultyList" style="margin-top: 20px;overflow: auto;overflow-x: hidden;">
+       <div  id="facultyList" style="margin-top: 20px;overflow: auto;overflow-x: hidden;">
+       
+       </div>
+     </div>
+    <div id="section2">
+        <div id="facultydetail" >
+          
+        </div>
+    </div>
       
-      </div>
-      <div id="facultydetail" >
-        
-      </div>
-      <canvas id="myChart" style="width:100%;max-width:100%;height: 400px;"></canvas>
+     <div id="section3">
+       <canvas id="myChart" style="width:100%;max-width:100%;margin-top:20px;height: 400px;"></canvas>
+     </div>
   </div>
   
-</div>  
+</div>
+
+<div
+  class="modal fade"
+  id="forDate"
+  tabindex="-1"
+
+ 
+  
+  role="dialog"
+  aria-labelledby="modalTitleId"
+  aria-hidden="true"
+>
+  <div
+    class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-md"
+    role="document"
+  >
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalTitleId">
+         View Report
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          onclick="showThis(1)"
+        ></button>
+      </div>
+      <div class="modal-body">
+         <div class="input-group">
+          <div class="input-group-text">FROM</div>
+        
+            <input type="date"class="form-control" id="date1">
+     
+          <div class="input-group-text">
+            TO
+          </div>
+
+            <input type="date" class="form-control"id="date2">
+      
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-bs-dismiss="modal"
+         onclick="showThis(1)">
+          BACK
+        </button>
+        <button type="button" class="btn btn-primary" onclick=" graph()">VIEW</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script src="../bootjs/boostrap.js"></script>
 <script src="../chart/chart.js"></script>
 <script src="../dean_script.js"></script>
 </body>

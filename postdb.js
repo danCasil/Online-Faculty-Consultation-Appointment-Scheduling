@@ -6,7 +6,7 @@ const pool =new Pool({
  //Online
  ssl: {rejectUnauthorized: false}
  //Ofline
-     // ssl:false
+    // ssl:false
 });
 
 module.exports = pool;

@@ -3,6 +3,26 @@
 background-color: #21b043;
 color: white;
 }
+#ofcasLoad{
+   
+  position: absolute;
+  width: 100%;
+  background-color: rgb(255, 255, 255);
+
+  height: 100%;
+  z-index: 100; 
+   backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+} 
+#ofcasLoad>img{
+  position: absolute;
+  padding: 50px;
+  top: 50%;
+  left: 50%;
+  width: 500px;
+  height: auto;
+  transform: translate(-50%, -50%)  scale(.7);
+}
 #back{
     text-align: left;
 }
@@ -75,7 +95,7 @@ left: 5px;
   #logout{
     position: absolute;
     right:40px;
-    padding-left: 30px;
+    padding-left: 25px;
     top: 70px;
   }
     #facultydetail,#facultyList{
@@ -103,7 +123,7 @@ left: 5px;
 #back{
     position: absolute;
     top: 70px;
-    right: 140px;
+    right:25px;
     padding-left: 30px;
     width: fit-content;
     }

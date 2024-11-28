@@ -1,4 +1,4 @@
-
+ document.getElementById("ofcasLoad").style.display = ""
 const collegeNameList={
   CCSICT:'College of Computing Studies, Information and Communication Technology',
   CAS:'College of Arts and Sciences',
@@ -6,15 +6,39 @@ const collegeNameList={
   CCJE:"College of Criminal Justice Education"}
 const facultydetail=document.getElementById("facultydetail")
 const container=document.getElementById("facultyList")
+
 const showgraph=document.getElementById("showgraph")
+const s1=document.getElementById("section1")
+const s2=document.getElementById("section2")
+const s3=document.getElementById("section3")
 document.addEventListener("DOMContentLoaded",function(e){
-      facultydetail.style.display="none"
+  
+  showThis(1)
     getfaculty()
+ 
+    
 })
 function getfaculty(){
+   document.getElementById("ofcasLoad").style.display = ""
    fetch("/getfaculty").then(response=>response.json()).then(data=>{
-        document.getElementById("collegeName").textContent="College of Computing Studies, Information and Communication Technology"
-    document.getElementById("collegeName").style.display=""
+      document.getElementById("ofcasLoad").style.display = "none"
+    const college=data.result[0].college
+    switch(college){
+      case "CCSICT":
+        document.getElementById("collegeName").textContent=collegeNameList.CCSICT
+        break;
+      case "CED":
+        document.getElementById("collegeName").textContent=collegeNameList.CED
+        break;
+      case "CAS":
+        document.getElementById("collegeName").textContent=collegeNameList.CAS
+        break;
+      case "CCJE":
+        document.getElementById("collegeName").textContent=collegeNameList.CAS
+        break;
+    }
+  
+ 
          const row=document.createElement("div")
          row.classList.add("row")
   for(let i=0;i<20;i++){    
@@ -36,94 +60,137 @@ function getfaculty(){
 container.appendChild(row)
      })
    }
+function showThis(id){
 
+for(let i=1;i<=3;i++){
+
+  if(id==i){
+    document.getElementById(`section${i}`).style.display=""
+    
+  }else{
+    document.getElementById(`section${i}`).style.display="none"
+  }
+}
+}
 
 function show(id){
-   container.style.display="none"
-   showgraph.style.display="none"
-      facultydetail.style.display=""
- 
+ showThis(2)
+    
+  document.getElementById("ofcasLoad").style.display = ""
 fetch(`/load/record?id=${id}`).then(response=>response.json()).then(data=>{
+     document.getElementById("ofcasLoad").style.display = "none"
   console.table(data)
 const countdata=data.counts
 const userD=data.user_data[0]
-document.getElementById("collegeName").style.display="none"
+
 facultydetail.innerHTML=`<div class="row" style="margin-top:30px;width:55%">
 <h5>${userD.last}, ${userD.first} ${userD.mid}</h5>
-<h6>${userD.id_number}</h6>
+<h6 id="id_holder">${userD.id_number}</h6>
 </div>
 <hr>
 <div class="row">
-<div class="col-3">
-  <h6>Consulted</h6>
+<div class="col-sm-6">
+<div class="row" >
+<div class="col-6"><input type="checkbox" style="display:inline"checked id="co"onclick="filterData()"><h6 style="display:inline">Consulted</h6>
   <div id="consulted">
 ${countdata.consulted}
   </div>
 </div>
 
-<div class="col-3">
-  <h6>Cancelled</h6>
+<div class="col-6">
+<input type="checkbox" style="display:inline" checked id="ca"onclick="filterData()"><h6 style="display:inline">Cancelled</h6>
   <div id="cancelled">
 ${countdata.cancelled}
   </div>
 </div>
-<div class="col-3">
-<h6>Declined</h6>
+</div>
+</div>
+
+<div class="col-sm-6">
+<div class="row">
+<div class="col-6"><input type="checkbox" style="display:inline"checked id="de"onclick="filterData()"><h6 style="display:inline">Declined</h6>
 <div id="declined">
 ${countdata.declined}
 </div>
 </div>
-<div class="col-3">
-<h6>Missed</h6>
-<div id="missed">
-${countdata.missed}
-</div>
-</div>
-</div>
+      <div class="col-6">
+        <input type="checkbox" style="display:inline"checked id="mi"onclick="filterData()"><h6                 style="display:inline">Missed</h6>
+        <div id="missed">
+            ${countdata.missed}
+        </div>
+      </div>
+    </div>
+  </div>
+</div></div>
 <hr>
 <div class="container-fluid">
 <div  id="studentList">
 <div class="row" style="position: sticky;top: 0;backdrop-filter: blur(5px);">
-  <div class="col-4">
+  <div class="col-3">
     Name
   </div>
-  <div class="col-4">
+  <div class="col-3">
    Purpose
   </div>
-   <div class="col-4">
+   <div class="col-3">
     Consulted Date
   </div>
+  <div class="col-3" >
+    Remark
+  </div>
+</div>
+<div id="LIST">
+
 </div>
 </div>
+
 </div>
-<button type=button id="back" class="form-control btn-primary" onclick="window.location.reload()"><img src="../img/Back.png" class="mybtn-icon" alt="">back</button>
+<button type=button id="back" class="form-control btn-primary" onclick="showThis(1)"><img src="../img/Back.png" class="mybtn-icon" alt="">back</button>
 `
-const studentList=document.getElementById("studentList")
+const studentList=document.getElementById("LIST")
 
 data.studentdata.forEach(element=>{
   const row=document.createElement("div")
   const row2=document.createElement("div")
+  row2.style.fontSize="13.5px"
+  row2.style.fontWeight="500"
   const formC=document.createElement("div")
   row.classList.add("row")
   row2.classList.add("row")
   row.style.marginTop="5px"
   formC.classList.add("form-control")
   const name=document.createElement("div")
-  name.classList.add("col-4")
+  name.classList.add("col-3")
   const purpose=document.createElement("div")
-  purpose.classList.add("col-4")
+  purpose.classList.add("col-3")
   const date=document.createElement("div")
-  date.classList.add("col-4")
-  const D=new Date(element.consulted_date)
-  const dd=D.getDate()
-  const mm=D.getMonth()+1
-  const yyyy=D.getFullYear()
+  date.classList.add("col-3")
+  const remark=document.createElement("div")
+  remark.classList.add("col-3")
+  var word = element.type
+   var firstLetter = word.charAt(0).toUpperCase();
+    var restOfWord = word.slice(1);
+  remark.textContent=`${firstLetter}${restOfWord}`
+  const dandtROW=document.createElement("div")
+  dandtROW.classList.add("row")
+ 
+
+  const d=document.createElement("div")
+  d.classList.add("col-sm-6")
+  const t=document.createElement("div")
+  t.classList.add("col-sm-6")
   purpose.textContent=element.consultation_purpose
-  date.textContent=` ${convertTime((element.consulted_time_in))} - ${convertTime((element.consulted_time_out))} ${dd}-${mm}-${yyyy} `
+d.textContent=dateFormat(element.consulted_date)
+t.textContent= `${convertTime((element.consulted_time_in))} - ${convertTime((element.consulted_time_out))}`
+dandtROW.appendChild(d)
+dandtROW.appendChild(t)
+  date.appendChild(dandtROW)
   name.textContent=`${element.last}, ${element.first} ${element.mid}`
+
   row2.appendChild(name)
   row2.appendChild(purpose)
   row2.appendChild(date)
+  row2.appendChild(remark)
   formC.appendChild(row2)
   row.appendChild(formC)
   studentList.appendChild(row)
@@ -132,24 +199,45 @@ data.studentdata.forEach(element=>{
    console.log(err)
 })
 }
+var myModalEl = document.getElementById('forDate');
+var forDate =new bootstrap.Modal(myModalEl);
 
 showgraph.addEventListener("click",(e)=>{
   if(showgraph.textContent=='Back'){
     showgraph.onclick=window.location.reload()
   }else{
-    graph()
+  
+    showThis(3)
+    forDate.show()
   }
 })
 function graph(){
-  showgraph.textContent="Back"
+  const date1=document.getElementById("date1").value
+  const date2=document.getElementById("date2").value
+  if((date1&&date2!=null)&&(date1<date2)){
+    forDate.hide()
 
-     container.style.display="none"
-  fetch('/load/graphdata').then(response=>response.json()).then(data=>{
-    createGraph(data.xValues, data.yValues)
+   document.getElementById("ofcasLoad").style.display = ""
 
+
+       s3.innerHTML+=`<button type="button" id="back"class="form-control btn-primary" onclick="showThis(1)">
+       <img src="../img/Back.png" class="mybtn-icon" alt="">back
+       </button>`;
+const dates={
+  d1:date1,
+  d2:date2
+}
+const toString=JSON.stringify(dates)
+  fetch(`/load/graphdata?dates=${toString}`).then(response=>response.json()).then(data=>{
+    
+    createGraph(data.xValues, data.yValues,data.dates)
+ document.getElementById("ofcasLoad").style.display = "none"
   }).catch(err=>{
     console.log(err)
   })
+}else{
+  alert("Invalid Date")
+}
 }
 document.getElementById("logout").addEventListener("click",(e)=>{
 
@@ -162,7 +250,9 @@ if(data.logout==true){
   })
 })
 
-function createGraph(xValues, yValues){
+
+function createGraph(xValues, yValues,dates){
+ 
   const btnFROM=document.createElement("input")
   const btnTo=document.createElement("input")
   btnFROM.type="date"
@@ -185,7 +275,7 @@ function createGraph(xValues, yValues){
       legend: {display: false},
       title: {
         display: true,
-        text: "Consultation Frequency by CCSICT Faculty"
+        text: `Consultation Frequency by CCSICT Faculty from ${dates.d1} to ${dates.d2}`
       },
       scales: {
         yAxes: [{
@@ -206,10 +296,93 @@ function createGraph(xValues, yValues){
   });
 }
 
-
+function filterData(){
+  
+const checkbox={
+dec:  getE('de').checked,
+can:getE('ca').checked,
+con:getE('co').checked,
+mis:getE('mi').checked,
+id:id_holder.textContent
+}
+const check =JSON.stringify(checkbox);
+fetch(`/filter/data?checkbox=${check}`)
+.then(response=>response.json())
+.then(data=>{
+  const studentList=document.getElementById("LIST")
+  studentList.innerHTML="";
+  data.filtered.forEach(element=>{
+    const row=document.createElement("div")
+    const row2=document.createElement("div")
+    row2.style.fontSize="13.5px"
+    row2.style.fontWeight="500"
+    const formC=document.createElement("div")
+    row.classList.add("row")
+    row2.classList.add("row")
+    row.style.marginTop="5px"
+    formC.classList.add("form-control")
+    const name=document.createElement("div")
+    name.classList.add("col-3")
+    const purpose=document.createElement("div")
+    purpose.classList.add("col-3")
+    const date=document.createElement("div")
+    date.classList.add("col-3")
+    const remark=document.createElement("div")
+    remark.classList.add("col-3")
+    var word = element.type
+     var firstLetter = word.charAt(0).toUpperCase();
+      var restOfWord = word.slice(1);
+    remark.textContent=`${firstLetter}${restOfWord}`
+    const dandtROW=document.createElement("div")
+    dandtROW.classList.add("row")
+   
+  
+    const d=document.createElement("div")
+    d.classList.add("col-sm-6")
+    const t=document.createElement("div")
+    t.classList.add("col-sm-6")
+    purpose.textContent=element.consultation_purpose
+  d.textContent=dateFormat(element.consulted_date)
+  t.textContent= `${convertTime((element.consulted_time_in))} - ${convertTime((element.consulted_time_out))}`
+  dandtROW.appendChild(d)
+  dandtROW.appendChild(t)
+    date.appendChild(dandtROW)
+    name.textContent=`${element.last}, ${element.first} ${element.mid}`
+  
+    row2.appendChild(name)
+    row2.appendChild(purpose)
+    row2.appendChild(date)
+    row2.appendChild(remark)
+    formC.appendChild(row2)
+    row.appendChild(formC)
+    studentList.appendChild(row)
+  })
+}).catch(err=>{
+  console.log(err);
+})
+}
+function getE(id){
+ return document.getElementById(id)
+}
 function convertTime(time) { // Split the time string into hours, minutes, and seconds 
   let [hours, minutes, seconds] = time.split(':'); // Convert hours to a number
-   hours = parseInt(hours); // Determine AM or PM suffix
-    const suffix = hours >= 12 ? 'PM' : 'AM'; // Adjust hours for 12-hour format
-     hours = hours % 12 || 12; // Return the formatted time 
+   hours = parseInt(hours);
+   let suffix 
+   if(hours>7){
+    suffix= 'AM'
+  } 
+    else{
+      suffix= 'PM'} 
+    
      return `${hours}:${minutes} ${suffix}`; }
+
+function dateFormat(date){
+
+const [year, month, day] = date.split("-");
+
+const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const formattedDate = `${months[parseInt(month, 10) - 1]} ${parseInt(day, 10)}, ${year}`;
+
+return formattedDate
+
+}

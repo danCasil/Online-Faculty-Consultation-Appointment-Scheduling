@@ -18,9 +18,7 @@ function formatDate(dateString) {
     return date.toLocaleDateString('en-US', options);
 }
 
- window.addEventListener("load",function(){
-    document.getElementById("ofcasLoad").style.display =""
- })
+
 
 document.addEventListener("DOMContentLoaded",function(e){
   
