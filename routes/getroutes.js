@@ -42,7 +42,8 @@ const checkLogSession = (req, res, next) => {
 }
 
 route.get("/",checkLogSession, (req, res)=>{
-    res.render("login")
+    res.send("UNDERMAINTENANCE")
+    //res.render("login")
 })
 
 //start development
