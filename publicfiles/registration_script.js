@@ -11,12 +11,12 @@ const section1=document.getElementById("section1")
 const section2=document.getElementById("section2")
 const section3=document.getElementById("section3")
 const section4=document.getElementById("section4")
-const section5=document.getElementById("section5")
+
 const l1=document.getElementById("l1")
 const l2=document.getElementById("l2")
 const l3=document.getElementById("l3")
 const l4=document.getElementById("l4")
-const l5=document.getElementById("l5")
+
 let finishsection=['','','','','']
 let currentsection=1
 
@@ -48,8 +48,8 @@ document.addEventListener("DOMContentLoaded",function(){
 let sec_num=1
 function showOtherForm(section,type){
 if(type=='next'){
-    if(sec_num==5){
-        sec_num=5
+    if(sec_num==4){
+        sec_num=4
     }else{
         sec_num+=section
       
@@ -99,7 +99,7 @@ document.querySelectorAll(".input_section").forEach(function(sect){
         sect.style.display="none"
     }
 
-   if(sec_num==5){
+   if(sec_num==4){
     NextBTN.disabled=true
     NextBTN.innerHTML='Submit'
     NextBTN.type='submit'
@@ -114,14 +114,17 @@ document.querySelectorAll(".input_section").forEach(function(sect){
             element.style.display="none"
     })
     }else{
+        document.querySelectorAll(".faculty").forEach(element=>{
+            element.style.display="none"
+    })
     document.getElementById("college").style.display="none" 
     }
 }
 sec1Items=['first','mid','last']
-sec2Items=['birthday','gender','civil']
-sec3ItemsF=['idnum','collegesel']
-sec3ItemsS=['idnum','course','year','section']
-sec4Items=['email','user']
+
+sec2ItemsF=['idnum','collegesel']
+sec2ItemsS=['idnum','course','year','section']
+sec3Items=['email','user']
 NextBTN.addEventListener("click",function(){
 if(section1.style.display!="none"){
    
@@ -142,34 +145,18 @@ if(section1.style.display!="none"){
                 
                 }) 
         }
-}else if(section2.style.display!="none"){
-    if(valueGet('birthday')!=''&&valueGet("gender")!=""&&valueGet("civil")!=""){
-        showOtherForm(1,'next')
-        sec2Items.forEach(function(item){
-                removeRequire(item)
-            }) 
-        }else{
-            sec2Items.forEach(function(item){
-                if(valueGet(item)==''){
-                    createRequire(item)
-                }else{
-                    removeRequire(item)
-                }
-                
-                }) 
-        }
-}else if(section3.style.display!='none'){
+}else if(section2.style.display!='none'){
     
   if(pagerole=='faculty')  {
     if(valueGet("idnum")!=""&&valueGet("collegesel")){
-        sec3ItemsF.forEach(function(item){
+        sec2ItemsF.forEach(function(item){
                 removeRequire(item)
             }) 
             checkduplicate(valueGet('idnum'), 'idnum')
                    
                   
     }else{
-    sec3ItemsF.forEach(function(item){
+    sec2ItemsF.forEach(function(item){
         if(valueGet(item)==''){
             createRequire(item)
         }else{
@@ -180,12 +167,12 @@ if(section1.style.display!="none"){
 }
     else{
         if(valueGet("idnum")!=""&&valueGet("course")&&valueGet("year")!=""&&valueGet('section')!=""){
-            sec3ItemsS.forEach(function(item){
+            sec2ItemsS.forEach(function(item){
                 removeRequire(item)
             }) 
             checkduplicate(valueGet('idnum'), 'idnum')
                    
-    }else{sec3ItemsS.forEach(function(item){
+    }else{sec2ItemsS.forEach(function(item){
         if(valueGet(item)==''){
     
             createRequire(item)
@@ -195,14 +182,14 @@ if(section1.style.display!="none"){
         }) 
     }
 }
-}else if(section4.style.display!='none'){
+}else if(section3.style.display!='none'){
     if(valueGet("user")!=""&&valueGet("email")){
-        sec4Items.forEach(function(item){
+        sec3Items.forEach(function(item){
             removeRequire(item)
             }) 
     checkduplicate(valueGet('user'), 'user')
     }else{
-    sec4Items.forEach(function(item){
+    sec3Items.forEach(function(item){
         if(valueGet(item)==''){
             createRequire(item)
         }else{
@@ -302,13 +289,7 @@ function removeRequire(id){
                 case "last":
                     label.style.left='70%'
                     break
-                case "birthday":
-                    label.style.left='18%'
-                    if(window.innerWidth<500){
-                        label.style.top='100%'  
-                        label.style.left='24%'  
-                    }
-                    break
+               
                 case "gender":
                     label.style.left='20%'
                     if(window.innerWidth<500){
@@ -525,14 +506,12 @@ document.getElementById("passcheck").addEventListener("focus",function(){
 updateLabel("labelpass", "-1px", "11px",this,'out')
 
 })
-getElement('birthday').addEventListener("input",function(){
-   getElement('birth').style.display="none";
-})
+
 
 document.getElementById("passcheck").addEventListener("input",function(){
     const chk1= document.getElementById("chk1")
     const chk2= document.getElementById("chk2")
-    const chk3= document.getElementById("chk3")
+
     const userpass=this.value
 if(this.value!=''){
  document.getElementById("passstatus").style.display=""
@@ -542,18 +521,18 @@ document.getElementById("passstatus").style.display="none"
 }
    const passcharacter= document.getElementById("passcharacter")
    const passlength= document.getElementById("passlength")
-const passstr=   document.getElementById("passstrenght")
+
    let streght=0,threshold1,threshold2
 if(userpass.length>=8){
     
     passlength.checked=true;
     passlength.style.opacity='100%';
-    chk2.style.color = '#538135';
+    chk1.style.color = '#538135';
     threshold1=1
 }else{
     threshold1=0
     passlength.checked=false;
-    chk2.style.color = 'black';
+    chk1.style.color = 'black';
     passlength.style.opacity='50%';
 }
 
@@ -561,12 +540,12 @@ if(userpass.length>=8){
 if (validatePassword(userpass)) {
     threshold2=1
     passcharacter.checked = true;
-    chk3.style.color = '#538135';
+    chk2.style.color = '#538135';
     passcharacter.style.opacity = '100%';
 } else {
     threshold2 = 0
     passcharacter.checked = false;
-    chk3.style.color = 'black';
+    chk2.style.color = 'black';
     passcharacter.style.opacity = '50%';
 }
 streght=threshold1+threshold2
@@ -578,21 +557,17 @@ if(streght==2){
    newclass='str'
    labelstr.textContent='good'
    document.getElementById("pass").disabled=false
-   passstr.checked=true
-   passstr.style.opacity='100%'
    chk1.style.color = '#538135';
 }else if(streght==1){
   newclass='avg'
   labelstr.textContent='still weak'
-  passstr.checked=false
-  passstr.style.opacity='50%'
+
   chk1.style.color = 'black';
 }else{
     chk1.style.color = 'black';
      newclass='weak'
      labelstr.textContent='too weak'
-     passstr.checked=false
-     passstr.style.opacity='50%'
+
      chk1.style.color = 'black';
 }
 labelstr.classList.replace(oldclass, newclass);
@@ -683,6 +658,7 @@ mail.addEventListener('input', function(e) {
         // Create a new button element
         button = document.createElement('button');
         button.id = 'mailButton';
+        button.style.animation="beat 1s infinite"
         button.textContent = 'Verify';
         button.type = 'button';
         button.onclick = function(){
@@ -727,11 +703,14 @@ fetch("/OTP/Authenticate",{
 .then(data=>{
 if(data.success== true){
     this.reset()
-    getElement('mailButton').textContent="verified"
+    getElement('mailButton').textContent="Verified"
     getElement('mailButton').disabled=true
+    getElement('mailButton').style.animation=""
+    getElement("mailButton").style.transform="scale(1)"
     mail.style.borderColor='#b6d8a0'
+    getElement("mailButton").style.color="green"
     user.disabled=false
-    getElement("user").focus()
+    focuson('user')
     OTPmodal.hide()
 }else{
     document.getElementById("msg_otp").textContent="You entered an incorrect OTP. Please verify your input and try again."

@@ -20,9 +20,9 @@
  <div class="col-sm-4"> 
 <form action="/<%= role %>/reg/new"  method="post" class="form-control form"id="registrationForm">
         
-    <img src="../img/OCAS-logo.png" style="position: absolute;top: 0;width: 150px;height: 150px; left: 50%;
+    <img src="../img/OCAS-logo.png" style="position: absolute;top: 0;width: auto;height: 150px; left: 50%;
   transform: translateX(-50%);" alt="">
-        <center><h5  id="welcome"><b>Welcome to faculty registration</b></h5></center>
+        <center><h5  id="welcome" ><b>Welcome to faculty registration</b></h5></center>
         <div class="label_sub_title" >Don't worry your information will be kept privately</div>
         <input type="hidden" id="role" value="<%= role %>">
         <div id="line_nav">
@@ -30,10 +30,10 @@
             <div class="line" id="l2" onclick="showOtherForm(2,'nav')"></div>  
             <div class="line" id="l3" onclick="showOtherForm(3,'nav')"></div>  
             <div class="line" id="l4" onclick="showOtherForm(4,'nav')"></div> 
-            <div class="line" id="l5" onclick="showOtherForm(5,'nav')"></div>
+           
           </div>
-<div id="section3" class="input_section">
-            <div class="label_title" ><b>What's is your ID Number?</b></div>
+<div id="section2" class="input_section">
+            <div class="label_title" ><b>Enter your ID Number?</b></div>
              
             <div class="row" style="width: 100%; margin-left: auto;
     margin-right: auto;">
@@ -44,7 +44,7 @@
                 </div>
             </div>
                 <div class="row"id="college" style="margin-top: 10px;">
-                    <div class="label_title" ><b>Your College Department?</b></div>
+                    <div class="label_title" ><b>Enter Your College Department?</b></div>
             
                      
                    <select class="form-select" type="text" name="college"id="collegesel">
@@ -113,7 +113,7 @@
             
          </div>
     <div id="section1"class="input_section">
-        <div class="label_title" ><b>What's your name?</b></div>
+        <div class="label_title" ><b>Please provide your name</b></div>
 
           <div class="myflex" style="margin-left: auto;
     margin-right: auto;position: relative;display:flex; "id="section1_input" >
@@ -133,45 +133,20 @@
 
         
           </div>
-          </div>
-          <div id="section2" class="input_section">
-          <div class="row">
-           <div class="label_title" ><b>Your Birthday and Gender</b></div> 
-           <div class="col-7" style="position: relative;padding: 0;">
-         
-                
-                <label for="birthday" id="birth">MM    /    DD    /    YYYY</label>
-                <input class="form-control " type="date" name="birthday" id="birthday">
+<label for="userTitle"class="faculty">How should we address you?</label>
+<select id="userTitle" name="userTitle" class="faculty"> 
+  <option value="Mr.">Mr.</option> 
+  <option value="Mrs.">Mrs.</option>
+  <option value="Ms.">Ms.</option> 
+  <option value="Sir">Sir</option>
+   <option value="Dr.">Dr.</option> 
+  <option value="Prof.">Prof.</option>
+ </select>
 
-           </div>
-           <div class="col-5" style="position: relative;">
-          
-        
-              
-            <center>
-                <select name="gender" id="gender" class="form-select">
-                  <option value="" disabled selected>Select here..</option>
-                    <option value="M">Male</option>
-                    <option value="F">Female</option>
-                </select>
-            </center>
-    </div>
           </div>
-          <div class="row" style="position: relative;">
-            <center>
-                <div class="label_title" id="civil_label" ><b>Civil Status</b></div>
-                <select name="civil" id="civil" class="form-select">
-                  <option value="" disabled selected>Select here..</option>
+ 
 
-                    <option value="Single">Single</option>
-                    <option value="Married">Married</option>
-                   
-                </select>
-            </center>
-          </div>
-          </div>
-
-<div id="section4" class="input_section">
+<div id="section3" class="input_section">
   <div class="row" style="margin-left: auto;margin-right: auto;padding: 0px 6px;">
     <div class="label_title" >
       <b>
@@ -195,7 +170,7 @@
     </div>                 
   </div>
 </div>
-       <div  id="section5" class="input_section">
+       <div  id="section4" class="input_section">
         <div class="label_title"  ><b>Create your password</b></div>
       
          <div class="row">
@@ -208,12 +183,11 @@
              
             </div> 
             <div style="padding: 5px;" id="passchecker">
-              <input type="checkbox" name="" id="passstrenght" class="">
-              <label for="passlength" style="top: 10px;"id="chk1">Must be Okay strength or better.</label>
+             
               <input type="checkbox" name="" id="passlength" class="">
-              <label for="passlength" style="top: 36px;" id="chk2">Password is at least 8 characters long.</label>
+              <label for="passlength" style="top: 18%;" id="chk1">Password is at least 8 characters long.</label>
               <input type="checkbox" name="" id="passcharacter" class="">
-              <label for="passcharacter" style="top: 62px;"id="chk3">Password includes two of the following: letter, number, or symbol.</label>
+              <label for="passcharacter" style="top: 60%;"id="chk2">Password includes two of the following: letter, number, or symbol.</label>
             </div>
         
               </div>

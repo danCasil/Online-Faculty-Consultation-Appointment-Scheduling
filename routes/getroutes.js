@@ -59,8 +59,12 @@ const test=(req,res,next)=>{
    next()
   }
 
-  
-
+  route.get("/test/login/s",test2, (req,res)=>{
+    res.redirect('/home')
+  })
+  route.get("/test/login/f",test, (req,res)=>{
+    res.redirect('/home')
+  })
 route.get( "/creator/login/:id",(req, res)=>{
 
     const id=req.params.id

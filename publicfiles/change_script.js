@@ -41,11 +41,6 @@ window.location.reload()
     const days = ['','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 
 
-    monday.innerHTML = "Monday";
-    tuesday.innerHTML = "Tuesday";
-    wednesday.innerHTML = "Wednesday";
-    thursday.innerHTML = "Thursday";
-    friday.innerHTML = "Friday";
 
     const tablebody = document.getElementById('tbodys')
 tablebody.innerHTML=""
@@ -119,7 +114,7 @@ const newStrs=formatTime(data.timeout)
           friday.appendChild(rowclass);
           break;
       }
-      divs.style.marginTop = "15px";
+      divs.style.marginTop = "10px";
     
         
         td1.textContent = days[data.day];

@@ -101,7 +101,7 @@ route.get("/load/schedule",(req, res)=>{
             res.status(500).send('Database error');
             return;
         }
-       
+       console.table(result)
      try{  
     const rec_id=await queryDatabase("SELECT record_id FROM record WHERE id_number=$1 AND type='consulted'",[id])
     res.json({result,pg_role,rec_id,id})
@@ -522,33 +522,45 @@ res.json({dupli:result.duplicated})
 async function mailSendNotif(data,txt,req){
     let mailtxt,subj
  try{   
-   const Name=await queryDatabase("SELECT last, first FROM info WHERE id_number=$1",[data.nagsched])
+   const Name=await queryDatabase("SELECT usert, last, first FROM info WHERE id_number=$1",[data.nagsched])
    const Email=await queryDatabase("SELECT email FROM info WHERE id_number=$1",[data.nasched])
         console.log(Email[0].email)
         console.table(Name)
         const currentTime = new Date();
          let greet; 
-         const morningStart = new Date(); morningStart.setHours(6, 0, 0); 
+         const morningStart = new Date(); 
+         morningStart.setHours(6, 0, 0); 
         const afternoonStart = new Date(); afternoonStart.setHours(12, 0, 0); 
-        const eveningStart = new Date(); eveningStart.setHours(18, 0, 0);
-        if (currentTime >= morningStart && currentTime < afternoonStart) { greet = "Good Morning!"; } else if (currentTime >= afternoonStart && currentTime < eveningStart) { greet = "Good Afternoon!"; } else { greet = "Good Evening!"; }
-
-        if(txt=='finish'&&data.scheduler_role=='student'){
+        const eveningStart = new Date(); 
+        eveningStart.setHours(18, 0, 0);
+        if (currentTime >= morningStart && currentTime < afternoonStart) { 
+            greet = "Good Morning!"; 
+        } else if (currentTime >= afternoonStart && currentTime < eveningStart) {
+             greet = "Good Afternoon!"; } 
+        else
+         { greet = "Good Evening!"; }
+let fullname
+if(Name[0].usert!=null){
+    fullname=`${Name[0].usert} ${Name[0].first} ${Name[0].last}`
+    }else{
+        fullname=` ${Name[0].last}, ${Name[0].first}`
+    }   
+     if(txt=='finish'&&data.scheduler_role=='student'){
             subj=`Consultation Confirmation`
-            mailtxt=`${greet} , We are here to inform you that ${Name[0].last}, ${Name[0].first} has Confirmed that you have successfully completed the scheduled consultation.`
+            mailtxt=`${greet} , We are here to inform you that ${fullname} has Confirmed that you have successfully completed the scheduled consultation.`
         }else if(txt=='finish'&&data.scheduler_role=='faculty'){
              subj=`Consultation Confirmation`
-            mailtxt=`${greet} , We are here to inform you that ${Name[0].last}, ${Name[0].first} has Confirmed that you have  completed the scheduled time.`
+            mailtxt=`${greet} , We are here to inform you that ${fullname} has Confirmed that you have  completed the scheduled time.`
         }else if(txt=='accepted'){
 
             subj=`Schedule Accepted`
-            mailtxt=`${greet} , We are here to inform you that ${Name[0].last}, ${Name[0].first} has Accepted your scheduled time from ${data.timein} to ${data.timeout} on ${formatThis(data.date)}` 
+            mailtxt=`${greet} , We are here to inform you that ${fullname} has Accepted your scheduled time from ${data.timein} to ${data.timeout} on ${formatThis(data.date)}` 
         }else if(txt=='declined'){
             subj=`Schedule Declined`
-            mailtxt=`${greet} , We are here to inform you that ${Name[0].last}, ${Name[0].first} has Declined your scheduled time from ${data.timein} to ${data.timeout} on ${formatThis(data.date)}` 
+            mailtxt=`${greet} , We are here to inform you that ${fullname} has Declined your scheduled time from ${data.timein} to ${data.timeout} on ${formatThis(data.date)}` 
         }else{
             subj=`Schedule Cancelled`
-            mailtxt=`${greet} , We are here to inform you that ${Name[0].last}, ${Name[0].first} has Cancelled your scheduled time from ${data.timein} to ${data.timeout} on ${formatThis(data.date)}` 
+            mailtxt=`${greet} , We are here to inform you that ${fullname} has Cancelled your scheduled time from ${data.timein} to ${data.timeout} on ${formatThis(data.date)}` 
         }
         
         const mailOptions = {
@@ -575,7 +587,36 @@ async function mailSendNotif(data,txt,req){
         res.status(500).json({ error: 'Failed to fetch records' }); 
     }     
     }
+route.get('/load/notif/filter',async(req,res)=>{
+    const token=req.query.token;
+    const id=req.session.user_id
+    let text
+    if(token=='all'){
+    text=""
+    }else if(token=='new'){
+        text="AND status='new' "
+    }else{
+        text="AND status='old' "
+    }
+    try{
+        const result=await queryDatabase("SELECT notif.notif_id,info.first, info.last,notif.status, notif.dateandtime,notif.notif_text,notif.type FROM info JOIN notif ON info.id_number = notif.sender_id WHERE notif.receiver_id = $1 "+text+" ORDER BY dateandtime DESC;", [id]);
+         const poolresult=await queryDatabase('SELECT voter_id,voted_id FROM pool WHERE voter_id=$1',[req.session.user_id])
+    if(poolresult&&poolresult.length==0) {
+       const SYSTEMnotif=await queryDatabase("SELECT notif.*,info.last,info.mid,info.first,info.college,notif.notif_text FROM notif JOIN info ON notif.notif_text=info.id_number WHERE sender_id='SYSTEM' AND receiver_id='alpha'AND info.college=$1 AND notif.notif_text!=$2",[req.session.college,req.session.user_id])
+        res.json({result,SYSTEMnotif })
+    }
+    else
+   { 
+    res.json({result})
+}
 
+    }catch (err) { 
+        console.error('Failed to fetch records:', err);
+        res.status(500).json({ error: 'Failed to fetch records' }); 
+    }
+
+
+})
     function formatThis(d){
         const originalDate = new Date(d); 
         const options = { 

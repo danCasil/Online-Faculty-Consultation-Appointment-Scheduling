@@ -183,7 +183,7 @@ route.patch(`/update/missed`,async (req,res)=>{
     }
 
   const info={
-    id:data.id,
+    id:id,
     teach:teach,
     learn:learn,
     type:'missed',
@@ -273,7 +273,7 @@ console.table(R)
 async function mailSendNotif(data,txt,req){
     let mailtxt,subj
     try { 
-        const Name = await queryDatabase("SELECT last, first FROM info WHERE id_number=$1",[data.nagsched]);
+        const Name = await queryDatabase("SELECT usert,last, first FROM info WHERE id_number=$1",[data.nagsched]);
         const Email = await queryDatabase("SELECT email FROM info WHERE id_number=$1",[data.nasched]);
         const currentTime = new Date();
          let greet; 
@@ -281,23 +281,23 @@ async function mailSendNotif(data,txt,req){
         const afternoonStart = new Date(); afternoonStart.setHours(12, 0, 0); 
         const eveningStart = new Date(); eveningStart.setHours(18, 0, 0);
         if (currentTime >= morningStart && currentTime < afternoonStart) { greet = "Good Morning!"; } else if (currentTime >= afternoonStart && currentTime < eveningStart) { greet = "Good Afternoon!"; } else { greet = "Good Evening!"; }
-
+        const fullname=`${Name[0].usert} ${Name[0].last}, ${Name[0].first}`
         if(txt=='finish'&&data.scheduler_role=='student'){
             subj=`Consultation Confirmation`
-            mailtxt=`${greet} , We are here to inform you that ${Name[0].last}, ${Name[0].first} has Confirmed that you have successfully completed the scheduled consultation.`
+            mailtxt=`${greet} , We are here to inform you that ${fullname} has Confirmed that you have successfully completed the scheduled consultation.`
         }else if(txt=='finish'&&data.scheduler_role=='faculty'){
              subj=`Consultation Confirmation`
-            mailtxt=`${greet} , We are here to inform you that ${Name[0].last}, ${Name[0].first} has Confirmed that you have  completed the scheduled time.`
+            mailtxt=`${greet} , We are here to inform you that ${fullname} has Confirmed that you have  completed the scheduled time.`
         }else if(txt=='accepted'){
 
             subj=`Schedule Accepted`
-            mailtxt=`${greet} , We are here to inform you that ${Name[0].last}, ${Name[0].first} has Accepted your scheduled time from ${data.timein} to ${data.timeout} on ${formatThis(data.date)}` 
+            mailtxt=`${greet} , We are here to inform you that ${fullname} has Accepted your scheduled time from ${data.timein} to ${data.timeout} on ${formatThis(data.date)}` 
         }else if(txt=='declined'){
             subj=`Schedule Declined`
-            mailtxt=`${greet} , We are here to inform you that ${Name[0].last}, ${Name[0].first} has Confirmed that you have  completed the scheduled time.` 
+            mailtxt=`${greet} , We are here to inform you that ${fullname} has Confirmed that you have  completed the scheduled time.` 
         }else{
             subj=`Schedule Cancelled`
-           mailtxt=`${greet} , We are here to inform you that ${Name[0].last}, ${Name[0].first} has Cancelled your scheduled time on ${formatThis(data.date)}`
+           mailtxt=`${greet} , We are here to inform you that ${fullname} has Cancelled your scheduled time on ${formatThis(data.date)}`
         }
         
         const mailOptions = {

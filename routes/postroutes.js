@@ -253,15 +253,15 @@ try {
 
 })
 route.post("/faculty/reg/new", async(req,res)=>{
-const {userid,birthday,first,mid,last,email,pass,college,civil,gender,ninja_username}=req.body
+const {userid,birthday,first,mid,last,email,pass,college,civil,gender,ninja_username,userTitle}=req.body
 
 
 const year='0',section='0',course="faculty"
 
 try {  
     const hashedPass= await encryptThis(pass)
-    await queryDatabase("INSERT INTO info (id_number,first,mid, last, course, year, section, birthday,email, college,username,password,gender,civil_status) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)", [userid,first,mid,last,course,year,section,birthday,email,college,ninja_username,hashedPass,gender,civil]);
-    commitAndPush()
+    await queryDatabase("INSERT INTO info (id_number,usert,first,mid, last, course, year, section,email, college,username,password) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)", [userid,userTitle,first,mid,last,course,year,section,email,college,ninja_username,hashedPass]);
+
      req.session.user_id=userid;
     req.session.role=course;
     req.session.userlogindate=new Date()
@@ -276,8 +276,8 @@ route.post("/student/reg/new",async (req,res)=>{
    const college='0'
    try {  
     const hashedPass= await encryptThis(pass)
-    await queryDatabase("INSERT INTO info(id_number, first, mid, last, course, year, section, birthday,email, college,username,password,civil_status,gender) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)",[userid,first,mid,last,course,year,section,birthday,email,college,ninja_username,hashedPass,civil,gender]);
-    commitAndPush()
+    await queryDatabase("INSERT INTO info(id_number,usert, first, mid, last, course, year, section,email, college,username,password) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)",[userid,null,first,mid,last,course,year,section,email,college,ninja_username,hashedPass]);
+    
     req.session.user_id=userid;
     req.session.role=course;
     req.session.userlogindate=new Date()
@@ -292,15 +292,40 @@ route.post("/student/reg/new",async (req,res)=>{
 
 
 route.post("/notify", async(req, res)=>{
+    
     const {R_id,msg}=req.body
     const S_id=req.session.user_id
     const Insertquery="INSERT INTO notif(sender_id, receiver_id, notif_text, dateandtime, status,type) VALUES ($1,$2,$3,$4,'new','notif') "
-   
+    const senderName=await queryDatabase("SELECT usert,first,last FROM info WHERE id_number='"+S_id+"'")
+    const recieverEmail=await queryDatabase("SELECT email FROM info WHERE id_number='"+R_id+"'")
+    const name=senderName[0]
+    let fullname
+    if(name.usert!=null){
+    fullname=`${name.usert} ${name.first} ${name.last}`
+    }else{
+        fullname=`${name.last}, ${name.first}`
+    }
+
   const timedate= new Date()
     try {  
-        await queryDatabase(Insertquery,[S_id,R_id,msg,timedate]);
-        commitAndPush()
-         res.json({ status: true }); 
+    
+        const mailOptions = {
+            to: recieverEmail[0].email,
+            from: 'OFCAS <ofcas.system@gmail.com>',
+            subject: `New Notification`,
+            html: `<p style="font-size: 16px; color: #333;"> You have been notified by <strong>${fullname}</strong>. </p> <p style="font-size: 16px; color: #555;"> <em>Message: ${msg}</em> </p>`
+        };
+        
+        transporter.sendMail(mailOptions, async (err) => {
+            if (err) {
+                console.error(err);
+                res.json( { errorMessage: 'Error sending email.' });
+            }else{
+            await queryDatabase(Insertquery,[S_id,R_id,msg,timedate]);
+            res.json({ status: true }); 
+        }
+            
+        })
          } catch (err) { 
         console.error('Failed to fetch records:', err);
         res.status(500).json({ error: 'Failed to fetch records' });
@@ -344,7 +369,9 @@ route.post("/createSchedule",async(req,res)=>{
     const data={
         scheduler:scheduler_id,
         scheduled:ScheduledID,
-        txtmsg:purpose
+        txtmsg:purpose,
+        date:PreferredDate,
+        time:`${PreferredTin} - ${PreferredTout}`
     }
 if(reSched==''){
     try {  
@@ -400,17 +427,25 @@ type=`accepted`
 type=`cancelled`
     }else if(status=='new Sched'){
 type="Schedule"
-
-const result=await queryDatabase("SELECT first,last,mid,email FROM info WHERE id_number=$1",[scheduled])
+console.table(data)
+const result=await queryDatabase("SELECT email FROM info WHERE id_number=$1",[scheduled])
+const schedulerName=await queryDatabase("SELECT usert,first,last,mid,email FROM info WHERE id_number=$1",[scheduler])
 const name=result[0]
+let fullname
+if(schedulerName[0].usert!=null){
+fullname=`${schedulerName[0].usert} ${schedulerName[0].first} ${schedulerName[0].last}`
+}else{
+fullname=`${schedulerName[0].first} ${schedulerName[0].last}`
+}
+
 const mailOptions = {
     to: name.email,
     from: 'OFCAS <ofcas.system@gmail.com>',
     subject: `New Schedule`,
-    text:` Set by ${name.first} ${name.last} \n on ${formatThis(timedate)} \n Purpose:${txtmsg}`
+    text:` Set by ${fullname}\n Time:${data.time} \n Date: ${data.date} \n Purpose:${txtmsg}`
 };
-console.log(mailOptions)
-await transporter.sendMail(mailOptions, (err) => {
+
+ transporter.sendMail(mailOptions, (err) => {
     if (err) {
         console.error(err);
     }

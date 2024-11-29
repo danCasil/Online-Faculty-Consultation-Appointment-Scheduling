@@ -1,4 +1,5 @@
 
+
 const yesORnoModal = new bootstrap.Modal(document.getElementById("confirmationModal"));
 const editTxt=document.getElementById("msgForConfirm")
 
@@ -49,52 +50,34 @@ function refreshschedule() {
     document.getElementById("noData").style.display = "";
     if(data.result&&data.result.length>0){
       document.getElementById("noData").style.display = "none";
+      loadschedule(data.result, data.pg_role, data.rec_id,data.id)
     }else{
       document.getElementById("noData").style.display = "";
     }
   
-    loadschedule(data.result, data.pg_role, data.rec_id,data.id)
+    
   })
     .catch(err => {
       console.error('Error fetching account data:', err);
     });
 }
 
-function loadschedule(datas, role, rec,curr_id) {
+async function loadschedule(datas, role, rec,curr_id) {
 
   const tbody = document.getElementById("tablebd");
   tbody.innerHTML = "";
-  datas.forEach((data, index) => {
-    
-    const rawdate = new Date(data.date)
-    const lgdate = document.getElementById("loginDate").value;
-    const loginDate = new Date();
-    const currentDate = new Date(data.date);
-    
-    const diffTime = Math.abs(currentDate - loginDate);
-    
-    // Calculate days
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-    
-    // Calculate hours
-    const diffHours = Math.floor((diffTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    
-    // Calculate minutes
-    const diffMinutes = Math.floor((diffTime % (1000 * 60 * 60)) / (1000 * 60));
-    
-    // Calculate seconds
-    const diffSeconds = Math.floor((diffTime % (1000 * 60)) / 1000);
+  datas.forEach(async (data, index) => {
     
 
-
+const diff=await dateDifference(data.date ,new Date())
 const toastBd = document.getElementById('toastbody')
   const toastTime= document.getElementById("toasttime")
 const toastLiveExample = document.getElementById('liveToast')
 const toastTt= document.getElementById("toasttitle")
  const Formattedtimein = formatTime(data.time_in)
  const Formattedtimeout = formatTime(data.time_out)
-if (diffDays < 3 && diffDays>0 &&data.remark=='accepted') {
-      toastTime.textContent = diffDays
+if (diff.days < 3 && diff.days>0 &&data.remark=='accepted') {
+      toastTime.textContent = diff.days
 toastBd.textContent=`You've got an upcoming meeting with  ${data.last}, ${data.first}  from ${Formattedtimein} to ${Formattedtimeout} on ${months[currentDate.getMonth()]} ${currentDate.getDate()}/${currentDate.getFullYear()}`
   
 
@@ -105,7 +88,7 @@ toastBd.textContent=`You've got an upcoming meeting with  ${data.last}, ${data.f
     
 
     }
-   
+   const rawdate=new Date(data.date)
     let month, day, year
     if (!rawdate.getMonth() > 9) {
       month = rawdate.getMonth() + 1;
@@ -160,25 +143,38 @@ col_6A.classList.add('col-sm-6')
 col_6B.classList.add('col-sm-6')
 const A=create_Button("Accept")
 const B=create_Button("Declined")
+console.table(diff)
 if(data.remark=='new'){
 
-  if(loginDate<currentDate){
-if(data.nagsched==curr_id){
-col4.textContent='WAITING FOR CONFIRMATION'
-}else{
+  if(diff.days<=2){
+    if(data.nagsched==curr_id){
+     
+      if(role=="faculty"){
+        col4.appendChild(create_Button("Resched"))
+      }else{
+        col4.textContent='WAITING FOR CONFIRMATION'
+      }
+  }else{
+    if(role=='faculty'){
   
-  col_6A.appendChild(A)
-  col_6B.appendChild(B)
-  A.onclick=()=>{
-  acceptSched(data.sched_id)
+      col_6A.appendChild(A)
+      col_6B.appendChild(B)
+      A.onclick=()=>{
+      acceptSched(data.sched_id)
+      }
+      B.onclick=()=>{
+      declineSched(schedinfo)
+      }
+      newRow.appendChild(col_6A)
+      newRow.appendChild(col_6B)
+      col4.appendChild(newRow)
+    }else{
+      
+    }
   }
-  B.onclick=()=>{
-  declineSched(schedinfo)
-  }
-  newRow.appendChild(col_6A)
-  newRow.appendChild(col_6B)
-  col4.appendChild(newRow)
-}
+
+
+  
 }else{
  
   over=overLay(`overlay${data.sched_id}`,'Missed')
@@ -286,7 +282,7 @@ function overLay(id,text){
 }
 
 function acceptSched(id){
-  const confirmed=confirm("Are you sure to accept this schedule?" )
+  const confirmed=confirm("Are you sure you want to accept this schedule?" )
   if(confirmed){
 fetch(`/update/schedule/accept?id=${encodeURI(id)}`,{method:'PATCH'}).then(response => response.json())
 .then(data => {
@@ -486,4 +482,33 @@ document.getElementById("target_id").addEventListener("input", function (e) {
     console.log(err);
   })
 })
-function formatTime(time) { const [hours, minutes, seconds] = time.split(':'); let period; if (hours >= 1 && hours < 6) { period = 'PM'; } else if (hours >= 8 && hours < 12) { period = 'AM'; } else if (hours == 12) { period = 'PM'; } else { period = hours >= 12 ? 'PM' : 'AM'; } const formattedHours = hours % 12 || 12; return `${formattedHours}:${minutes} ${period}`; }
+function formatTime(time) { 
+  const [hours, minutes, seconds] = time.split(':');
+   let period; 
+  if (hours >= 1 && hours < 6) {
+     period = 'PM';
+     } 
+else if (hours >= 8 && hours < 12) { 
+  period = 'AM'; 
+} 
+else if (hours == 12) { 
+  period = 'PM';
+ } else { 
+  period = hours >= 12 ? 'PM' : 'AM'; 
+}
+ const formattedHours = hours % 12 || 12;
+  return `${formattedHours}:${minutes} ${period}`; 
+}
+
+function dateDifference(dateStr, date2) { 
+  const [yy, mm, dd] = dateStr.split('-');
+  const date1=new Date(yy,mm-1,dd);
+  const diffTime = date1 - date2
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)); 
+  const diffHours = Math.floor((diffTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)); 
+  const diffMinutes = Math.floor((diffTime % (1000 * 60 * 60)) / (1000 * 60));
+   const diffSeconds = Math.floor((diffTime % (1000 * 60)) / 1000);
+  return { days: diffDays, hours: diffHours, minutes: diffMinutes, seconds: diffSeconds  
+  };
+ }
+

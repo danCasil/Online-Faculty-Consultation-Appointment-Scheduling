@@ -174,14 +174,14 @@ document.getElementById("student_notifier").addEventListener("click", ()=>{
 
   document.getElementById("notif_sender").addEventListener("submit",function(e){
     e.preventDefault()
-    
+    Loading.style.display=""
     const data=new FormData(this)
     fetch("/notify",{
         method: "POST",
         body: data,
     }).then(response => response.json())
     .then(respond => {
-   
+       Loading.style.display="none"
   
 
     if(respond.status==true){

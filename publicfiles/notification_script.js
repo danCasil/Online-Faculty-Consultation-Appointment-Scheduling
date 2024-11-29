@@ -105,7 +105,7 @@ function vote(voted_id,vote){
         console.error("", err);
     })
 }
-
+const MainContent=document.getElementById("accordionExample");
 function create_notif_table(data){
     let msg
     const currentDate = new Date()
@@ -113,7 +113,7 @@ function create_notif_table(data){
 
         column={col1:"col-8",col2:"col-4"}
      
-    const maincontent=document.getElementById("accordionExample");
+   
     data.forEach((datas)=> {
         const databaseDate =new Date(datas.dateandtime)
         switch(datas.type){
@@ -166,7 +166,7 @@ function create_notif_table(data){
               </div>
           </div>`
     
-        maincontent.appendChild(row);
+        MainContent.appendChild(row);
   
 });
 }
@@ -248,6 +248,62 @@ function timeDifference(current, previous) {
 }
 
   
-function notifBox(){
+function filter(token){
+    document.getElementById("ofcasLoad").style.display = ""
+    fetch(`/load/notif/filter?token=${token}`)
+    .then(response=>response.json())
+    .then(status=>{
+        document.getElementById("ofcasLoad").style.display = "none"
+        const sysNotif=status.SYSTEMnotif
+        const systemAccordion=document.getElementById("System")
+       
+      
+        if(sysNotif&&sysNotif.length>0){
+            const currentDate = new Date()
+            var column;
+         
+           
+              sysNotif.forEach(system=>{   
+                column={col1:"col-4",col2:"col-8"}
+             
+                const databaseDate =new Date(system.dateandtime)
+                const row=document.createElement("div")
+                row.innerHTML=`<div class="accordion-item" style="margin-bottom:20px;">
+                <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button collapsed ${system.status} row" style="margin:0"id="notif_id${system.notif_id}" type="button" data-bs-toggle="collapse" data-bs-target="#notif${system.notif_id}" aria-expanded="false" aria-controls="notif${system.notif_id}"
+                   ">
+    
+             <div class="row"> 
+          <div class="col-4">
+    ${system.sender_id} 
+          </div>
+          <div class="col-8">
+    <p class="accordiontime">${timeDifference(currentDate,databaseDate)}</p>
+          </div>
+      </div>
+                    </button>
+                </h2>
+                <div id="notif${system.notif_id}" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                    <div class="accordion-body"> Is
+                      ${system.last}, ${system.first} the current Dean of ${system.college}?\n <button class='systemButtonYesNo Yes' onclick="vote('${system.notif_text}','y')" type='button'>Yes</button><button class='systemButtonYesNo No' onclick="vote('${system.notif_text}','n')" type='button'>No</button>
+                    </div>
+                </div>
+            </div>`
+      
+            systemAccordion.appendChild(row);
+              })
+       
+            }
+        if(status.result.length==0&&sysNotif&&sysNotif.length==0){
+            document.getElementById("noData").style.display=""
+        }else{
+            document.getElementById("noData").style.display="none"
+        }
+        MainContent.innerHTML=""
+    create_notif_table(status.result)
+    
+    }).catch(err=>{
+    console.log("Failed to Retrieve Data from the database");
+    })
 
 }

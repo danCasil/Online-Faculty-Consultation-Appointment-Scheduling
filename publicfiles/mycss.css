@@ -182,7 +182,11 @@ body{
       
             }
             @media (min-width:500px) {
-                #OFCASlogo{width: 90%;height: auto;}
+                #OFCASlogo
+                {
+                    width: 90%;height: auto;
+                    margin-bottom: 10px;
+                }
                 header{
                     
                     width: 100%;

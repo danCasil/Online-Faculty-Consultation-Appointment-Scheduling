@@ -6,8 +6,10 @@
   #timeContainer{
     height: 80%;
     border: solid rgba(0, 0, 0, 0.495) .2px;
-    padding: 15px;
+    padding:0;
     border-radius: 5px;
+    overflow-x: auto;
+    overflow-x: hidden;
   }
  </style>
 <div class="col-10" id="content">
@@ -16,13 +18,22 @@
         <h5 id="titleHr1">Consultation Hour</h5>
       </center>
       <div class="container-fluid"id="timeContainer">
-        <div class="row" >
+        <div class="row" style="background-color: #b6d8a0 ;padding: 5px;font-weight: bold;font-size: 15px;">
          
-          <div class="col-sm" id="mond">Monday</div>
-          <div class="col-sm" id="tues">Tuesday</div>
-          <div class="col-sm" id="wedn">Wednesday</div>
-          <div class="col-sm" id="thur">Thursday</div>
-          <div class="col-sm" id="frid">Friday</div>
+          <div class="col-sm" >Monday</div>
+          <div class="col-sm" >Tuesday</div>
+          <div class="col-sm" >Wednesday</div>
+          <div class="col-sm" >Thursday</div>
+          <div class="col-sm" >Friday</div>
+         
+        </div>
+        <div class="row"style="padding: 5px;" >
+         
+          <div class="col-sm" id="mond"></div>
+          <div class="col-sm" id="tues"></div>
+          <div class="col-sm" id="wedn"></div>
+          <div class="col-sm" id="thur"></div>
+          <div class="col-sm" id="frid"></div>
          
         </div>
       </div>
