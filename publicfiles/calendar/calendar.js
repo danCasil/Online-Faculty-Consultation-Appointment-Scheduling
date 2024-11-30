@@ -156,9 +156,10 @@ if(holiday==true){
   container.title=eventtxt
   datebtn.classList.toggle("event")
 }else if(data.status==true){
-  const needgap=date-today.getDate()
 
-  if(month==today.getMonth()&&needgap>=2){
+  const diff= dateDifference(`${parameter.year}-${month+1}-${date}`,new Date())
+  console.log(`${diff.days} ${month+1}${date}`)
+  if(month==today.getMonth()&&diff.days>1){
  container.textContent=`${avtxt} slot`
  datebtn.classList.toggle("available")
  datebtn.onclick=()=>SeeAvailableTime(date,month,parameter.day,parameter.target_id,parameter.year)

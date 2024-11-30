@@ -392,7 +392,7 @@ if(reSched==''){
 
 else{
     try {  
-       await queryDatabase(`UPDATE sched SET nagsched='${scheduler_id}',nasched='${ScheduledID}',time_in='${PreferredTin}',time_out='${PreferredTout}',date='${PreferredDate}',remark='new',scheduler_role='${req.session.role}'WHERE sched_id='${reSched}'`);
+       await queryDatabase(`UPDATE sched SET nagsched='${scheduler_id}',nasched='${ScheduledID}',time_in='${PreferredTin}',time_out='${PreferredTout}',date='${PreferredDate}',remark='resched',scheduler_role='${req.session.role}'WHERE sched_id='${reSched}'`);
        commitAndPush()
           res.json({status:true}); 
           } catch (err) { 

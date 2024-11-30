@@ -68,7 +68,7 @@ if(data.scheduler_role=='student'){
 console.table(data)      
   const info={
     teach:teach,
-    id:data.id,
+    id:data.sched_id,
     learn:learn,
     type:type,
     date:data.date,

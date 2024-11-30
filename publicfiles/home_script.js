@@ -68,6 +68,7 @@ async function loadschedule(datas, role, rec,curr_id) {
   tbody.innerHTML = "";
   datas.forEach(async (data, index) => {
     
+const dbDate=new Date(data.date);
 
 const diff=await dateDifference(data.date ,new Date())
 const toastBd = document.getElementById('toastbody')
@@ -78,7 +79,7 @@ const toastTt= document.getElementById("toasttitle")
  const Formattedtimeout = formatTime(data.time_out)
 if (diff.days < 3 && diff.days>0 &&data.remark=='accepted') {
       toastTime.textContent = diff.days
-toastBd.textContent=`You've got an upcoming meeting with  ${data.last}, ${data.first}  from ${Formattedtimein} to ${Formattedtimeout} on ${months[currentDate.getMonth()]} ${currentDate.getDate()}/${currentDate.getFullYear()}`
+toastBd.textContent=`You've got an upcoming meeting with  ${data.last}, ${data.first}  from ${Formattedtimein} to ${Formattedtimeout} on ${months[dbDate.getMonth()]} ${dbDate.getDate()}/${dbDate.getFullYear()}`
   
 
 
@@ -142,17 +143,27 @@ toastBd.textContent=`You've got an upcoming meeting with  ${data.last}, ${data.f
 col_6A.classList.add('col-sm-6')
 col_6B.classList.add('col-sm-6')
 const A=create_Button("Accept")
-const B=create_Button("Declined")
+const B=create_Button("Decline")
 console.table(diff)
 if(data.remark=='new'){
-
-  if(diff.days<=2){
+  if(diff.days>=1){
     if(data.nagsched==curr_id){
      
-      if(role=="faculty"){
-        col4.appendChild(create_Button("Resched"))
+      if(role=="faculty"){  
+        const c=create_Button('Cancel')
+        c.onclick=()=>{
+         cancelSched(schedinfo)
+        }
+        c.style.width='50%'
+        if(window.innerWidth<500){
+        c.style.width='100%'
+       
+      }
+      c.style.marginLeft='auto'
+        c.style.marginRight='auto'
+        col4.appendChild(c)
       }else{
-        col4.textContent='WAITING FOR CONFIRMATION'
+        col4.textContent='Waiting for confirmation'
       }
   }else{
     if(role=='faculty'){
@@ -168,9 +179,8 @@ if(data.remark=='new'){
       newRow.appendChild(col_6A)
       newRow.appendChild(col_6B)
       col4.appendChild(newRow)
-    }else{
-      
     }
+      
   }
 
 
@@ -191,8 +201,9 @@ col4.textContent = "Missed"
   over=overLay(`overlay${data.sched_id}`,'Declined')
 col4.textContent = "Declined"
 }else if(data.remark=='accepted'){
-if(loginDate>currentDate){
-  if(data.nagsched==curr_id){
+alert(diff.days)
+if((diff.days==-2)||(diff.days==-1)){ 
+  if(role=="faculty"){
   const f=create_Button('Finish')
   f.onclick=()=>{
     insertcomplete(data)
@@ -204,7 +215,9 @@ if(loginDate>currentDate){
 col4.textContent="Waiting for Confirmation"
   }
 }else {
-  if(data.nagsched!=curr_id){
+  alert(diff.days)
+ if(diff.days>=0){
+  if(role=='faculty'){
   const c=create_Button('Cancel')
   c.onclick=()=>{
    cancelSched(schedinfo)
@@ -218,17 +231,62 @@ c.style.marginLeft='auto'
   c.style.marginRight='auto'
   col4.appendChild(c)
 }else{
-  col4.textContent="Accepted"
+  col4.textContent= `Time left : ${diff.days}d ${diff.hours}hr`; 
+}
+} 
+else{
+  over=overLay(`overlay${data.sched_id}`,'Missed')
+
+  fetch(`/update/missed?id=${data.sched_id}`,{method:"PATCH"})
+
+  col4.textContent="MISSED"
 }
 }
 }else if(data.remark=="cancelled"){
   over=overLay(`overlay${data.sched_id}`,'Cancelled')
  col4.textContent="Cancelled"
 }
-else{
-  over=overLay(`overlay${data.sched_id}`,'Finished')
-  over.classList.add("Finish")
-  col4.textContent="Finished"
+else if(data.remark=="resched"){
+  if((diff.days==-2)||(diff.days==-1)){ 
+    if(role=="faculty"){
+    const f=create_Button('Finish')
+    f.onclick=()=>{
+      insertcomplete(data)
+     }
+     if(window.innerWidth<500){
+      f.style.width="100%"
+     }
+    col4.appendChild(f)}else{
+  col4.textContent="Waiting for Confirmation"
+    }
+  }else {
+    alert(diff.days)
+   if(diff.days>=0){
+    if(role=='faculty'){
+    const c=create_Button('Cancel')
+    c.onclick=()=>{
+     cancelSched(schedinfo)
+    }
+    c.style.width='50%'
+    if(window.innerWidth<500){
+    c.style.width='100%'
+   
+  }
+  c.style.marginLeft='auto'
+    c.style.marginRight='auto'
+    col4.appendChild(c)
+  }else{
+    col4.textContent= `Time left : ${diff.days}d ${diff.hours}hr`; 
+  }
+  } 
+  else{
+    over=overLay(`overlay${data.sched_id}`,'Missed')
+  
+    fetch(`/update/missed?id=${data.sched_id}`,{method:"PATCH"})
+  
+    col4.textContent="MISSED"
+  }
+  }
 }
  
     row.appendChild(col4)
@@ -246,7 +304,7 @@ else{
 }
 function create_Button(txt){
  const btn=document.createElement("button")
-  if(txt=='Finish'){
+  if(txt=='Finish'||txt=='Track Schedule'){
     btn.classList.add("btn-success")
     btn.style.width='50%'
    
@@ -256,9 +314,10 @@ function create_Button(txt){
    
     btn.style.marginLeft='auto'
       btn.style.marginRight='auto'
-  }else if(txt=='Accept'){
+  }else if(txt=='Accept'||txt=='Reschedule'){
     btn.classList.add("btn-primary")
-  }else{
+  }
+  else{
     btn.classList.add("btn-danger")
     if(window.innerWidth<500){
       btn.style.marginTop="10px"
@@ -512,3 +571,4 @@ function dateDifference(dateStr, date2) {
   };
  }
 
+ 

@@ -47,7 +47,12 @@ tablebody.innerHTML=""
 console.table(datas)
 console.log('hakc')
 console.table(datas)
-    datas.forEach(data => {
+monday.innerHTML=""
+tuesday.innerHTML=""
+wednesday.innerHTML=""
+thursday.innerHTML=""
+friday.innerHTML=""
+      datas.forEach(data => {
         const selectedday=document.getElementById("daychooser")
     
       const row = document.createElement('tr');

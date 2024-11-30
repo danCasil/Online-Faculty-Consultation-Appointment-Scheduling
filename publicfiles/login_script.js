@@ -1,5 +1,5 @@
 
-
+styleElement('ofcasLoad').display= "";
 
 document.addEventListener("DOMContentLoaded", () => {
     styleElement('ofcasLoad').display= "none";
@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
 })
 
 document.getElementById("login_form").addEventListener("submit",function(e){
-   
+    styleElement('ofcasLoad').display= "";
     
 e.preventDefault();
 
