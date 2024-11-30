@@ -373,13 +373,19 @@ route.post("/createSchedule",async(req,res)=>{
         date:PreferredDate,
         time:`${PreferredTin} - ${PreferredTout}`
     }
+    let remark
+    if(req.session.role=='faculty'){
+        remark=`accepted`
+    }else{
+          remark=`new`
+    }
 if(reSched==''){
     try {  
         const result= await queryDatabase("SELECT sched_id FROM sched WHERE time_in=$1 AND time_out=$2 AND date=$3 AND nasched=$4 AND remark='new'",[PreferredTin,PreferredTout,PreferredDate,ScheduledID]);
         if(result&&result.length>0){
             res.json({status:false})
         }else{
-    await queryDatabase("INSERT INTO sched(nagsched, nasched, time_in, time_out, date, remark,scheduler_role,purpose) VALUES ($1,$2,$3,$4,$5,'new','"+role+"',$6)",[scheduler_id,ScheduledID,PreferredTin,PreferredTout,PreferredDate,purpose]);
+    await queryDatabase("INSERT INTO sched(nagsched, nasched, time_in, time_out, date, remark,scheduler_role,purpose) VALUES ($1,$2,$3,$4,$5,'"+remark+"','"+role+"',$6)",[scheduler_id,ScheduledID,PreferredTin,PreferredTout,PreferredDate,purpose]);
     commitAndPush()
     notif(data,'new Sched')
     res.json({status:true}); 
