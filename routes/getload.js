@@ -310,14 +310,18 @@ AND ${course}`)
 route.get("/load/graphdata", async (req, res) => {
     const dates=JSON.parse(req.query.dates)
     const college = 'CCSICT';
+    const date1 = new Date(dates.d1);
+     const date2 = new Date(dates.d2); // Format the dates (Example: Convert to ISO string) 
+     const formattedDate1 = date1.toISOString();
+      const formattedDate2 = date2.toISOString();
     let xValues = [];
     let yValues = [];
-    console.log("SELECT COUNT(type) AS Count FROM record WHERE id_number = $1 AND type='consulted' AND(consulted_date>='"+dates.d1+"' AND consulted_date<='"+dates.d2+"')")
+    console.log("SELECT COUNT(type) AS Count FROM record WHERE id_number = $1 AND type='consulted' AND(exc_date>='"+new Date(dates.d1)+"' AND exc_date<='"+new Date(dates.d2)+"');")
     try {
         const name_and_id = await queryDatabase("SELECT last, id_number,first FROM info WHERE college=$1 and course='faculty'", [college])
     console.log("dasdasdasdasdasd")
         for (const element of name_and_id) {
-            const counts = await queryDatabase("SELECT COUNT(type) AS Count FROM record WHERE id_number = $1 AND type='consulted' AND(consulted_date>='"+dates.d1+"' AND consulted_date<='"+dates.d2+"');", [element.id_number]) 
+            const counts = await queryDatabase("SELECT COUNT(type) AS Count FROM record WHERE id_number = $1 AND type='consulted' AND(exc_date>='"+formattedDate1+"' AND exc_date<='"+formattedDate2+"');", [element.id_number]) 
             console.log(counts)
             xValues.push(element.last + ", " + element.first);
             const countTOINT=parseInt(counts[0].count)

@@ -47,7 +47,7 @@ route.patch("/update/notification",async (req,res)=>{
 })
 route.patch("/update/record",async(req,res)=>{
 
-    const type=req.query.type
+    const complete=req.query.complete
    const bd=req.query.data
    const data=JSON.parse(bd)
     const date=new Date()
@@ -62,15 +62,15 @@ if(data.scheduler_role=='student'){
     teach=data.nagsched
     learn=data.nasched
 }
-
- if(type=='consulted'){
+console.log(complete)
+ if(complete=='true'){
     try {  
 console.table(data)      
   const info={
     teach:teach,
     id:data.sched_id,
     learn:learn,
-    type:type,
+    type:'consulted',
     date:data.date,
     time_in:data.time_in,
     time_out:data.time_out
@@ -85,6 +85,28 @@ console.table(data)
             console.error('Failed to fetch records:', err);
              res.status(500).json({ error: 'Failed to fetch records' }); 
             }
+ }else{
+    try {  
+        console.table(data)      
+          const info={
+            teach:teach,
+            id:data.sched_id,
+            learn:learn,
+            type:'unsuccessful',
+            date:data.date,
+            time_in:data.time_in,
+            time_out:data.time_out
+          }
+         
+          await updateRecord(info)
+                await queryDatabase("UPDATE sched SET remark='unsuccessful' WHERE sched_id=$1",[data.sched_id]);
+                mailSendNotif(data,'unsuccessful',req)
+                commitAndPush()
+                res.json({success:true})
+                 } catch (err) {  
+                    console.error('Failed to fetch records:', err);
+                     res.status(500).json({ error: 'Failed to fetch records' }); 
+                    }
  }
 
 })

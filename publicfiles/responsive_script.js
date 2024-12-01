@@ -94,6 +94,7 @@ function menu_nav(){
     isshown=!isshown
   
         if(isshown){
+            document.body.style.overflow = "hidden";
     sidenavbar.style.display=''
    
     getElement('menuBTN').src='../img/close_menu.png'
@@ -104,6 +105,7 @@ function menu_nav(){
     sidenavbar.style.margin=""
     sidenavbar.style.zIndex="50000000"
     }else{
+      
     sidenavbar.style.display='none'
     getElement('menuBTN').src='../img/open_menu.png'
 

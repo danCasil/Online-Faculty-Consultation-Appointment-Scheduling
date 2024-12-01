@@ -59,12 +59,19 @@ const test=(req,res,next)=>{
      req.session.college='0'
    next()
   }
-
+  const deanTest=(req, res,next)=>{
+    req.session.college='CCSICT'
+    req.session.user_id='54321'
+    next()
+}
   route.get("/test/login/s",test2, (req,res)=>{
     res.redirect('/home')
   })
   route.get("/test/login/f",test, (req,res)=>{
     res.redirect('/home')
+  })
+  route.get("/test/login/d",deanTest, (req,res)=>{
+    res.redirect('/home/dean')
   })
 route.get( "/creator/login/:id",(req, res)=>{
 
@@ -181,11 +188,7 @@ route.get( "/notification",authenticate,(req, res)=>{
 route.get("/secret",(req, res)=>{
     res.render("DeanLogin")
 })
-const deanTest=(req, res,next)=>{
-    req.session.college='CCSICT'
-    req.session.user_id='54321'
-    next()
-}
+
 route.get("/home/dean",authenticateDean,(req, res)=>{
     res.render("DeanHome")
 })

@@ -3,12 +3,14 @@
 const yesORnoModal = new bootstrap.Modal(document.getElementById("confirmationModal"));
 const editTxt=document.getElementById("msgForConfirm")
 
-
-
+const finisherModal = new bootstrap.Modal(
+  document.getElementById("Finisher"),
+);
 
 
 document.addEventListener("DOMContentLoaded", function (e) {
-  
+
+
   if(document.getElementById('loginRole').value!='faculty'){
     document.getElementById("targets").textContent="faculty member's"
   }else{
@@ -61,7 +63,7 @@ function refreshschedule() {
       console.error('Error fetching account data:', err);
     });
 }
-
+var overLays
 async function loadschedule(datas, role, rec,curr_id) {
 
   const tbody = document.getElementById("tablebd");
@@ -77,18 +79,29 @@ const toastLiveExample = document.getElementById('liveToast')
 const toastTt= document.getElementById("toasttitle")
  const Formattedtimein = formatTime(data.time_in)
  const Formattedtimeout = formatTime(data.time_out)
-if (diff.days < 3 && diff.days>0 &&data.remark=='accepted') {
-      toastTime.textContent = diff.days
-toastBd.textContent=`You've got an upcoming meeting with  ${data.last}, ${data.first}  from ${Formattedtimein} to ${Formattedtimeout} on ${months[dbDate.getMonth()]} ${dbDate.getDate()}/${dbDate.getFullYear()}`
-  
+ if (diff.days < 3 && diff.days >= -1 && data.remark == 'accepted') { 
+  const dbDate = new Date(data.date); 
+  const toastContainer = document.getElementById('toastContainer'); 
+  let dayIndicator
+  switch(diff.days) {
+    case -1:
+      dayIndicator=`Today`
+        break
+    case 0:
+    dayIndicator=`Tomorrow`
+      break
+    case 1:
+    case 2:
+    dayIndicator=`${diff.days} days `
+    break
 
 
-
-  const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
-    toastBootstrap.show()
-    
-
-    }
+  }
+  const toastId = `liveToast${index}`; 
+  const toastHtml = ` <div id="${toastId}" class="toast" role="alert" aria-live="assertive" aria-atomic="true" style="border:solid black 1px;border-radius: 2.5;"> <div class="toast-header bg-light"> <strong class="me-auto">Attention</strong> <small>${dayIndicator} </small> <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button> </div> <div class="toast-body bg-light"> You've got an upcoming meeting with ${data.last}, ${data.first} from ${data.Formattedtimein} to ${data.Formattedtimeout} on ${months[dbDate.getMonth()]} ${dbDate.getDate()}/${dbDate.getFullYear()} </div> </div>`; 
+  toastContainer.insertAdjacentHTML('beforeend', toastHtml);
+   const toastEl = document.getElementById(toastId); const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastEl); toastBootstrap.show();
+}
    const rawdate=new Date(data.date)
     let month, day, year
     if (!rawdate.getMonth() > 9) {
@@ -108,28 +121,60 @@ toastBd.textContent=`You've got an upcoming meeting with  ${data.last}, ${data.f
     const finaldate = month + "/" + day + "/" + year
     const declinebtn = document.createElement("button");
     const acceptbtn = document.createElement("button");
-    const row = document.createElement("tr")
-    const col1 = document.createElement("td")
-    const col2 = document.createElement("td")
-    const col3 = document.createElement("td")
-    let col4 = document.createElement("td")
+    const row = document.createElement("div")
+    const col1 = document.createElement("div")
+    const col2 = document.createElement("div")
+    const col3 = document.createElement("div")
+    let col4 = document.createElement("div")
     const col_6A=document.createElement("div")
     const col_6B=document.createElement("div")
     const newRow=document.createElement("div")
     newRow.classList.add("row")
   let over
-
+  row.classList.add("row")
+  row.style.border = "#538135 solid .25px"
+  row.style.position = "relative"
+  const col_1=document.createElement("div")
+  const col_2=document.createElement("div")
+  const col_3=document.createElement("div")
+  const col_4=document.createElement("div")
+  col_1.classList.add("col-3")
+  col_2.classList.add("col-3")
+  col_3.classList.add("col-3")
+  col4.classList.add("col-3")
+  if(window.innerWidth < 500){
+      col4.style.paddingLeft = "6px"
+   
+  }
    col4.style.textAlign = "center"
-   col4.style.fontSize="13px"
+   
+   col4.style.fontSize="10px"
+   if(window.innerWidth>500){
+    col4.style.fontSize="15px"
+   }
     col1.textContent = data.first + " " + data.last
-    row.appendChild(col1)
+    col1.style.marginTop="auto"
+     col1.style.marginBottom="auto"
+      col_1.style.marginTop="auto"
+     col_1.style.marginBottom="auto"
+   col_1.appendChild(col1)
+    row.appendChild(col_1)
 
     col2.textContent = formatTime(data.time_in) + " - " + formatTime(data.time_out)
-    row.appendChild(col2)
+    col2.style.marginTop="auto"
+    col2.style.marginBottom="auto"
+     col_2.style.marginTop="auto"
+    col_2.style.marginBottom="auto"
+    col_2.appendChild(col2)
+    row.appendChild(col_2)
 
     col3.textContent = finaldate
-    row.appendChild(col3)
-  
+    col_3.appendChild(col3)
+    row.appendChild(col_3)
+    col3.style.marginTop="auto"
+    col3.style.marginBottom="auto"
+     col_3.style.marginTop="auto"
+    col_3.style.marginBottom="auto"
     const schedinfo = {
       id: data.sched_id,
       scheduler: data.nagsched,
@@ -201,22 +246,27 @@ col4.textContent = "Missed"
   over=overLay(`overlay${data.sched_id}`,'Declined')
 col4.textContent = "Declined"
 }else if(data.remark=='accepted'){
-alert(diff.days)
+
 if((diff.days==-2)||(diff.days==-1)){ 
   if(role=="faculty"){
   const f=create_Button('Finish')
   f.onclick=()=>{
+    finisherModal.show();
+   }
+
+  document.getElementById("completionBTN").onclick=()=>{
     insertcomplete(data)
    }
    if(window.innerWidth<500){
     f.style.width="100%"
    }
-  col4.appendChild(f)}else{
+  col4.appendChild(f)}
+  else{
 col4.textContent="Waiting for Confirmation"
   }
 }else {
-  alert(diff.days)
- if(diff.days>=0){
+
+ if(diff.days>0){
   if(role=='faculty'){
   const c=create_Button('Cancel')
   c.onclick=()=>{
@@ -231,10 +281,13 @@ c.style.marginLeft='auto'
   c.style.marginRight='auto'
   col4.appendChild(c)
 }else{
-  col4.textContent= `Time left : ${diff.days}d ${diff.hours}hr`; 
+  col4.innerHTML= `<b>Time left</b> : ${diff.days}d ${diff.hours}hr`; 
 }
-} 
+} else if(diff.days==0){
+  col4.textContent= `Tomorrow`; 
+}
 else{
+  alert(diff.days)
   over=overLay(`overlay${data.sched_id}`,'Missed')
 
   fetch(`/update/missed?id=${data.sched_id}`,{method:"PATCH"})
@@ -242,7 +295,14 @@ else{
   col4.textContent="MISSED"
 }
 }
-}else if(data.remark=="cancelled"){
+}else if(data.remark=="unsuccessful"){
+  over=overLay(`overlay${data.sched_id}`,'Unsuccessful')
+ col4.textContent="Unsuccessful"
+}else if(data.remark=="finished"){
+  over=overLay(`overlay${data.sched_id}`,'Completed')
+ col4.textContent="Completed"
+}
+else if(data.remark=="cancelled"){
   over=overLay(`overlay${data.sched_id}`,'Cancelled')
  col4.textContent="Cancelled"
 }
@@ -251,6 +311,10 @@ else if(data.remark=="resched"){
     if(role=="faculty"){
     const f=create_Button('Finish')
     f.onclick=()=>{
+      finisherModal.show();
+     }
+
+    document.getElementById("completionBTN").onclick=()=>{
       insertcomplete(data)
      }
      if(window.innerWidth<500){
@@ -260,7 +324,7 @@ else if(data.remark=="resched"){
   col4.textContent="Waiting for Confirmation"
     }
   }else {
-    alert(diff.days)
+
    if(diff.days>=0){
     if(role=='faculty'){
     const c=create_Button('Cancel')
@@ -288,18 +352,21 @@ else if(data.remark=="resched"){
   }
   }
 }
- 
+
     row.appendChild(col4)
     if(over){
-    row.appendChild(over)}
+    row.appendChild(over)
+  }
+  row.style.textAlign="center"
     tbody.appendChild(row)
-  })
-  const overLays = document.querySelectorAll('.overLay'); 
-  overLays.forEach(overLay => { overLay.addEventListener('click', function(e) {  overLays.forEach(el => el.classList.remove('show'));
-    this.classList.add('show');
-    
-   });})
+overLays = document.querySelectorAll('.overLay');
 
+overLays.forEach(overLay => { overLay.addEventListener('click', function(e) {  overLays.forEach(el => el.classList.remove('show'));
+  this.classList.add('show');
+  
+ });
+})
+  })
   
 }
 function create_Button(txt){
@@ -325,6 +392,10 @@ function create_Button(txt){
   }
   btn.style.textAlign = "center"
   btn.style.fontSize = "13px"
+  if(window.innerWidth < 500){
+    btn.style.fontSize="12px"
+   
+  }
   btn.classList.add("form-control")
   btn.textContent=txt
   btn.type="button"
@@ -336,7 +407,10 @@ function overLay(id,text){
   overlay.textContent=text
   overlay.id=id
   overlay.classList.add("overLay")
- 
+  if(text=="Completed"){
+    overlay.classList.add("Finish")
+    
+  }
   return overlay
 }
 
@@ -358,9 +432,15 @@ fetch(`/update/schedule/accept?id=${encodeURI(id)}`,{method:'PATCH'}).then(respo
 //old
 function insertcomplete(senddata) {
   console.table(senddata)
-
+  const c1= document.getElementById("choice1").checked
+  var complete
+  if(c1==true){
+    complete='true'
+  }else{
+   complete='false'
+  }
   const dataString=JSON.stringify(senddata)
-  fetch(`/update/record?data=${encodeURI(dataString)}&&type=${'consulted'}`, {
+  fetch(`/update/record?data=${encodeURI(dataString)}&&complete=${complete}`, {
     method: 'PATCH',
 
   })

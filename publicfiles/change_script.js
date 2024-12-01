@@ -45,7 +45,7 @@ window.location.reload()
     const tablebody = document.getElementById('tbodys')
 tablebody.innerHTML=""
 console.table(datas)
-console.log('hakc')
+
 console.table(datas)
 monday.innerHTML=""
 tuesday.innerHTML=""
@@ -67,7 +67,9 @@ const newStrs=formatTime(data.timeout)
       divs.onclick =  function() {
         editExistingSchedule(data.indx);
     };
-
+if(window.innerWidth<500){
+  document.getElementById("dayTitle").style.display="none";
+}
       const daynum=data.day
       rowclass.classList.add('row');
       switch (daynum) {
@@ -75,7 +77,9 @@ const newStrs=formatTime(data.timeout)
          
           divs.classList.add("form-control");
           divs.textContent = newStr + ' - ' + newStrs;
-
+          if(window.innerWidth<500){
+          divs.textContent ='Monday: '+newStr + ' - ' + newStrs;
+          }
           divs.style.fontSize = "14px";
           colclass.appendChild(divs);
         rowclass.appendChild(colclass);
@@ -84,7 +88,9 @@ const newStrs=formatTime(data.timeout)
         case '2':
             divs.classList.add("form-control");
           divs.textContent = newStr + ' - ' + newStrs;
-        
+          if(window.innerWidth<500){
+            divs.textContent ='Tuesday: '+newStr + ' - ' + newStrs;
+            }
           divs.style.fontSize = "14px";
           colclass.appendChild(divs);
           rowclass.appendChild(colclass);
@@ -93,7 +99,9 @@ const newStrs=formatTime(data.timeout)
         case '3':
             divs.classList.add("form-control");
           divs.textContent = newStr + ' - ' + newStrs;
-
+          if(window.innerWidth<500){
+            divs.textContent ='Wednesday: '+newStr + ' - ' + newStrs;
+            }
      
           divs.style.fontSize = "14px";
           colclass.appendChild(divs);
@@ -103,7 +111,9 @@ const newStrs=formatTime(data.timeout)
         case '4':
             divs.classList.add("form-control");
           divs.textContent = newStr + ' - ' + newStrs;
-   
+          if(window.innerWidth<500){
+            divs.textContent ='Thursday: '+newStr + ' - ' + newStrs;
+            }
           divs.style.fontSize = "14px";
           colclass.appendChild(divs);
           rowclass.appendChild(colclass);
@@ -112,7 +122,9 @@ const newStrs=formatTime(data.timeout)
         case '5':
             divs.classList.add("form-control");
           divs.textContent = newStr + ' - ' + newStrs;
-  
+          if(window.innerWidth<500){
+            divs.textContent ='Friday: '+newStr + ' - ' + newStrs;
+            }
           divs.style.fontSize = "14px";
           colclass.appendChild(divs);
           rowclass.appendChild(colclass);

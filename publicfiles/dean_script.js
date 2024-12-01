@@ -125,7 +125,7 @@ ${countdata.declined}
 <hr>
 <div class="container-fluid">
 <div  id="studentList">
-<div class="row" style="position: sticky;top: 0;backdrop-filter: blur(5px);">
+<div class="row" style="position: sticky;top: 0;backdrop-filter: blur(5px);font-weight:bold">
   <div class="col-3">
     Name
   </div>
@@ -200,7 +200,7 @@ dandtROW.appendChild(t)
 })
 }
 var myModalEl = document.getElementById('forDate');
-var forDate =new bootstrap.Modal(myModalEl);
+var forDate =new bootstrap.Modal(myModalEl,{backdrop: 'static', keyboard: false});
 
 showgraph.addEventListener("click",(e)=>{
   if(showgraph.textContent=='Back'){
@@ -259,7 +259,13 @@ function createGraph(xValues, yValues,dates){
   btnFROM.id="FROMID"
   btnFROM.classList.add("form-control")
 
-
+  const date1 = new Date(  dates.d1); 
+  const options = { month: 'short' };
+   const monthName1 = new Intl.DateTimeFormat('en-US', options).format(date1); 
+   const formattedDate1 = `${monthName1} ${date1.getDate()}, ${date1.getFullYear()}`
+   const date2 = new Date(dates.d2); 
+     const monthName2 = new Intl.DateTimeFormat('en-US', options).format(date2); 
+    const formattedDate2 = `${monthName2} ${date2.getDate()}, ${date2.getFullYear()}`
   const barColors = ["red", "green","blue","orange","brown"];
   
   new Chart("myChart", {
@@ -275,10 +281,21 @@ function createGraph(xValues, yValues,dates){
       legend: {display: false},
       title: {
         display: true,
-        text: `Consultation Frequency by CCSICT Faculty from ${dates.d1} to ${dates.d2}`
+        text: `Faculty Consultation Activity: Number of Consultations per Faculty Member from ${formattedDate1} to ${formattedDate2}`
       },
       scales: {
-        yAxes: [{
+        xAxes: [{ 
+          scaleLabel: { 
+          display: true, 
+          labelString: 'Faculty Members',
+           fontWeight: 'bolder', 
+            fontSize: 14,
+            fontColor: "#375623 ",
+           },
+            ticks: { 
+              autoSkip: false 
+            } }],
+          yAxes: [{
           ticks: {
             beginAtZero: true,  
             callback: function(value) {
@@ -287,8 +304,16 @@ function createGraph(xValues, yValues,dates){
               }
               return '';  // Don't display non-whole numbers
             }
+          }, scaleLabel: { 
+            display: true, 
+            labelString: 'Number of Consultations',
+            fontWeight: "bold",
+            fontSize: 14,
+            fontColor:"#375623 "
+          
           }
         }]
+
       }
       
       
