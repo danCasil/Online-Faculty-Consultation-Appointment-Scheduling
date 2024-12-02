@@ -124,17 +124,11 @@ white-space: pre-wrap;
     border: #79c142 groove;
     padding: 5px;
     border-radius: 10px;
-    position: absolute;
     
 }
 
 
 
-
-.btn_form:hover{
-    background-color: #f9f9f9;
-    transition: background-color .5s;
-}
 
 
 

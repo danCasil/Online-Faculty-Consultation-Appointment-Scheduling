@@ -41,7 +41,7 @@ function getfaculty(){
  
          const row=document.createElement("div")
          row.classList.add("row")
-  for(let i=0;i<20;i++){    
+  //for(let i=0;i<20;i++){    
       data.result.forEach(element => {
         const form_control=document.createElement("div")
         form_control.style.marginTop="2.5px"
@@ -55,7 +55,7 @@ function getfaculty(){
       row.appendChild(col_sm)
 
     })
-   }
+   //}
 
 container.appendChild(row)
      })

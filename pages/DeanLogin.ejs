@@ -16,23 +16,26 @@
         </div>
         <div class="col-sm-3">
            
-            <form action="/secret/login" method="post" id="login_form" class="form-control form"> <h4 class="web-app"><img src="../img/OCAS-logo.png" alt="" style="height: 150px;width: 150px;"><br>Dean Login</h4>
-                
-<div style="position: relative;">
+            <form action="/secret/login" method="post" id="login_form" class="form-control form"> <h4 class="web-app"><img src="../img/OCAS-logo.png" alt="" style="height: 130px;width: auto;margin-bottom: 10px;"></h4>
+                <h6 style="text-align: center;font-weight: bold;color:#375623  ;">Dean Login</h6>
+<div style="position: relative;margin-top: 0;">
     
                     <label for="id"  id="namelabel" class="inputslabel">Username</label>
-                    <input type="text"name="id" class="form-control"style="padding-top: 15px;margin-top:30px;width: 90%;margin-left: auto;margin-right: auto;"id="id"required>
+                    <input type="text"name="id" class="form-control"style="padding-top: 10px;margin-top:10px;width: 90%;margin-left: auto;margin-right: auto;"id="id"required>
     
 </div>
 <div style="position: relative;">
     <img src=""id="eyeimg"  style="background-color: white;position: absolute;top: 18%;left: 81%;width: 10%;" alt="">
               <label for="pass "class="inputslabel" >Password</label>
-              <input type="password"name="pass"  class="form-control"style="padding-top: 15px;margin-top:30px;width: 90%;margin-left: auto;margin-right: auto;"id="pass"required>
+              <input type="password"name="pass"  class="form-control"style="padding-top: 15px;margin-top:10px;width: 90%;margin-left: auto;margin-right: auto;"id="pass"required>
 </div>
-<div id="loginErr" >It seems that you entered your credentials wrong. Please check and try again.</div>
-                <button type="submit" class="inputs btn_form" style="margin-top: 30px;">Login</button>
+<div id="loginErr" style="margin-top: 10px;">It seems that you entered your credentials wrong. Please check and try again.</div>
+                <button type="submit" class="inputs btn_form" style="margin-top: 10px;">Login</button>
                 <div class="form-control hr"></div>
                 <button type="button" class="inputs btn_form" id="register">Register</button>
+                <button type="button" class="inputs btn_form" onclick="window.location.href='/'" style="align-items: center;display: flex;">
+                    <img src="../img/dean.png" alt="" style="width:25px;top: 25px;margin-right: 10px;text-align: left;">
+                    Login as Faculty / Student</button>
                 </form>
         </div>
      </div>

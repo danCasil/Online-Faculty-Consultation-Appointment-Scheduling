@@ -25,8 +25,9 @@ flex:1
         </div>
         <div class="col-sm-3" >
            
-            <form action="/OTP" method="post" id="login_form" class="form-control form"> <h4 class="web-app" style="margin-top: 0;margin-bottom: 0;"><img src="../img/OCAS-logo.png" alt="" style="height: 130px;width: 210px;margin-bottom: 10px;"></h4>
-            <h6 style="text-align: center;">Faculty and Student Login</h6>
+            <form action="/OTP" method="post" id="login_form" class="form-control form">
+                 <h4 class="web-app" style="margin-top: 0;margin-bottom: 0;"><img src="../img/OCAS-logo.png" alt="" style="height: 130px;width: 210px;margin-bottom: 10px;"></h4>
+            <h6 style="text-align: center;font-weight: bold;color:#375623  ;">Faculty and Student Login</h6>
 <div style="position: relative;">
     
                     <label for="id" id="namelabel" class="inputslabel">Username</label>
@@ -43,7 +44,7 @@ flex:1
 <div id="loginErr" style="margin-top: 10px;">It seems that you entered your credentials wrong. Please check and try again.</div>
                 <div class="row" style="margin-top: 10px;">
                   <div class="col-6">
-                      <button type="submit" class="inputs "  style="margin-bottom:0;"id="loginBTN">Login</button> 
+                      <button type="submit" class="inputs btn_form"  style="margin-bottom:0;"id="loginBTN">Login</button> 
                   </div>
                   <div class="col-6">
                     <a type="button" class="inputs "style="text-align:center;flex:1;padding-top:0;margin-bottom:0;" id="forgot">Forgot Password?</a>
@@ -52,10 +53,10 @@ flex:1
                 <div class="form-control hr"></div>
 
                <div style="display: flex;width: 100%;">
-                 <button type="button" class="inputs " id="register" style="flex:1;">Register</button>
+                 <button type="button" class="inputs btn_form" id="register" style="flex:1;">Register</button>
                 
                </div>
-                 <button type="button" class="inputs " onclick="window.location.href='/secret'" style=""><img src="../img/dean.png" alt="" style="height: 25px;width: 25px;margin-right: 10px;">Login As Dean</button></div>
+                 <button type="button" class="inputs btn_form" onclick="window.location.href='/secret'" style=""><img src="../img/dean.png" alt="" style="height: 25px;width: 25px;margin-right: 10px;">Login As Dean</button></div>
        
             </form>
                

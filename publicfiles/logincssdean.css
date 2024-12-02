@@ -52,8 +52,9 @@ label{
  margin-bottom: 10px;
 }
 button{
-    background-color: #79c142;
-    color: #000;
+    background-color: #538135;
+    color: white;
+
     border-color: rgb(0, 0, 0);
     border-style:ridge;
 }
@@ -101,8 +102,4 @@ span{width: 40%;}
     border: #79c142 groove;
     padding: 5px;
     border-radius: 10px;
-}
-.btn_form:hover{
-    background-color: #f9f9f9;
-    transition: background-color .5s;
 }
