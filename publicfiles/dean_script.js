@@ -145,7 +145,7 @@ ${countdata.declined}
 </div>
 
 </div>
-<button type=button id="back" class="form-control btn-primary" onclick="showThis(1)"><img src="../img/Back.png" class="mybtn-icon" alt="">back</button>
+<button type=button id="back" class="form-control btn-primary" onclick="showThis(1)"><img src="../img/Back.png" class="mybtn-icon" alt="">Back</button>
 `
 const studentList=document.getElementById("LIST")
 
@@ -221,7 +221,7 @@ function graph(){
 
 
        s3.innerHTML+=`<button type="button" id="back"class="form-control btn-primary" onclick="showThis(1)">
-       <img src="../img/Back.png" class="mybtn-icon" alt="">back
+       <img src="../img/Back.png" class="mybtn-icon" alt="">Back
        </button>`;
 const dates={
   d1:date1,
