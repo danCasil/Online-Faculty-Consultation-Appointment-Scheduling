@@ -16,12 +16,12 @@
  
   <div id="ofcasLoad"> <img src="../img/loading.gif" alt=""></div>
  <div class="row">
- <div class="col-sm-8"></div>
- <div class="col-sm-4"> 
+ <div class="col-md-8"></div>
+ <div class="col-md-4"> 
 <form action="/<%= role %>/reg/new"  method="post" class="form-control form"id="registrationForm">
         
-    <img src="../img/OCAS-logo.png" style="position: absolute;top: 0;width: auto;height: 150px; left: 50%;
-  transform: translateX(-50%);" alt="">
+    <img src="../img/OCAS-logo.png" style="position: absolute;top: 0;height: auto; left: 50%;
+  transform: translateX(-50%);" alt="" id="regLogo">
         <center><h5  id="welcome" ><b>Welcome to faculty registration</b></h5></center>
         <div class="label_sub_title" >Don't worry your information will be kept privately</div>
         <input type="hidden" id="role" value="<%= role %>">
@@ -203,7 +203,7 @@
          </div>
        </div>       
        <center>
-       <button type="button" onclick="" id="NextBTN"><img src="../img/download.png"width="30px"height="40px"   alt=""></button>
+       <button type="button" onclick="" id="NextBTN"><img src="../img/download.png"width="30px"height="auto"   alt=""></button>
        <div class="form_btn"></center>  
 
          <button type="button" onclick="window.location.href='/'"  id="Rbtn">Already have an account</button> 

@@ -2,7 +2,7 @@
 #Rbtn{
     position: absolute;
     left: 50%;
-    bottom:1px;
+    bottom:0px;
     transform: translate(-50%, -50%);
        background-color: transparent;
     backdrop-filter: blur(2px);
@@ -15,7 +15,7 @@
 .form-control.form{
     margin-top: 1vh;
     margin-bottom: 1vh;
-    height: 98vh;
+    height: 100vh;
     background-color:rgba(255, 255, 255, 0.71);
     backdrop-filter: blur(2px);
     -webkit-backdrop-filter: blur(2px);
@@ -23,7 +23,7 @@
    
 }
 #welcome{
-    font-size: 25px;
+    font-size: auto;
     font-weight: bold;
 }
 
@@ -45,7 +45,7 @@
      background-color: #b6d8a0 ;
        color:#f9f9fa;
        position: absolute;
-        bottom: 8%;
+        bottom:15%;
      
     }
     #NextBTN:disabled{
@@ -92,8 +92,18 @@
     top: 12px;
 
 }
-
-   @media (max-width:500px) {
+@media (min-width:768px) {
+#welcome{
+    margin-top: 50%;
+}
+#regLogo{
+    width: 70%;
+}
+}
+   @media (max-width:768px) {
+    #regLogo{
+        width: 40%;
+    }
     #section1_input{
         padding: 0;
         margin-top: 15px;
@@ -113,7 +123,7 @@
     -webkit-backdrop-filter: blur(2px);
  }
  #Rbtn{
-    bottom:-20px;
+    bottom:2px;
  }
 #birth{
     position: absolute;
@@ -125,7 +135,7 @@
 }
 #welcome{
     margin-bottom: 10px;
-    margin-top: 50%;
+    margin-top: 30%;
     color: #375623;
 }
 #birthday{
@@ -165,7 +175,7 @@
 }
 
 
-@media (min-width:500px) {
+@media (max-width:500px) {
  
     #inputLabelidnum{
         position: absolute;

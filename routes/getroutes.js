@@ -110,7 +110,9 @@ route.get("/home",authenticate, (req, res)=>{
     const role=req.session.role
     res.render("home",{id,date,role})
 })
-
+route.get("/test",(req,res)=>{
+    res.render("test")
+})
 route.get( "/change",authenticate,(req, res)=>{
  
     const id=req.session.user_id

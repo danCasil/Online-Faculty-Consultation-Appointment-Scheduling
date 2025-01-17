@@ -16,17 +16,36 @@ font-size: 13px;
 flex:1
 }
 
+@media (min-width:768px) {
+    #LoginLogo{
+    width: 100%;
+    margin-bottom: 10px;
+    }
+}
+@media (max-width:766px) {
+    #LoginLogo{
+    width: 20%;
+    margin-bottom: 10px;
+    }
+}
+@media (max-width:500px) {
+    #LoginLogo{
+    width: 100%;
+    margin-bottom: 10px;
+    }
+  
+}
 </style>
 <body><div id="ofcasLoad"> <img src="../img/loading.gif" alt="" ></div>
 <div class="container-fluid">
      <div class="row"style="margin-left: auto;margin-right: auto;">
-        <div class="col-sm-9">
+        <div class="col-md-9">
            
         </div>
-        <div class="col-sm-3" >
+        <div class="col-md-3" >
            
             <form action="/OTP" method="post" id="login_form" class="form-control form">
-                 <h4 class="web-app" style="margin-top: 0;margin-bottom: 0;"><img src="../img/OCAS-logo.png" alt="" style="height: 130px;width: 210px;margin-bottom: 10px;"></h4>
+                 <h4 class="web-app" style="margin-top: 0;margin-bottom: 0;"><img src="../img/OCAS-logo.png" alt="" id="LoginLogo"></h4>
             <h6 style="text-align: center;font-weight: bold;color:#375623  ;">Faculty and Student Login</h6>
 <div style="position: relative;">
     
@@ -44,19 +63,28 @@ flex:1
 <div id="loginErr" style="margin-top: 10px;">It seems that you entered your credentials wrong. Please check and try again.</div>
                 <div class="row" style="margin-top: 10px;">
                   <div class="col-6">
-                      <button type="submit" class="inputs btn_form"  style="margin-bottom:0;"id="loginBTN">Login</button> 
+                      <button type="submit" class="inputs btn_form"  style="width: 100%;"id="loginBTN">Login</button> 
                   </div>
                   <div class="col-6">
                     <a type="button" class="inputs "style="text-align:center;flex:1;padding-top:0;margin-bottom:0;" id="forgot">Forgot Password?</a>
                   </div>
                 </div>
                 <div class="form-control hr"></div>
+<div class="row" style="padding: 0;">
+<div class="col-6" style="padding: 0;"> 
+     <label for="register">New to OFCAS?</label>
+</div>
+<div class="col-6" style="padding: 0;"> 
+    <a type="button" class="inputs " id="register" >Create An Account</a>
+</div>
+</div>
+               
 
-               <div style="display: flex;width: 100%;">
-                 <button type="button" class="inputs btn_form" id="register" style="flex:1;">Register</button>
                 
-               </div>
-                 <button type="button" class="inputs btn_form" onclick="window.location.href='/secret'" style=""><img src="../img/dean.png" alt="" style="height: 25px;width: 25px;margin-right: 10px;">Login As Dean</button></div>
+                
+                
+            
+                </div>
        
             </form>
                
