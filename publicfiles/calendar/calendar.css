@@ -4,7 +4,10 @@
 
 
 .calendar-head{
-width: 10%;
+width: 100%;
+color: black;
+border: .25px rgba(0, 0, 0, 0.457) solid;
+background-color:#b6d8a0 ;
 padding: 0;
 text-align: center;
 }
@@ -12,6 +15,7 @@ text-align: center;
 #calendar-body {
     margin-top: 15px;
     display: grid;
+    border: .25px rgba(0, 0, 0, 0.457) solid;
 width: 100%;
 padding: 0px;
     text-align: center;
@@ -24,7 +28,7 @@ padding: 0px;
     background-color:#ffffff ;
     text-align: center;
     padding: 0;
-    border: 0;
+    border: .25px rgba(0, 0, 0, 0.457) solid;
     height: 55px;
     max-height: 55px;
   

@@ -382,17 +382,14 @@ route.get("/load/available",async (req,res)=>{
     const results=await queryDatabase("SELECT DISTINCT day FROM "+table+" WHERE id=$1 AND day=$2;",[id,day])
     const results2=await queryDatabase("SELECT indx FROM "+table+" WHERE id=$1 AND day=$2;",[id,day])
     const result3=await queryDatabase("SELECT * FROM sched JOIN "+table+" ON sched.time_in="+table+".timein AND sched.time_out="+table+".timeout  WHERE (nasched=$1 OR nagsched=$2) AND date=$3 AND remark='accepted'",[id,id,targetdate])
-
+    
    
  
   if(results&&results.length==1&&(results2.length>result3.length)){
-    console.log(`SELECT * FROM sched JOIN ${table} ON sched.time_in=${table}.timein AND sched.time_out=${table}.timeout  WHERE nasched='${id}' AND date='${targetdate}' AND remark='accepted'`)
+    const Allin=await queryDatabase("SELECT timein FROM "+table+" WHERE id=$1 AND day=$2;",[id,day])
     const slot=results2.length-result3.length
-    console.table(results)
-    console.table(result3)
-    console.table(results2)
-    console.log(""+slot+"Dasdasdkashdjk")
-    res.json({status:true,result3,slot:slot})
+
+    res.json({status:true,result3,Allin,slot:slot,results})
   }else{
 res.json({status:false})
     }
@@ -633,5 +630,11 @@ route.get('/load/notif/filter',async(req,res)=>{
 
        return  formattedDate = originalDate.toLocaleDateString('en-US', options);
     }
+route.get("/ReqOTP",(req,res)=>{
+
+    let data="data"
+    res.json({data})
+})
+
 
 module.exports = route

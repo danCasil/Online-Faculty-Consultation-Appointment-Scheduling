@@ -47,6 +47,9 @@ background-color: red;
 color: white;
 background-color: #375623;
 }
+a{
+  overflow: hidden;
+}
 </style>
 <body>
   <div id="ofcasLoad" style="z-index: 100000000000000000;"> <img src="../img/loading.gif" alt=""></div>
@@ -86,6 +89,12 @@ background-color: #375623;
       <a  class="form-control " style="margin-bottom: 10%;"  type="button"
      id="student_notifier"><img src="../img/notifier_normal.png"id="icon4"class="navbaricon" alt="" >Notify A Student</a>
     
+<div id="pcFormat">
+  <hr>
+       <a class="form-control" id="changepasswordbtn1">
+        <img src="../img/resetPass_normal.png"id="icon10"class="navbaricon" alt="">Change Password</a>
+       <a href="/logout" class="form-control"><img src="../img/logout_normal.png"id="icon5"class="navbaricon" alt="">Logout</a>
+</div>
      <div id="cp">
       <img  src="../img/profile_normal.png"  style="width: 20px;height: 20px;display: inline;margin-right: 5px;margin-left: 8px;"alt="">
       <div id="currentUsername" style="display: inline; ">
@@ -117,6 +126,7 @@ pC.classList.add('collapsed')}else{
     function getElm(id){
       return document.getElementById(id)
     }
+
    
 
     document.addEventListener("DOMContentLoaded",function(e){
@@ -128,56 +138,34 @@ pC.classList.add('collapsed')}else{
         document.getElementById('profileContainerPC').style.display="none"
     const cp=document.getElementById('cp')
     cp.style.display=""
+    document.getElementById('pcFormat').style.display="none" 
+
     document.getElementById('changepasswordbtn').onclick=()=>{
       window.location.href=`/secure/${data.id}`}
+      
+     
     document.getElementById('currentUsername').textContent=data.name
-       }else{const cp=document.getElementById('cp')
+       }else{
+        document.getElementById('changepasswordbtn1').onclick=()=>{
+
+        window.location.href=`/secure/${data.id}`}
+        const cp=document.getElementById('cp')
     cp.style.display="none"
+    document.getElementById('pcFormat').style.display="" 
              document.getElementById('profileContainerPC').style.display=""
-        getElm('currentUser').innerHTML= `${data.name}<img src="../img/drop.png" alt="" style="width: 20px;height: 20px;display: inline;margin-right: 5px; margin-left:10px"id="dropIcon" alt="">`
-        const a1=document.createElement('a')
-        const a2=document.createElement('a')
-       a1.href=`/secure/${data.id}`
-       a1.id="profReset"
-       a1.classList.add('form-control','profBTN')
-       a1.style.marginTop="10px"
-       a1.style.marginBottom="10px"
-        a1.innerHTML=`<img src="../img/resetPass_normal.png"id="icon5"class="navbaricon" alt="">Change Password
-       `  
-        a2.id="profLogout"
-       a2.href="/logout" 
-       a2.classList.add('form-control','profBTN')
-       a2.style.marginTop="0px"
-       a2.innerHTML=` <img src="../img/logout_normal.png"id="icon5"class="navbaricon" alt="">Logout`
-        getElm('currentUser').appendChild(a1)
-        getElm('currentUser').appendChild(a2)
-
-
-        getElm('profLogout').addEventListener("mouseenter",function(){
-          this.innerHTML= ' <img src="../img/logout.png"id="icon5"class="navbaricon" alt="">Logout'
-})
-getElm('profLogout').addEventListener("mouseleave",function(){
-          this.innerHTML= ' <img src="../img/logout_normal.png"id="icon5"class="navbaricon" alt="">Logout'
-})
-getElm('profReset').addEventListener("mouseenter",function(){
-          this.innerHTML= ' <img src="../img/resetPass_hover.png"id="icon5"class="navbaricon" alt="">Change Password'
-})
-getElm('profReset').addEventListener("mouseleave",function(){
-          this.innerHTML= ' <img src="../img/resetPass_normal.png"id="icon5"class="navbaricon" alt="">Change Password'
-})
+        getElm('currentUser').innerHTML= `${data.name}`
       }
       
          if(data.role=='student'){
        
         if(window.location.pathname=='/change'){
-        chg.innerHTML='<img src="../img/change_active.png"id="icon3" style="top:7px" class="" style="" alt="">Add Freetime'
-
-        getElm('titleHr1').textContent='Free Time'
-        getElm('exampleModalLabel').textContent='Add Free Time'
+        chg.innerHTML=''
+        chg.classList.remove('form-control')
+      
 
       }else{
-       
-        chg.innerHTML='<img src="../img/change_normal.png"id="icon3" style="top:7px" class="" style="" alt="">Add Freetime'
+        chg.classList.remove('form-control')
+        chg.innerHTML=''
         }
 
 

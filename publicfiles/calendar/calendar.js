@@ -54,7 +54,7 @@ let currentYear=today.getFullYear();
 
 function generateCalendar(year, month, target) {
   calendar.innerHTML = ''; // Clear previous +
-  
+
 const datecurrent=document.getElementById("datecurrent")
 
   // Calculate the first day of the month
@@ -106,7 +106,11 @@ for(let i=1; i<=daysInMonth[month];i++){
   updateCaLendardata(i,month,parameter)
 }
 }
-
+function getAMorPM() {
+  const now = new Date();
+  const hours = now.getHours();
+  return hours >= 12 ? 'PM' : 'AM';
+}
 function updateCaLendardata(date,month,parameter){
   document.getElementById("ofcasLoad").style.display=""
   fetch(`/load/available?year=${parameter.year}&date=${date}&month=${month}&day=${parameter.day}&target_id=${parameter.target_id}`).then(response=>response.json()).then(data=>{
@@ -114,7 +118,7 @@ function updateCaLendardata(date,month,parameter){
 if(daysInMonth[month]==date){
   
   document.getElementById("ofcasLoad").style.display="none"
-}
+}  responsive()
    const events=[{
       name:'founding Aniversary',
       date:25,      
@@ -159,12 +163,61 @@ if(holiday==true){
 
   const diff= dateDifference(`${parameter.year}-${month+1}-${date}`,new Date())
   console.log(`${diff.days} ${month+1}${date}`)
-  if(month==today.getMonth()&&diff.days>1){
- container.textContent=`${avtxt} slot`
+console.table(data.Allin)
+
+  if(month==today.getMonth()&&((today.getDate()==date)  ) ){
+   
+console.log(month+"/"+parameter.year+"/"+date +"//"+today.getDate())
+
+
+let numSlot=avtxt
+ let now = new Date();
+ let Ttype = now.getHours() >= 12 ? 'PM' : 'AM';
+ let timeNow = now.getHours() + ":" + now.getMinutes() + ":00";
+
+ data.Allin.forEach(timeIN => {
+     let Tin = timeIN.timein;
+     let Tinhours = parseInt(Tin.split(":")[0], 10);
+     let timeDiff,Time1,Time2
+     if (Tinhours >= 8 && Tinhours <= 11) {
+    Time2= Tinhours 
+      
+     }else{
+      switch (Tinhours) {
+        case 1:
+          Time2=13
+          break
+        case 2:
+          Time2=14
+          break
+        case 3:
+          Time2=15
+          break
+        case 4:
+          Time2=16
+          break
+      }
+     }
+     timeDiff=now.getHours() - Time2;
+     let hoursNow = now.getHours();
+
+ 
+     if (timeDiff >= 2) {
+      numSlot-=1
+     } 
+     
+ });
+
+ if(numSlot==0){
+  container.textContent="" 
+ }else{
+ container.textContent=`${numSlot} slot`
  datebtn.classList.toggle("available")
  datebtn.onclick=()=>SeeAvailableTime(date,month,parameter.day,parameter.target_id,parameter.year)
+ }
+
 }
- else if(month>today.getMonth()){
+ else if(month>today.getMonth()|| (today.getDate()<date)){
   container.textContent=`${avtxt} slot`
   datebtn.classList.toggle("available")
   datebtn.onclick=()=>SeeAvailableTime(date,month,parameter.day,parameter.target_id,parameter.year)

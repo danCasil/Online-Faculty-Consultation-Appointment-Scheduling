@@ -146,12 +146,11 @@ fetch("/load/new_notification").then(response=>response.json()).then(data=>{
             col_day =document.querySelectorAll('.day')
              calendar.style.gridTemplateColumns=`repeat(7,${column_witdh}px)`
         }else{
+            
             column_witdh=calendar.offsetWidth/7
             col_day=document.querySelectorAll('.day')
         calendar.style.gridTemplateColumns=`repeat(7,${column_witdh}px)`}
-    col_day.forEach(days=>{
-       days.style.width=column_witdh+"px"  
-    })
+
     }
 
     if(editBtn){

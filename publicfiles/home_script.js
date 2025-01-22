@@ -262,7 +262,26 @@ if((diff.days==-2)||(diff.days==-1)){
    }
   col4.appendChild(f)}
   else{
-col4.textContent="Waiting for Confirmation"
+    const f=document.createElement("button")
+    f.innerText="Request OTP"
+    f.classList.add("form-control")
+    f.style.marginLeft="auto"
+    f.style.marginRight="auto"
+    f.style.width='50%'
+    f.style.backgroundColor="#538135"
+     f.style.color="white"
+     f.onclick=()=>{
+        document.getElementById("ofcasLoad").style.display =""
+      fetch("/ReqOTP").then(response=>response.json()).then(data=>{
+  document.getElementById("ofcasLoad").style.display ="none"
+//tapusin ko sa susunod
+
+      }).catch(err=>{
+
+      }) 
+
+     }
+col4.appendChild(f)
   }
 }else {
 
