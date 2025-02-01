@@ -203,7 +203,7 @@ route.get("/getfaculty",async(req, res)=>{
     const college=req.session.college
     /**SELECT DISTINCT info.id_number, info.first,info.mid,info.last, record.used_time,record.type FROM info JOIN record ON info.id_number = record.id_number WHERE college= */
     try{
-    const result = await queryDatabase('SELECT id_number,first,mid,last,college FROM info WHERE college=$1',[college])
+    const result = await queryDatabase('SELECT id_number,first,mid,last,college FROM info WHERE course="faculty" and college=$1',[college])
     res.json({result})
    }catch (err) { 
     console.error('Failed to fetch records:', err);
