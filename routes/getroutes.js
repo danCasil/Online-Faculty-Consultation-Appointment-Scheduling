@@ -21,12 +21,12 @@ const authenticate = (req, res, next) => {
         res.redirect('/')
     }
 }
-const authenticateDean = (req, res, next) => {
+const authenticateSec = (req, res, next) => {
     if(req.session.user_id){
         console.log(req.session.user_id)
         next()
     }else{
-        res.redirect('/secret')
+        res.redirect('/')
     }
 }
 const checkLogSession = (req, res, next) => {
@@ -102,7 +102,21 @@ route.get( "/creator/logout",(req, res)=>{
 })
 //end of development
 
-
+route.get("/grouper",async(req, res)=>{
+    const id=req.session.user_id
+    try {
+        const role=await queryDatabase("SELECT course FROM info WHERE id_number=$1",[id])
+     
+    if(role[0].course=="secretary"){
+        res.redirect("/home/sec")
+    }else{
+        res.redirect("/home")
+    }
+    }
+    catch { 
+        console.error("err")
+    }
+})   
 route.get("/home",authenticate, (req, res)=>{
    
   const id=req.session.user_id
@@ -191,7 +205,7 @@ route.get("/secret",(req, res)=>{
     res.render("DeanLogin")
 })
 
-route.get("/home/sec",authenticateDean,(req, res)=>{
+route.get("/home/sec",authenticateSec,(req, res)=>{
     res.render("sec")
 })
 route.get('/dean_logout',(req,res)=>{

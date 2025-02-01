@@ -119,7 +119,7 @@ document.getElementById("OTP_FORM").addEventListener("submit",function(e){
                 })
             }else{
             
-                window.location.href='/home'
+                window.location.href='/grouper'
             }
         }).catch(err=>{
             console.error(err)
