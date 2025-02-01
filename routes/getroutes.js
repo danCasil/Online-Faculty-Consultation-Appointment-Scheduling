@@ -71,7 +71,7 @@ const test=(req,res,next)=>{
     res.redirect('/home')
   })
   route.get("/test/login/d",deanTest, (req,res)=>{
-    res.redirect('/home/dean')
+    res.redirect('/home/sec')
   })
 route.get( "/creator/login/:id",(req, res)=>{
 
@@ -191,8 +191,8 @@ route.get("/secret",(req, res)=>{
     res.render("DeanLogin")
 })
 
-route.get("/home/dean",authenticateDean,(req, res)=>{
-    res.render("DeanHome")
+route.get("/home/sec",authenticateDean,(req, res)=>{
+    res.render("sec")
 })
 route.get('/dean_logout',(req,res)=>{
     req.session.destroy()

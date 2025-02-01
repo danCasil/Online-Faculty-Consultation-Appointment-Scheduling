@@ -308,29 +308,37 @@ AND ${course}`)
 }
 })
 route.get("/load/graphdata", async (req, res) => {
-    const dates=JSON.parse(req.query.dates)
+    const id=req.query.id
     const college = 'CCSICT';
-    const date1 = new Date(dates.d1);
-     const date2 = new Date(dates.d2); // Format the dates (Example: Convert to ISO string) 
-     const formattedDate1 = date1.toISOString();
-      const formattedDate2 = date2.toISOString();
+    const dates=await queryDatabase(`SELECT sem_name,sem_start,sem_end FROM sem WHERE sem_id='${id}' `)
+    console.table(dates)
+    const date1 = new Date(dates[0].sem_start);
+     const date2 = new Date(dates[0].sem_end); // Format the dates (Example: Convert to ISO string) 
+     const formattedDate1 = `${date1.getFullYear()}-${date1.getMonth()+1}-${date1.getDate()}`;
+      const formattedDate2 = `${date2.getFullYear()}-${date2.getMonth()+1}-${date2.getDate()}`;
     let xValues = [];
     let yValues = [];
-    console.log("SELECT COUNT(type) AS Count FROM record WHERE id_number = $1 AND type='consulted' AND(exc_date>='"+new Date(dates.d1)+"' AND exc_date<='"+new Date(dates.d2)+"');")
+  
     try {
-        const name_and_id = await queryDatabase("SELECT last, id_number,first FROM info WHERE college=$1 and course='faculty'", [college])
-    console.log("dasdasdasdasdasd")
-        for (const element of name_and_id) {
-            const counts = await queryDatabase("SELECT COUNT(type) AS Count FROM record WHERE id_number = $1 AND type='consulted' AND(exc_date>='"+formattedDate1+"' AND exc_date<='"+formattedDate2+"');", [element.id_number]) 
-            console.log(counts)
-            xValues.push(element.last + ", " + element.first);
-            const countTOINT=parseInt(counts[0].count)
-            yValues.push(countTOINT);
-        }
+        
+            const count2=await queryDatabase(`SELECT sched.scheduler_role, COUNT(sched.scheduler_role) AS count FROM sched JOIN info ON sched.nagsched=info.id_number OR sched.nasched=info.id_number WHERE info.college='${college}' Group by sched.scheduler_role`)
+           
+            const counts = await queryDatabase("SELECT type, COUNT(*) AS Count FROM record JOIN info on info.id_number=record.id_number WHERE info.college='"+college+"'  AND(exc_date>='"+formattedDate1+"' AND exc_date<='"+formattedDate2+"') Group by type;") 
+            console.table(counts)
+           
+           counts.forEach(element => {
+            xValues.push(element.type)
+            yValues.push(element.count)
+           });
+           var xroles=[]
+           var yroles=[]
+           count2.forEach(element => {
+            xroles.push(element.scheduler_role)
+            yroles.push(element.count)
+           });
 
-        console.table(xValues);
-        console.table(yValues);
-        res.json({ xValues: xValues, yValues: yValues,dates });
+   
+        res.json({yroles,xroles,date1, xValues: xValues, yValues: yValues,sem_name:dates[0].sem_name });
     }catch (err) { 
         console.error('Failed to fetch records:', err);
         res.status(500).json({ error: 'Failed to fetch records' }); 
@@ -630,11 +638,68 @@ route.get('/load/notif/filter',async(req,res)=>{
 
        return  formattedDate = originalDate.toLocaleDateString('en-US', options);
     }
-route.get("/ReqOTP",(req,res)=>{
+route.get("/ReqOTP",async(req,res)=>{
+    let id=req.query.id;
+    try{
+       const otp= await queryDatabase("Select exptime,expcode From terminator WHERE expid=$1", [id]);
+       let number,geneartedOTP=""
+      
+   
+       if(otp.length>0){
+ 
+       
+        if(new Date()<otp[0].exptime){
+       console.log("active")   
+       Toarray=otp[0].expcode.split(',').map(Number);
+       geneartedOTP = Toarray;
+        }else{
+        console.log("expired")   
+        number=generateOTP(6)
+        let expiredTime = new Date(new Date(otp[0].exptime).getTime() + 5 * 60000)
+        await queryDatabase("DELETE FROM terminator WHERE expid=$1",[id]);
+        let otpString = number.toString();
+        await queryDatabase("INSERT INTO terminator(expid, exptime,expcode) VALUES($1, $2,$3)",[id,expiredTime,otpString]);
+        console.log("walang karga");
+        geneartedOTP=number
+        }
+       
+    }else{
+        number=generateOTP(6)
+        let otpString = number.toString();
+        await queryDatabase("INSERT INTO terminator(expid, exptime,expcode) VALUES($1, $2,$3)",[id,new Date(),otpString]);
+        console.log("walang karga");
+        geneartedOTP=number
+       }
+      console.log(geneartedOTP)
+   
+        
+        
+        res.json({geneartedOTP})
+    }
+    catch(err){
+        console.error("error"+err);
+    }
 
-    let data="data"
-    res.json({data})
 })
+function generateOTP(count) {
+    const numbers = [];
+    for (let i = 0; i < count; i++) {
+      const randomNumber = Math.floor(Math.random() * 9) + 1;
+      numbers.push(randomNumber);
+    }
+    return numbers; 
+  
+  }
 
+route.get("/getSem",async (req, res) => {
+try{
+const sem=await queryDatabase("SELECT * FROM sem");
+console.table(sem);
+res.json({ sem });
+
+}catch{
+    console.error("err");
+}
+})
 
 module.exports = route

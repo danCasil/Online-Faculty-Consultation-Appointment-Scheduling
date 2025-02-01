@@ -48,10 +48,11 @@ route.patch("/update/notification",async (req,res)=>{
 route.patch("/update/record",async(req,res)=>{
 
     const complete=req.query.complete
+    const otp=req.query.OTP
    const bd=req.query.data
    const data=JSON.parse(bd)
     const date=new Date()
-
+    const databaseOTP= await queryDatabase("Select exptime,expcode From terminator WHERE expid=$1", [data.sched_id]);
 
 let learn,teach
 
@@ -62,10 +63,12 @@ if(data.scheduler_role=='student'){
     teach=data.nagsched
     learn=data.nasched
 }
-console.log(complete)
- if(complete=='true'){
+
+ if(databaseOTP&&databaseOTP.length==1&&complete=='true'){
     try {  
-console.table(data)      
+        let Studentotp=databaseOTP[0].expcode
+  if(Studentotp===otp){
+  
   const info={
     teach:teach,
     id:data.sched_id,
@@ -78,10 +81,16 @@ console.table(data)
  
   await updateRecord(info)
         await queryDatabase("UPDATE sched SET remark='finished' WHERE sched_id=$1",[data.sched_id]);
+        await queryDatabase("DELETE From terminator WHERE expid=$1", [data.sched_id]);
         mailSendNotif(data,'finish',req)
         commitAndPush()
-        res.json({success:true})
-         } catch (err) {  
+        res.json({wrong:false})
+        }else{
+        
+        res.json({wrong:true})
+        }
+    
+    } catch (err) {  
             console.error('Failed to fetch records:', err);
              res.status(500).json({ error: 'Failed to fetch records' }); 
             }

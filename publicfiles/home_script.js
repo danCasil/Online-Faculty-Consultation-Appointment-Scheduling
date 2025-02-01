@@ -272,9 +272,24 @@ if((diff.days==-2)||(diff.days==-1)){
      f.style.color="white"
      f.onclick=()=>{
         document.getElementById("ofcasLoad").style.display =""
-      fetch("/ReqOTP").then(response=>response.json()).then(data=>{
+      fetch(`/ReqOTP?id=${data.sched_id}`).then(response=>response.json()).then(data=>{
   document.getElementById("ofcasLoad").style.display ="none"
-//tapusin ko sa susunod
+const otpContainer = new bootstrap.Modal(
+  document.getElementById("otpContainer"),
+);
+const ContainerOTP=document.getElementById("StudentOTP")
+ContainerOTP.innerHTML=""
+data.geneartedOTP.forEach(number=>{
+const box= document.createElement("div")
+box.style.border="1px solid black"
+box.style.textAlign="center"
+box.classList.add("col-2")
+box.textContent=number
+ContainerOTP.appendChild(box)
+})
+
+otpContainer.show()
+
 
       }).catch(err=>{
 
@@ -306,7 +321,7 @@ c.style.marginLeft='auto'
   col4.textContent= `Tomorrow`; 
 }
 else{
-  alert(diff.days)
+
   over=overLay(`overlay${data.sched_id}`,'Missed')
 
   fetch(`/update/missed?id=${data.sched_id}`,{method:"PATCH"})
@@ -448,25 +463,35 @@ fetch(`/update/schedule/accept?id=${encodeURI(id)}`,{method:'PATCH'}).then(respo
   }
 }
 
+
 //old
-function insertcomplete(senddata) {
-  console.table(senddata)
+
+async function  insertcomplete(senddata) {
   const c1= document.getElementById("choice1").checked
+  let otp=[]
+  document.querySelectorAll(".InputOTP").forEach(item => {
+    otp.push(item.value)
+  })
   var complete
   if(c1==true){
     complete='true'
   }else{
    complete='false'
   }
+  
   const dataString=JSON.stringify(senddata)
-  fetch(`/update/record?data=${encodeURI(dataString)}&&complete=${complete}`, {
+  fetch(`/update/record?data=${encodeURI(dataString)}&&complete=${complete}&&OTP=${otp}`, {
     method: 'PATCH',
 
   })
     .then(response => response.json())
     .then(data => {
+      if(data.wrong==true){
+        alert("You inputted a wrong OTP. Please try again.")
+      }else{
+        window.location.reload()
+      }
 
-  window.location.reload()
     })
     .catch(error => {
 

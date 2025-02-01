@@ -434,6 +434,18 @@ document.addEventListener("DOMContentLoaded",function(){
         ></button>
       </div>
       <div class="modal-body">
+       <div class="container-fluid">
+        <div class="row" id="OTPcompletion">
+          <p style="margin-bottom: 5px;text-align: center;font-size: 13px;font-weight: bold;">Please input the one-time pin (OTP) that you can obtain from the student you consulted with.</p>
+          <input type="number"
+          id="otp1"class="InputOTP col">
+          <input type="number"  id="otp2"class="InputOTP col">
+          <input type="number"  id="otp3"class="InputOTP col">
+          <input type="number"  id="otp4"class="InputOTP col">
+          <input type="number"  id="otp5"class="InputOTP col">
+          <input type="number"  id="otp6"class="InputOTP col">
+        </div>
+       </div>
         <div class="form-check">
           <input class="form-check-input" type="radio" name="flexRadioDefault" id="choice1" checked>
           <label class="form-check-label" for="choice1">
@@ -462,9 +474,95 @@ document.addEventListener("DOMContentLoaded",function(){
     </div>
   </div>
 </div>
+<style>
+  .InputOTP{
+    margin: 3px;
 
+  }
+  input[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+</style>
 
+<script>
+  
+  document.getElementById("completionBTN").disabled=true
+  document.querySelectorAll(".form-check-input").forEach(element=>{
+     element.addEventListener("click",function(){
+      const inputs = document.querySelectorAll(".InputOTP");
+    let allFilled = true;
 
+    inputs.forEach(input => {
+      if (input.value === '') {
+        allFilled = false;
+      }
+    });
+      let condition1=document.getElementById("choice1").checked
+      if(condition1){
+        
+document.getElementById("OTPcompletion").style.display=""
+if (allFilled) {
+      document.getElementById("completionBTN").disabled = false;
+    }else{
+document.getElementById("completionBTN").disabled=true
+    }
+
+  }else{
+document.getElementById("OTPcompletion").style.display="none"
+document.getElementById("completionBTN").disabled=false
+  }
+     })
+  })
+
+document.querySelectorAll(".InputOTP").forEach(function(el) {
+    el.addEventListener("keydown",function(e){
+        const otpid = el.id;
+        const lastChar = parseInt(otpid.charAt(otpid.length - 1));
+        const id = lastChar - 1;
+        const nextInput = document.getElementById(`otp${id}`); 
+        if(e.keyCode==8){
+            if(el.value==''){
+            nextInput.focus();
+          }
+          document.getElementById("completionBTN").disabled=true
+     
+        } 
+        const inputs = document.querySelectorAll(".InputOTP");
+    let allFilled = true;
+
+    inputs.forEach(input => {
+      if (input.value == '') {
+        allFilled = false;
+      }
+    });
+    if (allFilled) {
+      document.getElementById("completionBTN").disabled = false;
+    }
+   
+    })
+    el.addEventListener("input", function(e) {
+        const otpid = el.id;
+        const lastChar = parseInt(otpid.charAt(otpid.length - 1));
+        const id = lastChar + 1;
+        if (el.value !== null && el.value !== '') {
+            el.value = el.value.slice(-1);
+             }
+        if (el.value > 0 && el.value < 10) {
+            const nextInput = document.getElementById(`otp${id}`);
+            if (nextInput) {
+                nextInput.focus();
+            }else{
+              document.getElementById("completionBTN").disabled=false
+                document.getElementById("completionBTN").focus()
+                
+            }
+        }
+        
+    });
+});
+
+</script>
 
 
   <div class="modal fade" id="declineForm" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
@@ -497,8 +595,47 @@ document.addEventListener("DOMContentLoaded",function(){
     </div>
   </div>
 
-  <!-- Optional: Place to the bottom of scripts -->
+  <div class="modal fade" id="otpContainer" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
+    role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalTitleId">
+        One Time Pin
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" >
+          <div class="container-fluid" >
+            <div class="row">
+              <div class="col-12">
+<p style="text-align: justify;font-size: 15px;margin-bottom: 5px;">You have requested a one-time password (OTP) for verification purposes. Please use the OTP below within the next <b>5 minutes. </b></p>
+              </div>
+            </div>
+            <div class="row" id="StudentOTP">
 
+
+            </div>
+            <div class="row">
+              <div class="col-12">
+<p style="text-align: center;font-size: 12px;font-weight: bolder;">Give the above OTP to the instructor you consulted.</p>
+              </div>
+            </div>
+          </div>
+
+
+          
+
+        </div>
+        <div class="modal-footer">
+          <button id="cancelbtn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Close
+          </button>
+        
+        </div>
+      </div>
+    </div>
+  </div>
 
 
 

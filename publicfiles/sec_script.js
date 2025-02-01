@@ -1,3 +1,5 @@
+
+
  document.getElementById("ofcasLoad").style.display = ""
 const collegeNameList={
   CCSICT:'College of Computing Studies, Information and Communication Technology',
@@ -206,38 +208,53 @@ showgraph.addEventListener("click",(e)=>{
   if(showgraph.textContent=='Back'){
     showgraph.onclick=window.location.reload()
   }else{
-  
+  getSem()
     showThis(3)
     forDate.show()
   }
 })
-function graph(){
-  const date1=document.getElementById("date1").value
-  const date2=document.getElementById("date2").value
-  if((date1&&date2!=null)&&(date1<date2)){
-    forDate.hide()
-
+function getSem(){
+  fetch("/getSem")
+  .then(response=>response.json())
+  .then(data=>{
+    const holder=document.getElementById("sem-holder")
+    holder.innerHTML=""
+    data.sem.forEach(item=>{
+    const row=document.createElement("div")
+    const control=document.createElement("button")
+    control.textContent=item.sem_name
+    control.type="button"
+    control.classList.add("form-control")
+    row.style.marginBottom="5px"
+    row.classList.add("row")
+    row.onclick=()=>{
+      graph(item.sem_id)
+    }
+    row.appendChild(control)
+    holder.appendChild(row)
+  })
+  }).catch(err=>{
+    console.log("err")
+  })
+}
+function graph(id){
+ 
    document.getElementById("ofcasLoad").style.display = ""
 
 
        s3.innerHTML+=`<button type="button" id="back"class="form-control btn-primary" onclick="showThis(1)">
        <img src="../img/Back.png" class="mybtn-icon" alt="">Back
        </button>`;
-const dates={
-  d1:date1,
-  d2:date2
-}
-const toString=JSON.stringify(dates)
-  fetch(`/load/graphdata?dates=${toString}`).then(response=>response.json()).then(data=>{
-    
-    createGraph(data.xValues, data.yValues,data.dates)
+
+
+  fetch(`/load/graphdata?id=${id}`).then(response=>response.json()).then(data=>{
+    document.getElementById("ofcasLoad").style.display = "none"
+
+    createGraph(data.yroles,data.xroles,data.xValues, data.yValues,data.sem_name,data.count2)
  document.getElementById("ofcasLoad").style.display = "none"
   }).catch(err=>{
     console.log(err)
   })
-}else{
-  alert("Invalid Date")
-}
 }
 document.getElementById("logout").addEventListener("click",(e)=>{
 
@@ -251,74 +268,94 @@ if(data.logout==true){
 })
 
 
-function createGraph(xValues, yValues,dates){
- 
-  const btnFROM=document.createElement("input")
-  const btnTo=document.createElement("input")
-  btnFROM.type="date"
-  btnFROM.id="FROMID"
-  btnFROM.classList.add("form-control")
-
-  const date1 = new Date(  dates.d1); 
-  const options = { month: 'short' };
-   const monthName1 = new Intl.DateTimeFormat('en-US', options).format(date1); 
-   const formattedDate1 = `${monthName1} ${date1.getDate()}, ${date1.getFullYear()}`
-   const date2 = new Date(dates.d2); 
-     const monthName2 = new Intl.DateTimeFormat('en-US', options).format(date2); 
-    const formattedDate2 = `${monthName2} ${date2.getDate()}, ${date2.getFullYear()}`
-  const barColors = ["red", "green","blue","orange","brown"];
+function createGraph(yroles,xroles,xValues, yValues,sem_name,count2){
   
+  const barColors = [];
+  if(xValues.length == 0){
+  xValues=["No Record"]
+  yValues=[1]
+  barColors.push("Gray")
+  }else{
+  forDate.hide()
+
+  xValues.forEach(x=>{
+
+    switch(x){
+      case "consulted":
+        barColors.push("green")
+        break
+      case "missed":
+        barColors.push("red")
+        break
+      case "declined":
+        barColors.push("blue")
+        break
+      case "cancelled":
+        barColors.push("orange")
+        break
+    }
+   
+  })
+}
   new Chart("myChart", {
-    type: "bar",
+    type: "pie",
     data: {
-      labels: xValues,
-      datasets: [{
-        backgroundColor: barColors,
-        data: yValues
-      }]
+        labels: xValues,
+        datasets: [{
+            backgroundColor: barColors,
+            data: yValues
+            
+        }]
     },
     options: {
-      legend: {display: false},
-      title: {
-        display: true,
-        text: `Faculty Consultation Activity: Number of Consultations per Faculty Member from ${formattedDate1} to ${formattedDate2}`
-      },
-      scales: {
-        xAxes: [{ 
-          scaleLabel: { 
-          display: true, 
-          labelString: 'Faculty Members',
-           fontWeight: 'bolder', 
-            fontSize: 14,
-            fontColor: "#375623 ",
-           },
-            ticks: { 
-              autoSkip: false 
-            } }],
-          yAxes: [{
-          ticks: {
-            beginAtZero: true,  
-            callback: function(value) {
-              if (value % 1 === 0) {
-                return value;
-              }
-              return '';  // Don't display non-whole numbers
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: true,
+                position: 'top' 
+            },
+            title: {
+                display: true,
+                text: `${sem_name} Consultation Status`,
+                font: {
+                    size: 18,
+                    weight: 'bold'
+                }
             }
-          }, scaleLabel: { 
-            display: true, 
-            labelString: 'Number of Consultations',
-            fontWeight: "bold",
-            fontSize: 14,
-            fontColor:"#375623 "
-          
-          }
-        }]
-
-      }
-      
-      
+        }
     }
-  });
+});
+
+new Chart("myCharts", {
+  type: "pie",
+  data: {
+      labels: xroles,
+      datasets: [{
+          backgroundColor: ["green","blue"],
+          data: yroles
+          
+      }]
+  },
+  options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+          legend: {
+              display: true,
+              position: 'top' 
+          },
+          title: {
+              display: true,
+              text: `Student and Teacher Engagement for this Month`,
+              font: {
+                  size: 18,
+                  weight: 'bold'
+              }
+          }
+      }
+  }
+});
 }
 
 function filterData(){
