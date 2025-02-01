@@ -43,10 +43,14 @@ function sendOTP(status)
       ).then(data=>{
         document.getElementById('ofcasLoad').style.display = "none";
         if(data.success==true){
-          OTPmodal.show()  
-          Resend_botton.onclick=sendOTP('resend')
+            startTimer(data.seconds)
+            OTPmodal.show()  
+         
         }else{
           startTimer(data.seconds)
+          if(!OTPmodal.show()){
+            OTPmodal.show()
+          }
         }
         
         

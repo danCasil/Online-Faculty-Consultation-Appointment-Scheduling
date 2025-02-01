@@ -4,7 +4,7 @@
     const transporter = require('../emailConfig');
     const { commitAndPush } = require('../gitPusher.js');
     const {encryptThis, verifyThis}= require("../encryptor.js");
-
+    const {updater} = require('../updater.js');
     function queryDatabase(query, params = []) { 
         return new Promise((resolve, reject) => {
             pool.query(query, params, (err, res) => { 
@@ -69,13 +69,14 @@ await queryDatabase("UPDATE info set password=$1 WHERE id_number=$2",[newpass,id
 }
 })
 
-route.get("/OTP",(req, res)=>{
+route.get("/OTP",async (req, res)=>{
     const OTP_params=req.query.OTP_STATUS
     let mailtxt
     let subj
     let OTP_status
     let receipient
-    if(OTP_params.length>7){
+       updater() 
+       if(OTP_params.length>7){
 const OTP_data=JSON.parse(OTP_params)
         OTP_status=OTP_data.stat
         req.session.email=OTP_data.email
@@ -87,10 +88,11 @@ const OTP_data=JSON.parse(OTP_params)
     }
     receipient=req.session.email
 
-
-
+const checkExistingOTP=await queryDatabase("SELECT * FROM terminator WHERE expid=$1 ",[`Login:${req.session.email}`])
+console.table(checkExistingOTP)
+console.log(checkExistingOTP.length)
    let rawOTP
-    if(OTP_status=='send'){
+    if(OTP_status=='send'&&(checkExistingOTP.length==0)){
        
          rawOTP=generateOTP(6)
          const OTP = rawOTP.join('');
@@ -103,9 +105,14 @@ const OTP_data=JSON.parse(OTP_params)
             subj='OFCAS - Login OTP'
         }
         const otplife=new Date()
-        otplife.setMinutes(otplife.getMinutes() + 1);
-        req.session.otpLifespan=otplife
         
+        otplife.setMinutes(otplife.getMinutes() + 3);
+        let userOTP
+        userOTP=rawOTP.join(",")
+        
+        await queryDatabase("INSERT INTO terminator (expid,exptime,expcode) values($1,$2,$3)",[`Login:${req.session.email}`,otplife,userOTP])
+        
+       
           
              const mailOptions = {
             to: receipient,
@@ -120,12 +127,16 @@ const OTP_data=JSON.parse(OTP_params)
                 res.json( { errorMessage: 'Error sending email.' });
             }
             
-            req.session.OTPnumber=OTP;
+            const currentTime = new Date();
+            const remainingTime = Math.max(0, Math.round((otplife - currentTime) / 1000)); 
           
-            res.json({success:true});
+            res.json({success:true,seconds:remainingTime});
 
-        }); }else{
-            const OTP_LIFE=new Date(req.session.otpLifespan)
+        }); 
+    
+    }else{
+        const OTPtime=checkExistingOTP[0].exptime
+            const OTP_LIFE=new Date(OTPtime)
             console.log(OTP_LIFE>new Date())
             if(OTP_LIFE>new Date()){
                 console.log("Cooldown")
@@ -148,9 +159,10 @@ function generateOTP(count) {
 
 route.post("/OTP/Authenticate",async (req,res)=>{
     const {otp1,otp2,otp3,otp4,otp5,otp6}=req.body
-    const OTP=otp1+''+otp2+''+otp3+''+otp4+''+otp5+''+otp6
-    
-   if(OTP==req.session.OTPnumber){
+    const OTP=otp1+','+otp2+','+otp3+','+otp4+','+otp5+','+otp6
+    const OTPNum=await queryDatabase("SELECT * FROM terminator WHERE expid=$1",[`Login:${req.session.email}`])
+   if(OTPNum&&OTPNum.length>0) {
+   if(OTP==OTPNum[0].expcode){
     if(req.session.otp_type){
         res.json({success:true,type:'reg'})
     }else{ 
@@ -166,6 +178,8 @@ route.post("/OTP/Authenticate",async (req,res)=>{
         }   
 }
 }else{
+    res.json({success:false})
+   }}else{
     res.json({success:false})
    }
 })

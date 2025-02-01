@@ -1,5 +1,6 @@
 const express = require("express")
 const route = express.Router()
+const {updater} = require('../updater.js');
 const db = require('../postdb');
 const {encryptThis, verifyThis}= require("../encryptor.js");
 require('dotenv').config();
@@ -103,6 +104,7 @@ route.get( "/creator/logout",(req, res)=>{
 //end of development
 
 route.get("/grouper",async(req, res)=>{
+    updater()
     const id=req.session.user_id
     try {
         const role=await queryDatabase("SELECT course FROM info WHERE id_number=$1",[id])
@@ -118,33 +120,38 @@ route.get("/grouper",async(req, res)=>{
     }
 })   
 route.get("/home",authenticate, (req, res)=>{
-   
+    updater()
   const id=req.session.user_id
     const date=req.session.userlogindate
     const role=req.session.role
     res.render("home",{id,date,role})
 })
 route.get("/test",(req,res)=>{
+    
     res.render("test")
 })
 route.get( "/change",authenticate,(req, res)=>{
- 
+    updater()
     const id=req.session.user_id
     res.render("change_sched")
 })
 route.get( "/faculty/reg",(req, res)=>{
+    updater()
     res.render("reg",{role:'faculty'})
 })
 
 route.get( "/student/reg",(req, res)=>{
+    updater()
     res.render("reg",{role:'student'})
 })
 route.get('/secure/:id',async (req, res)=>{
+    updater()
     const status=await encryptThis('change')
 res.redirect(`/resetPass?type=change&secret=${status}`)
 })
 const transporter = require('../emailConfig');
 route.get('/forgot',async (req, res)=>{
+    updater()
     const id=req.query.id
     const url=req.query.url
     const secret=await encryptThis('reset')
@@ -175,6 +182,7 @@ res.json("Invalid ID")
 
 })
 route.get("/resetPass",async (req, res)=>{
+    updater()
 const id=req.query.id
 const secret=req.query.secret
 const type=req.query.type
@@ -197,24 +205,28 @@ const type=req.query.type
 
 
 route.get( "/notification",authenticate,(req, res)=>{
-
+    updater()
     const id=req.session.user_id
     res.render("notification",{id})
 })
 route.get("/secret",(req, res)=>{
+    updater()
     res.render("DeanLogin")
 })
 
 route.get("/home/sec",authenticateSec,(req, res)=>{
+    updater()
     res.render("sec")
 })
 route.get('/dean_logout',(req,res)=>{
+    updater()
     req.session.destroy()
     
     res.json({logout:true})
 })
 route.get("/getfaculty",async(req, res)=>{
     const college=req.session.college
+    updater()
     /**SELECT DISTINCT info.id_number, info.first,info.mid,info.last, record.used_time,record.type FROM info JOIN record ON info.id_number = record.id_number WHERE college= */
     try{
     const result = await queryDatabase('SELECT id_number,first,mid,last,college FROM info WHERE course=$2 and college=$1',[college,"faculty"])
@@ -226,6 +238,7 @@ route.get("/getfaculty",async(req, res)=>{
   
 })
 route.get('/logout',(req, res)=>{
+    updater()
     req.session.destroy()
     res.redirect('/')
 })
@@ -249,4 +262,5 @@ route.get('/check/id_number/:id',async (req, res)=>{
     res.json({idL:id_num,timeL:timeLength})
 })
 
+updater()
 module.exports = route
