@@ -261,14 +261,14 @@ route.get('/check/id_number/:id',async (req, res)=>{
     var timeLength=0
     const id_num=available_id.length
     if(id_num==1){
-    let table
+    let table="facultytime",targetID
     if(req.session.role=='student'){
-    table="facultytime"
+        targetID=id
     }else{
-    table="studenttime"
+        targetID=req.session.user_id
     }
-
-   const  available_time=await queryDatabase("SELECT * FROM "+table+" WHERE id=$1;",[id])
+console.log(targetID)
+   const  available_time=await queryDatabase("SELECT * FROM "+table+" WHERE id=$1;",[targetID])
    timeLength=available_time.length
 }
 

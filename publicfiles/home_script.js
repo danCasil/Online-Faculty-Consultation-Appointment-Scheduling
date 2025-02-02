@@ -191,7 +191,8 @@ const A=create_Button("Accept")
 const B=create_Button("Decline")
 console.table(diff)
 if(data.remark=='new'){
-  if(diff.days>=1){
+
+  if(diff.days>=0){
     if(data.nagsched==curr_id){
      
       if(role=="faculty"){  

@@ -1,5 +1,6 @@
 
 
+
  document.getElementById("ofcasLoad").style.display = ""
 const collegeNameList={
   CCSICT:'College of Computing Studies, Information and Communication Technology',
@@ -447,4 +448,23 @@ const formattedDate = `${months[parseInt(month, 10) - 1]} ${parseInt(day, 10)}, 
 
 return formattedDate
 
+}
+const sorted=document.getElementById("sorter")
+const ordered=document.getElementById("order")
+sorted.addEventListener("change", (e)=>{
+  sorter(e.target.value,ordered.value)
+})
+ordered.addEventListener("change", (e)=>{
+
+  sorter(sorted.value,e.target.value)
+})
+function sorter(a,b){
+console.log(a+""+b)
+fetch(`/sort?param1=${a}&&param2=${b}`)
+.then(response=>response.json())
+.then(respo=>{
+
+}).catch(err=>{
+
+})
 }

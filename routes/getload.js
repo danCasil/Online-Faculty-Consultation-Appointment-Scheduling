@@ -371,11 +371,11 @@ route.get("/load/available",async (req,res)=>{
      let id
     
         id=req.query.target_id
-     let table
+     let table='facultytime',target
         if(req.session.role!='faculty'){
-            table='facultytime'
+            target=id
             }else{
-                table='studenttime'
+                target=req.session.user_id
             }
      const date=req.query.date
      const month=parseInt(req.query.month)+1
@@ -387,14 +387,14 @@ route.get("/load/available",async (req,res)=>{
   
   try{ 
     
-    const results=await queryDatabase("SELECT DISTINCT day FROM "+table+" WHERE id=$1 AND day=$2;",[id,day])
-    const results2=await queryDatabase("SELECT indx FROM "+table+" WHERE id=$1 AND day=$2;",[id,day])
-    const result3=await queryDatabase("SELECT * FROM sched JOIN "+table+" ON sched.time_in="+table+".timein AND sched.time_out="+table+".timeout  WHERE (nasched=$1 OR nagsched=$2) AND date=$3 AND remark='accepted'",[id,id,targetdate])
+    const results=await queryDatabase("SELECT DISTINCT day FROM "+table+" WHERE id=$1 AND day=$2;",[target,day])
+    const results2=await queryDatabase("SELECT indx FROM "+table+" WHERE id=$1 AND day=$2;",[target,day])
+    const result3=await queryDatabase("SELECT * FROM sched JOIN "+table+" ON sched.time_in="+table+".timein AND sched.time_out="+table+".timeout  WHERE (nasched=$1 OR nagsched=$2) AND date=$3 AND remark='accepted'",[target,target,targetdate])
     
    
  
   if(results&&results.length==1&&(results2.length>result3.length)){
-    const Allin=await queryDatabase("SELECT timein FROM "+table+" WHERE id=$1 AND day=$2;",[id,day])
+    const Allin=await queryDatabase("SELECT timein FROM "+table+" WHERE id=$1 AND day=$2;",[target,day])
     const slot=results2.length-result3.length
 
     res.json({status:true,result3,Allin,slot:slot,results})
