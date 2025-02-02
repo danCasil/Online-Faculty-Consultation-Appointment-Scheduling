@@ -152,13 +152,18 @@ res.redirect(`/resetPass?type=change&secret=${status}`)
 const transporter = require('../emailConfig');
 route.get('/forgot',async (req, res)=>{
     updater()
+    const linktime=new Date()
+        
+    linktime.setMinutes(linktime.getMinutes() + 5);
     const id=req.query.id
     const url=req.query.url
     const secret=await encryptThis('reset')
     console.log(id)
 const target=await queryDatabase(`SELECT email FROM info WHERE id_number='${id}'`)
+const existing=await queryDatabase("SELECT * FROM terminator WHERE expid=$1",[`Login:${id}`])
 const link=url+"resetPass?id="+id+"&type=reset&secret="+secret
-if(target&&target.length>0){
+if((target&&target.length>0)&&(existing&&existing.length==0)){
+    await queryDatabase("INSERT INTO terminator (expid,exptime,expcode) values ($1,$2,$3)",[`Login:${id}`,linktime,secret])
     console.log(target[0].email)
     const mailOptions = {
         to: target[0].email,
@@ -177,7 +182,10 @@ if(target&&target.length>0){
 
   
 }else{
-res.json("Invalid ID")    
+    if(existing&&existing.length>0){
+        res.json("We already sent an Email to your Gmail Account. Please wait for few minutes thankyou")  
+    }else{
+res.json("Invalid ID")    }
 }
 
 })
@@ -186,6 +194,9 @@ route.get("/resetPass",async (req, res)=>{
 const id=req.query.id
 const secret=req.query.secret
 const type=req.query.type
+const linktime=await queryDatabase("SELECT exptime FROM terminator WHERE expid=$1",[`Login:${id}`])
+console.table(linktime)
+if(linktime&&linktime.length>0){
    if(req.session.user_id){
     req.session.userPass=req.session.user_id
    }else{
@@ -199,7 +210,9 @@ const type=req.query.type
    }
   
    res.render('reset',{secretToken:secret,changepass:tok})
-   
+   }else{
+    res.send("LINK EXPIRED")
+   }
  
 })
 

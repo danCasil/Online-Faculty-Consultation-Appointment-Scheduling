@@ -260,7 +260,7 @@ document.getElementById("logout").addEventListener("click",(e)=>{
 
   fetch("/dean_logout").then(response=>response.json()).then((data)=>{
 if(data.logout==true){
-  window.location.href="/secret"
+  window.location.href="/"
 }
   }).catch(err=>{
 
