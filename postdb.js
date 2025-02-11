@@ -1,14 +1,12 @@
 const { Pool } = require('pg');
 require('dotenv').config();
-try{
+
 const pool =new Pool({
- connectionString: process.env.DATABASE_URL_TEST,
+ connectionString: process.env.DATABASE_URL_ONLINE,
 
- //ssl: {rejectUnauthorized: false}
+ ssl: {rejectUnauthorized: false}
 
-    ssl:false
-});}catch{
-    console.log("maymali");
-}
+   // ssl:false
+});
 
 module.exports = pool;
