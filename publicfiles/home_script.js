@@ -691,7 +691,7 @@ function formatTime(time) {
 }
 
 function dateDifference(dateStr, date2, time) {
-
+console.log(time)
 
   const [hours, minutes, seconds] = time.split(':').map(Number);
 

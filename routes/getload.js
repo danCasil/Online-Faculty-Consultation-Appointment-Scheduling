@@ -227,7 +227,7 @@ let table
 if(req.session.role!='faculty'){
 table='facultytime'
 }else{
-    table='studenttime'
+    table='facultytime'
 }
 
 try{

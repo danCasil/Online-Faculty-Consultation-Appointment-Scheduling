@@ -161,9 +161,10 @@ if(holiday==true){
   datebtn.classList.toggle("event")
 }else if(data.status==true){
 
-  const diff= dateDifference(`${parameter.year}-${month+1}-${date}`,new Date())
+  const diff= dateDifference(`${parameter.year}-${month+1}-${date}`,new Date(),"8:00:00")
+  
   console.log(`${diff.days} ${month+1}${date}`)
-console.table(data.Allin)
+
 
   if(month==today.getMonth()&&((today.getDate()==date)  ) ){
    
