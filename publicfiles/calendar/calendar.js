@@ -111,9 +111,9 @@ function getAMorPM() {
   const hours = now.getHours();
   return hours >= 12 ? 'PM' : 'AM';
 }
-function updateCaLendardata(date,month,parameter){
+ function updateCaLendardata(date,month,parameter){
   document.getElementById("ofcasLoad").style.display=""
-  fetch(`/load/available?year=${parameter.year}&date=${date}&month=${month}&day=${parameter.day}&target_id=${parameter.target_id}`).then(response=>response.json()).then(data=>{
+  fetch(`/load/available?year=${parameter.year}&date=${date}&month=${month}&day=${parameter.day}&target_id=${parameter.target_id}`).then(response=>response.json()).then(async data=>{
     
 if(daysInMonth[month]==date){
   
@@ -161,54 +161,25 @@ if(holiday==true){
   datebtn.classList.toggle("event")
 }else if(data.status==true){
 
-  const diff= dateDifference(`${parameter.year}-${month+1}-${date}`,new Date(),"8:00:00")
-  
-  console.log(`${diff.days} ${month+1}${date}`)
-
-
   if(month==today.getMonth()&&((today.getDate()==date)  ) ){
    
 console.log(month+"/"+parameter.year+"/"+date +"//"+today.getDate())
 
 
-let numSlot=avtxt
- let now = new Date();
- let Ttype = now.getHours() >= 12 ? 'PM' : 'AM';
- let timeNow = now.getHours() + ":" + now.getMinutes() + ":00";
+const numSlot=data.slot
 
- data.Allin.forEach(timeIN => {
-     let Tin = timeIN.timein;
-     let Tinhours = parseInt(Tin.split(":")[0], 10);
-     let timeDiff,Time1,Time2
-     if (Tinhours >= 8 && Tinhours <= 11) {
-    Time2= Tinhours 
-      
-     }else{
-      switch (Tinhours) {
-        case 1:
-          Time2=13
-          break
-        case 2:
-          Time2=14
-          break
-        case 3:
-          Time2=15
-          break
-        case 4:
-          Time2=16
-          break
-      }
-     }
-     timeDiff=now.getHours() - Time2;
-     let hoursNow = now.getHours();
+for (let i = 0; i < data.Allin.length; i++) {
 
- 
-     if (timeDiff >= 2) {
-      numSlot-=1
-     } 
-     
- });
+  const diff = await dateDifference(`${parameter.year}-${month}-${date}`, new Date(), timeIN.timein)
 
+
+if(diff.hours<2){
+
+  numSlot=numSlot-1
+}
+
+ };
+ alert(numSlot)
  if(numSlot==0){
   container.textContent="" 
  }else{

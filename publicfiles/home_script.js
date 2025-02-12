@@ -691,7 +691,6 @@ function formatTime(time) {
 }
 
 function dateDifference(dateStr, date2, time) {
-console.log(time)
 
   const [hours, minutes, seconds] = time.split(':').map(Number);
 
@@ -726,6 +725,7 @@ console.log(time)
   const diffTime = date1 - date2
   const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
   const diffHours = Math.floor((diffTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+
   const diffMinutes = Math.floor((diffTime % (1000 * 60 * 60)) / (1000 * 60));
   const diffSeconds = Math.floor((diffTime % (1000 * 60)) / 1000);
   console.log(date1.getMinutes(), date1.getHours())
