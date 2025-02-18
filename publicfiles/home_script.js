@@ -709,6 +709,12 @@ function dateDifference(dateStr, date2, time) {
     case 4:
       finalHR = 16;
       break;
+      case 5:
+        finalHR = 17;
+        break;
+        case 6:
+      finalHR = 18;
+      break;
     default:
       finalHR = hours
   }

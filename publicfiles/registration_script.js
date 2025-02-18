@@ -1,6 +1,4 @@
 
-
-
 const idnum=document.getElementById("idnum")
 const mail=document.getElementById("email")
 const user=document.getElementById("user")
@@ -59,7 +57,7 @@ if(type=='next'){
     sec_num=section
 }
  finishsection[sec_num-1]='f' 
-console.table(finishsection)
+
 
 document.querySelectorAll(".line").forEach(function(el){
     const str=el.id
@@ -306,12 +304,10 @@ function removeRequire(id){
                     }
                     break;
                 case 'collegesel':
-                    label.style.left='31%'
+                    label.style.left='30%'
                   
-                    label.style.top='73%'
-                    if(window.innerWidth<500){
-                        label.style.top='69%'  
-                    }
+                    label.style.top='100%'
+                   
                     break;
                 case "idnum":
                      label.style.left='33%'

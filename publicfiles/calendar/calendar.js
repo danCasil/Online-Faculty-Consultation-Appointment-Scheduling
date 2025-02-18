@@ -163,14 +163,13 @@ if(holiday==true){
 
   if(month==today.getMonth()&&((today.getDate()==date)  ) ){
    
-console.log(month+"/"+parameter.year+"/"+date +"//"+today.getDate())
+ 
 
-
-const numSlot=data.slot
+var numSlot=data.slot
 
 for (let i = 0; i < data.Allin.length; i++) {
 
-  const diff = await dateDifference(`${parameter.year}-${month}-${date}`, new Date(), timeIN.timein)
+  const diff = await dateDifference(`${parameter.year}-${month+1}-${date}`, new Date(), data.Allin[i].timein)
 
 
 if(diff.hours<2){
@@ -179,7 +178,7 @@ if(diff.hours<2){
 }
 
  };
- alert(numSlot)
+
  if(numSlot==0){
   container.textContent="" 
  }else{
@@ -233,15 +232,23 @@ const rawdata={
 }
 
 const data = JSON.stringify(rawdata);
-fetch(`/load/availabletime?data=${encodeURIComponent(data)}`).then(response=>response.json()).then(data=>{
+fetch(`/load/availabletime?data=${encodeURIComponent(data)}`).then(response=>response.json()).then(async data=>{
   const TimeContainer=document.getElementById("FacultyTimeContainer")   
 
-  TimeContainer.innerHTML=""
+  TimeContainer.innerHTML=`   <div class="row" >
+          <div class="container-fluid"id="morning">
+
+          </div>
+         </div> 
+         <div class="row">
+          <div class="container-fluid" id="afternoon">
+
+          </div>
+         </div> `
    target_name=`${data.result2[0].last},${data.result2[0].first} ${data.result2[0].mid}`
-   console.table(data.result3)
-   console.log(data.result1)
-  data.result1.forEach(element=>{
-    console.log(element)
+   console.log(data.result3)
+  data.result1.forEach(async element=>{
+
   if(data.result3.length>0) {
   
     data.result3.forEach(checker =>{
@@ -251,8 +258,15 @@ fetch(`/load/availabletime?data=${encodeURIComponent(data)}`).then(response=>res
  }
 })
 }else{
+  const diff = await dateDifference(`${year}-${month+1}-${date}`, new Date(), element.timein)
+  const dN=new Date()
+ 
+console.log(diff.hours,element.timein,month)
   if(element.day==day){
- btncreator(element,rawdata)
+    if(date==dN.getDate()&&month==dN.getMonth()&&dN.getFullYear()==year){
+      if(diff.hours>2){btncreator(element,rawdata)}
+    }else{
+   btncreator(element,rawdata)}
 }
 }
 })
@@ -264,7 +278,14 @@ fetch(`/load/availabletime?data=${encodeURIComponent(data)}`).then(response=>res
 
 }
 function btncreator(element,rawdata){
-  const TimeContainer=document.getElementById("FacultyTimeContainer")   
+  let TimeContainer
+  const [hours,min,sec]=element.timein.split(":")
+
+if(parseInt(hours)>6){
+  TimeContainer =document.getElementById("morning")   
+}else{
+  TimeContainer =document.getElementById("afternoon")
+}
 
   rawdata.timein=element.timein
   rawdata.timeout=element.timeout
@@ -299,6 +320,7 @@ if(data.isConflict){
 btn.classList.add("btnTime")
   btn.textContent=`${formattedTimeIn} - ${formattedTimeOut}`
   row.appendChild(btn)
+
   TimeContainer.appendChild(row)
 
 }).catch(err=>{
