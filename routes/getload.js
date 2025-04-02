@@ -220,14 +220,16 @@ route.get("/load/availabletime",async(req,res)=>{
 const {date,month,day,target_id,year} = information
 let target
 
-target=target_id
+
 console.log(target)
 const targetdate=new Date(year, month, day)
 let table
 if(req.session.role!='faculty'){
 table='facultytime'
+target=target_id
 }else{
     table='facultytime'
+    target=req.session.user_id
 }
 
 try{

@@ -6,6 +6,7 @@ const pool =new Pool({
 
 ssl: {rejectUnauthorized: false}
 
+// connectionString: process.env.DATABASE_URL_TEST,
 //  ssl:false
 });
 
