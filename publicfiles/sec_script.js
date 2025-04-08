@@ -1,5 +1,21 @@
+var ids=[];
+const mainPrint=document.getElementById("mainPrint");
+mainPrint.disabled=true;
 
-
+function checkbxClicked(value,id){
+  if(ids.length>0){
+    mainPrint.disabled=false;
+  }
+  if(value==true){
+    ids.push({id:id});
+  }else{
+    const itemIndex = ids.findIndex(item => item.id === id); // Find index of the object with the matching id
+    if (itemIndex > -1) {
+        ids.splice(itemIndex, 1); // Remove the object from the array
+    }
+  }
+  console.table(ids);
+}
 
  document.getElementById("ofcasLoad").style.display = ""
 const collegeNameList={
@@ -26,6 +42,7 @@ function getfaculty(){
    fetch("/getfaculty").then(response=>response.json()).then(data=>{
       document.getElementById("ofcasLoad").style.display = "none"
     const college=data.result[0].college
+    Targetcollege=college;
     switch(college){
       case "CCSICT":
         document.getElementById("collegeName").textContent=collegeNameList.CCSICT
@@ -41,23 +58,58 @@ function getfaculty(){
         break;
     }
   
- 
+        
          const row=document.createElement("div")
          row.classList.add("row")
   //for(let i=0;i<20;i++){    
-      data.result.forEach(element => {
-        const form_control=document.createElement("div")
-        form_control.style.marginTop="2.5px"
-      const col_sm=document.createElement("div")
-      col_sm.classList.add("col-sm-3")
-      col_sm.onclick=()=>show(element.id_number)
-      form_control.classList.add("form-control","mybtn")
-   
-      form_control.innerHTML=` ${element.id_number} <br> ${element.last}, ${element.first}`
-      col_sm.appendChild(form_control)
-      row.appendChild(col_sm)
-
-    })
+    data.result.forEach(element => {
+      // Create a wrapper div for form control and checkbox (acts as the button)
+      const form_control = document.createElement("div");
+      form_control.style.marginTop = "2.5px";
+      form_control.style.display = "flex"; // Use flexbox for layout
+      form_control.style.alignItems = "center"; // Align checkbox and text vertically
+      form_control.style.justifyContent = "start"; // Align checkbox and text inside the button
+      form_control.classList.add("form-control", "mybtn");
+  
+      // Attach the show() function to the button click
+      form_control.onclick = () => show(element.id_number);
+  
+      // Create the column div
+      const col_sm = document.createElement("div");
+      col_sm.classList.add("col-sm-3");
+  
+      // Create and style the checkbox
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.style.marginRight = "10px"; // Adjust spacing between checkbox and text
+      checkbox.style.cursor = "pointer";
+  
+      // Prevent the button click when the checkbox is clicked
+      checkbox.addEventListener("click",function(e){ 
+        checkbxClicked(this.checked, element.id_number, element.index)
+        e.stopPropagation()
+      })
+  
+      // Add unique ID or name for the checkbox if needed
+      checkbox.id = `checkbox-${element.id_number}`;
+      checkbox.name = `select-${element.id_number}`;
+  
+      // Add text content inside the button
+      const textContent = document.createElement("span");
+      textContent.innerHTML = `${element.id_number} <br> ${element.last}, ${element.first}`;
+      checkbox.style.transform = "scale(1)"; // Makes the checkbox 2x larger
+      checkbox.style.width = "25px"; // Explicit width
+      checkbox.style.height = "25px"; // Explicit height
+      // Append checkbox and text content to the button
+      form_control.appendChild(checkbox); // Checkbox inside the button
+      form_control.appendChild(textContent);
+  
+      // Append everything to the column div and row
+      col_sm.appendChild(form_control);
+      row.appendChild(col_sm);
+  });
+  
+  
    //}
 
 container.appendChild(row)
@@ -467,4 +519,13 @@ fetch(`/sort?param1=${a}&&param2=${b}`)
 }).catch(err=>{
 
 })
+}
+function print(){
+  const jsonString = JSON.stringify(ids);
+  
+    fetch(`/createPDF?idNum=${jsonString}`).then(response=>response.json()).then(data=>{
+
+    }).catch(err=>{
+
+    })
 }

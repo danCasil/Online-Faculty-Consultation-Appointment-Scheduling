@@ -147,6 +147,7 @@ console.log(checkExistingOTP.length)
         }   
 })
 
+
 function generateOTP(count) {
     const numbers = [];
     for (let i = 0; i < count; i++) {

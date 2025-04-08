@@ -150,6 +150,8 @@ route.get('/secure/:id',async (req, res)=>{
 res.redirect(`/resetPass?type=change&secret=${status}`)
 })
 const transporter = require('../emailConfig');
+const { parseJSON } = require("date-fns");
+const { console } = require("inspector");
 route.get('/forgot',async (req, res)=>{
     updater()
     const linktime=new Date()
@@ -275,5 +277,290 @@ console.log(targetID)
     res.json({idL:id_num,timeL:timeLength})
 })
 
+
+route.get('/createPDF', async (req, res) => {
+    const puppeteer = require('puppeteer');
+    const fs = require('fs');
+    const path = require('path');
+    const imgPath = path.resolve(__dirname, '../publicfiles/img/header.jpg');
+    const imgBase64 = fs.readFileSync(imgPath, { encoding: 'base64' });
+
+    try {
+        let body = '';
+        const browser = await puppeteer.launch();
+        const page = await browser.newPage();
+
+        // Parse the ids array
+        const ids = JSON.parse(req.query.idNum);
+        console.log(req.query.idNum);
+
+        // Loop through faculty IDs and generate records
+        for (const faculty of ids) {
+            console.log(faculty);
+
+            // Get faculty name
+            const facultyNames = await queryDatabase("SELECT CONCAT(last, ', ', first, ' ', SUBSTRING(mid, 1, 1), '.') AS name FROM info WHERE id_number=$1", [faculty.id]);
+
+            // Get faculty records
+            const facultyRecords = await queryDatabase(
+                "SELECT type, learner_id, consulted_date, consulted_time_in, consulted_time_out, consultation_purpose FROM record WHERE id_number=$1",
+                [faculty.id]
+            );
+
+            // Generate rows for the table
+            const rows = await Promise.all(
+                facultyRecords.map(async (entry) => {
+                    const studentName = await queryDatabase(
+                        `SELECT CONCAT(last, ', ', first, ' ', SUBSTRING(mid, 1, 1), '.') AS NAME FROM info WHERE id_number=$1`,
+                        [entry.learner_id]
+                    );
+
+                    const time = formatTimeToHourMinute(entry.consulted_time_in, false) + "-" + formatTimeToHourMinute(entry.consulted_time_out, true);
+
+                    const date = new Date(entry.consulted_date);
+                    const formattedDate = date.toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                    });
+
+                    return `
+                        <tr>
+                            <td>${studentName[0].name}</td>
+                            <td>${entry.consultation_purpose}</td>
+                            <td>${formattedDate}</td>
+                            <td>${time}</td>
+                     <td>${entry.type.charAt(0).toUpperCase() + entry.type.slice(1)}</td>
+
+                        </tr>`;
+                })
+            );
+
+            // Add a page for this faculty record
+            body += `
+                <div style="page-break-before: always;">
+                    <img src="data:image/jpeg;base64,${imgBase64}" style="width:100%;height:130px">
+                    <p style="font-size:12.5px"><b>ID:</b> ${faculty.id} <br> <b>NAME:</b> ${facultyNames[0].name}</p>
+                    <center>
+                        <h3>Consultation Record</h3>
+                    </center>
+                    <table border="1" style="width: 100%; border-collapse: collapse;">
+                        <tr>
+                            <th>Student Name</th>
+                            <th>Purpose</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Remarks</th>
+                        </tr>
+                        ${rows.join('')}
+                    </table>
+                </div>`;
+        }
+
+        // Wrap HTML content
+        const htmlContent = `
+            <html>
+            <head>
+                <style>
+                    body {
+                        margin: 50px 50px;
+                        font-family: Arial, sans-serif;
+                    }
+                    table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        margin-bottom: 20px;
+                    }
+                    th, td {
+                        border: 1px solid black;
+                        padding: 8px;
+                        text-align: left;
+                    }
+                    th {
+                        background-color: #f2f2f2;
+                    }
+                    .page-break {
+                        page-break-before: always;
+                    }
+                </style>
+            </head>
+            <body>
+                ${body}
+            </body>
+            </html>
+        `;
+
+        // Generate the PDF
+        await page.setContent(htmlContent);
+        await page.pdf({ path: './publicfiles/files/Report.pdf', format: 'A4' });
+
+        await browser.close();
+        console.log('PDF created: table.pdf');
+
+        res.send("PDF generation completed.");
+    } catch (error) {
+        console.error("Error generating PDF:", error);
+        res.status(500).send("An error occurred while generating the PDF.");
+    }
+});
+
+
+
+
+route.get('/createDocx',async (req,res)=>{
+    const { Document, Packer, Paragraph, TextRun,ImageRun,  Table, TableRow, TableCell  } = require('docx');
+    const fs = require('fs');
+  
+    const data=await queryDatabase("SELECT * FROM record WHERE id_number='54321'")
+    console.table(data)
+    const tableRows = [];
+    data.forEach((entry) => {
+        var date=new Date(entry.consulted_date);
+        const formattedDate = date.toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric"
+          });
+        var time=formatTimeToHourMinute(entry.consulted_time_in,false)+"-"+formatTimeToHourMinute(entry.consulted_time_out,true)
+        tableRows.push(
+            new TableRow({
+                children: [
+                    new TableCell({
+                        children: [new Paragraph(entry.learner_id)], // Add Student Name
+                    }),
+                    new TableCell({
+                        children: [new Paragraph(entry.consultation_purpose)], // Add Purpose
+                    }),
+                    new TableCell({
+                        children: [new Paragraph(formattedDate)], // Add Date and Time
+                    }),
+                    new TableCell({
+                        children: [new Paragraph(time)], // Add Date and Time
+                    }),
+                    new TableCell({
+                        children: [new Paragraph(entry.type)], // Add Remarks
+                    }),
+                ],
+            })
+        );
+    });
+    // Create a new document
+    if(fs.readFileSync("./publicfiles/img/header.jpg")){
+        console.log("TRue");
+    }
+    const doc = new Document({
+        sections: [
+            {
+                properties: {
+                    page: {
+                        margin: { // Adjust margins to ensure proper centering
+                            top: 720,   // 1 inch in twips
+                            bottom: 720,
+                            left: 360,
+                            right: 360,
+                        },
+                    },
+                },
+            
+                children: [
+                    new Paragraph({
+                        children: [
+                            new ImageRun({
+                                data: fs.readFileSync("./publicfiles/img/header.jpg"),
+                                transformation: { width: 550 / 0.8, height: 110 / 0.8 },
+                            }),
+                        ],
+                        alignment: "center",
+                        spacing: { line: 480 },
+                    }),
+                    new Table({
+                        width: {
+                            size: 100, // Set width as a percentage (relative to page width)
+                            type: "pct", // Use percentage width type
+                        },
+                        rows: [
+                            
+                            new TableRow({
+                                children: [
+                                    new TableCell({
+                                        children: [new Paragraph({ children: [new TextRun({ text: "Student Name", bold: true })] })],
+                                        shading: {
+                                            fill: "D3D3D3", // Gray color (Hex code for light gray)
+                                        },
+                                    }),
+                                    new TableCell({
+                                        children: [new Paragraph({ children: [new TextRun({ text: "Purpose", bold: true })] })],
+                                        shading: {
+                                            fill: "D3D3D3", // Gray color (Hex code for light gray)
+                                        },
+                                    }),
+                                    new TableCell({
+                                        children: [new Paragraph({ children: [new TextRun({ text: "Date", bold: true })] })],
+                                        shading: {
+                                            fill: "D3D3D3", // Gray color (Hex code for light gray)
+                                        },
+                                    }),
+                                    new TableCell({
+                                        children: [new Paragraph({ children: [new TextRun({ text: "Time", bold: true })] })],
+                                        shading: {
+                                            fill: "D3D3D3", // Gray color (Hex code for light gray)
+                                        },
+                                    }),
+                                    new TableCell({
+                                        children: [new Paragraph({ children: [new TextRun({ text: "Remarks", bold: true })] })],
+                                        shading: {
+                                            fill: "D3D3D3", // Gray color (Hex code for light gray)
+                                        },
+                                    }),
+                                ],
+                            }),
+                            
+                            ...tableRows,
+
+                        ],
+                    }),
+                    new Paragraph({
+                        
+                        children: [
+                            new TextRun({
+                                text: "This is a computer-generated document",
+                                size: 24,
+                            }),
+                        ],
+                        alignment: "center",
+                    })
+                ],
+            },
+        ],
+    });
+    
+    // Write the document to a file
+    Packer.toBuffer(doc).then(async (buffer) => {
+        fs.writeFileSync('Report.docx', buffer);
+        console.log('Word document created: Report.docx');
+    
+    });
+    res.send("okey")
+    
+})
+
+function formatTimeToHourMinute(timeString,isLast) {
+    // Split the time string into components
+    const [hours, minutes] = timeString.split(":");
+  
+    // Convert the hour to 12-hour format if needed
+    const formattedHour = (parseInt(hours, 10) % 12) || 12;
+  
+    // Combine hour and minutes
+    if(isLast) {
+       if(hours<6||hours==12){
+        return `${formattedHour}:${minutes} PM`
+       }else{
+return `${formattedHour}:${minutes} AM`
+       }
+         
+    }
+    return `${formattedHour}:${minutes}`;
+  }
 updater()
 module.exports = route
