@@ -15,6 +15,8 @@ app.use(express.json()); // Parse JSON bodies
 app.set("view engine", "ejs")
 app.set('views', path.join(__dirname, 'pages'));
 app.use(express.static("publicfiles"))
+app.use(express.json({ limit: '50mb', strict: false }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 
 

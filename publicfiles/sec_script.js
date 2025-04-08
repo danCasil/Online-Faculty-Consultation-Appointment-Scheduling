@@ -3,9 +3,8 @@ const mainPrint=document.getElementById("mainPrint");
 mainPrint.disabled=true;
 
 function checkbxClicked(value,id){
-  if(ids.length>0){
-    mainPrint.disabled=false;
-  }
+  mainPrint.disabled=true;
+ 
   if(value==true){
     ids.push({id:id});
   }else{
@@ -14,7 +13,11 @@ function checkbxClicked(value,id){
         ids.splice(itemIndex, 1); // Remove the object from the array
     }
   }
-  console.table(ids);
+  
+  if(ids.length>0){
+    mainPrint.disabled=false;
+  }
+ 
 }
 
  document.getElementById("ofcasLoad").style.display = ""
@@ -523,9 +526,32 @@ fetch(`/sort?param1=${a}&&param2=${b}`)
 function print(){
   const jsonString = JSON.stringify(ids);
   
-    fetch(`/createPDF?idNum=${jsonString}`).then(response=>response.json()).then(data=>{
+    fetch(`/createPDF?idNum=${jsonString}`) 
+    .then(response => {
+      if (!response.ok) {
+          throw new Error('Failed to fetch PDF');
+      }
+      return response.blob();
+  }).then(blob => {
+    
+  
+      const url = window.URL.createObjectURL(blob );
 
-    }).catch(err=>{
+      // Create a temporary link element
+      const a = document.createElement('a');
+      a.style.display = 'none'; // Hide the link element
+      a.href = url;
+      a.download = 'Report.pdf'; // Set the desired file name
 
-    })
+      // Append the link to the document and trigger a click
+      document.body.appendChild(a);
+      a.click();
+
+      // Clean up
+      window.URL.revokeObjectURL(url); // Revoke the blob URL to free memory
+      document.body.removeChild(a);   // Remove the link element
+  })
+  .catch(err => {
+      console.error('Error downloading PDF:', err);
+  });
 }

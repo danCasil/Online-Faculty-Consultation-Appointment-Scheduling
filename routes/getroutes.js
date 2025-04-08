@@ -287,19 +287,24 @@ route.get('/createPDF', async (req, res) => {
 
     try {
         let body = '';
-        const browser = await puppeteer.launch();
+        const browser = await puppeteer.launch({ headless: true });
         const page = await browser.newPage();
 
-        // Parse the ids array
+        // Parse the IDs array
         const ids = JSON.parse(req.query.idNum);
         console.log(req.query.idNum);
+
+        let pageBreakIndex = 0;
 
         // Loop through faculty IDs and generate records
         for (const faculty of ids) {
             console.log(faculty);
 
             // Get faculty name
-            const facultyNames = await queryDatabase("SELECT CONCAT(last, ', ', first, ' ', SUBSTRING(mid, 1, 1), '.') AS name FROM info WHERE id_number=$1", [faculty.id]);
+            const facultyNames = await queryDatabase(
+                "SELECT CONCAT(last, ', ', first, ' ', SUBSTRING(mid, 1, 1), '.') AS name FROM info WHERE id_number=$1",
+                [faculty.id]
+            );
 
             // Get faculty records
             const facultyRecords = await queryDatabase(
@@ -307,53 +312,65 @@ route.get('/createPDF', async (req, res) => {
                 [faculty.id]
             );
 
-            // Generate rows for the table
-            const rows = await Promise.all(
-                facultyRecords.map(async (entry) => {
-                    const studentName = await queryDatabase(
-                        `SELECT CONCAT(last, ', ', first, ' ', SUBSTRING(mid, 1, 1), '.') AS NAME FROM info WHERE id_number=$1`,
-                        [entry.learner_id]
-                    );
+            // Initialize rows as an array
+            let rows = [];
+            if (facultyRecords.length > 0) {
+                rows = await Promise.all(
+                    facultyRecords.map(async (entry) => {
+                        const studentName = await queryDatabase(
+                            `SELECT CONCAT(last, ', ', first, ' ', SUBSTRING(mid, 1, 1), '.') AS name FROM info WHERE id_number=$1`,
+                            [entry.learner_id]
+                        );
 
-                    const time = formatTimeToHourMinute(entry.consulted_time_in, false) + "-" + formatTimeToHourMinute(entry.consulted_time_out, true);
+                        const time = formatTimeToHourMinute(entry.consulted_time_in, false) + "-" + formatTimeToHourMinute(entry.consulted_time_out, true);
 
-                    const date = new Date(entry.consulted_date);
-                    const formattedDate = date.toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                    });
+                        const date = new Date(entry.consulted_date);
+                        const formattedDate = date.toLocaleDateString("en-US", {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                        });
 
-                    return `
-                        <tr>
-                            <td>${studentName[0].name}</td>
-                            <td>${entry.consultation_purpose}</td>
-                            <td>${formattedDate}</td>
-                            <td>${time}</td>
-                     <td>${entry.type.charAt(0).toUpperCase() + entry.type.slice(1)}</td>
-
-                        </tr>`;
-                })
-            );
+                        return `
+                            <tr>
+                                <td>${studentName[0].name}</td>
+                                <td>${entry.consultation_purpose}</td>
+                                <td>${formattedDate}</td>
+                                <td>${time}</td>
+                                <td>${entry.type.charAt(0).toUpperCase() + entry.type.slice(1)}</td>
+                            </tr>`;
+                    })
+                );
+            } else {
+                // Add a "No Data" row
+                rows.push(`
+                    <tr>
+                        <td colspan="5" style="text-align:center">No Data</td>
+                    </tr>
+                `);
+            }
 
             // Add a page for this faculty record
+            const pageBreak = pageBreakIndex > 0 ? `<div style="page-break-before: always;"><br><br><br><br>` : `<div>`;
+            pageBreakIndex++;
+
             body += `
-                <div style="page-break-before: always;">
-                    <img src="data:image/jpeg;base64,${imgBase64}" style="width:100%;height:130px">
-                    <p style="font-size:12.5px"><b>ID:</b> ${faculty.id} <br> <b>NAME:</b> ${facultyNames[0].name}</p>
-                    <center>
-                        <h3>Consultation Record</h3>
-                    </center>
-                    <table border="1" style="width: 100%; border-collapse: collapse;">
-                        <tr>
-                            <th>Student Name</th>
-                            <th>Purpose</th>
-                            <th>Date</th>
-                            <th>Time</th>
-                            <th>Remarks</th>
-                        </tr>
-                        ${rows.join('')}
-                    </table>
+                ${pageBreak}
+                <img src="data:image/jpeg;base64,${imgBase64}" style="width:100%;height:130px">
+                <p style="font-size:13px"><b>ID:</b> ${faculty.id} <br> <b>NAME:</b> ${facultyNames[0].name}</p>
+                <center>
+                    <h3>Consultation Record</h3>
+                </center>
+                <table border="1" style="width: 100%; border-collapse: collapse;">
+                    <tr>
+                        <th>Student Name</th>
+                        <th>Purpose</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Remarks</th>
+                    </tr>
+                    ${rows.join('')}
+                </table>
                 </div>`;
         }
 
@@ -377,7 +394,7 @@ route.get('/createPDF', async (req, res) => {
                         text-align: left;
                     }
                     th {
-                        background-color: #f2f2f2;
+                        background-color: #D0CECE;
                     }
                     .page-break {
                         page-break-before: always;
@@ -390,14 +407,20 @@ route.get('/createPDF', async (req, res) => {
             </html>
         `;
 
-        // Generate the PDF
         await page.setContent(htmlContent);
-        await page.pdf({ path: './publicfiles/files/Report.pdf', format: 'A4' });
 
+        const pdfBuffer = await page.pdf({ format: 'A4', printBackground: true  });
+
+        // Save for debugging purposes (optional)
+        fs.writeFileSync('debug.pdf', pdfBuffer);
         await browser.close();
-        console.log('PDF created: table.pdf');
 
-        res.send("PDF generation completed.");
+        res.set({
+            'Content-Type': 'application/pdf',
+            'Content-Disposition': 'attachment; filename=Report.pdf',
+        });
+
+        res.end(pdfBuffer);
     } catch (error) {
         console.error("Error generating PDF:", error);
         res.status(500).send("An error occurred while generating the PDF.");
@@ -405,144 +428,6 @@ route.get('/createPDF', async (req, res) => {
 });
 
 
-
-
-route.get('/createDocx',async (req,res)=>{
-    const { Document, Packer, Paragraph, TextRun,ImageRun,  Table, TableRow, TableCell  } = require('docx');
-    const fs = require('fs');
-  
-    const data=await queryDatabase("SELECT * FROM record WHERE id_number='54321'")
-    console.table(data)
-    const tableRows = [];
-    data.forEach((entry) => {
-        var date=new Date(entry.consulted_date);
-        const formattedDate = date.toLocaleDateString("en-US", {
-            month: "short",
-            day: "numeric",
-            year: "numeric"
-          });
-        var time=formatTimeToHourMinute(entry.consulted_time_in,false)+"-"+formatTimeToHourMinute(entry.consulted_time_out,true)
-        tableRows.push(
-            new TableRow({
-                children: [
-                    new TableCell({
-                        children: [new Paragraph(entry.learner_id)], // Add Student Name
-                    }),
-                    new TableCell({
-                        children: [new Paragraph(entry.consultation_purpose)], // Add Purpose
-                    }),
-                    new TableCell({
-                        children: [new Paragraph(formattedDate)], // Add Date and Time
-                    }),
-                    new TableCell({
-                        children: [new Paragraph(time)], // Add Date and Time
-                    }),
-                    new TableCell({
-                        children: [new Paragraph(entry.type)], // Add Remarks
-                    }),
-                ],
-            })
-        );
-    });
-    // Create a new document
-    if(fs.readFileSync("./publicfiles/img/header.jpg")){
-        console.log("TRue");
-    }
-    const doc = new Document({
-        sections: [
-            {
-                properties: {
-                    page: {
-                        margin: { // Adjust margins to ensure proper centering
-                            top: 720,   // 1 inch in twips
-                            bottom: 720,
-                            left: 360,
-                            right: 360,
-                        },
-                    },
-                },
-            
-                children: [
-                    new Paragraph({
-                        children: [
-                            new ImageRun({
-                                data: fs.readFileSync("./publicfiles/img/header.jpg"),
-                                transformation: { width: 550 / 0.8, height: 110 / 0.8 },
-                            }),
-                        ],
-                        alignment: "center",
-                        spacing: { line: 480 },
-                    }),
-                    new Table({
-                        width: {
-                            size: 100, // Set width as a percentage (relative to page width)
-                            type: "pct", // Use percentage width type
-                        },
-                        rows: [
-                            
-                            new TableRow({
-                                children: [
-                                    new TableCell({
-                                        children: [new Paragraph({ children: [new TextRun({ text: "Student Name", bold: true })] })],
-                                        shading: {
-                                            fill: "D3D3D3", // Gray color (Hex code for light gray)
-                                        },
-                                    }),
-                                    new TableCell({
-                                        children: [new Paragraph({ children: [new TextRun({ text: "Purpose", bold: true })] })],
-                                        shading: {
-                                            fill: "D3D3D3", // Gray color (Hex code for light gray)
-                                        },
-                                    }),
-                                    new TableCell({
-                                        children: [new Paragraph({ children: [new TextRun({ text: "Date", bold: true })] })],
-                                        shading: {
-                                            fill: "D3D3D3", // Gray color (Hex code for light gray)
-                                        },
-                                    }),
-                                    new TableCell({
-                                        children: [new Paragraph({ children: [new TextRun({ text: "Time", bold: true })] })],
-                                        shading: {
-                                            fill: "D3D3D3", // Gray color (Hex code for light gray)
-                                        },
-                                    }),
-                                    new TableCell({
-                                        children: [new Paragraph({ children: [new TextRun({ text: "Remarks", bold: true })] })],
-                                        shading: {
-                                            fill: "D3D3D3", // Gray color (Hex code for light gray)
-                                        },
-                                    }),
-                                ],
-                            }),
-                            
-                            ...tableRows,
-
-                        ],
-                    }),
-                    new Paragraph({
-                        
-                        children: [
-                            new TextRun({
-                                text: "This is a computer-generated document",
-                                size: 24,
-                            }),
-                        ],
-                        alignment: "center",
-                    })
-                ],
-            },
-        ],
-    });
-    
-    // Write the document to a file
-    Packer.toBuffer(doc).then(async (buffer) => {
-        fs.writeFileSync('Report.docx', buffer);
-        console.log('Word document created: Report.docx');
-    
-    });
-    res.send("okey")
-    
-})
 
 function formatTimeToHourMinute(timeString,isLast) {
     // Split the time string into components
