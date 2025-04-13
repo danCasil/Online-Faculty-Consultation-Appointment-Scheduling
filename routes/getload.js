@@ -200,11 +200,20 @@ route.get("/load/change_sched",async(req,res)=>{
 })
 route.get("/load/record",async(req,res)=>{
 const id=req.query.id
-
+const sem=req.query.sem
 try{
-    const record_type=await queryDatabase("SELECT type FROM record WHERE id_number=$1", [id]) 
+    const semester=await queryDatabase("SELECT * FROM sem WHERE sem_id=$1",[sem])
+    console.table(semester)
+    const date1 = new Date(semester[0].sem_start);
+    const date2 = new Date(semester[0].sem_end); 
+    const formattedDate1 = `${date1.getFullYear()}-${date1.getMonth()+1}-${date1.getDate()}`;
+    const formattedDate2 = `${date2.getFullYear()}-${date2.getMonth()+1}-${date2.getDate()}`;
+    console.table(formattedDate1+" "+formattedDate2)
+    const record_type=await queryDatabase("SELECT type FROM record WHERE id_number=$1 AND(record.exc_date>='"+formattedDate1+"' AND record.exc_date<='"+formattedDate2+"')", [id]) 
   const user_data=await queryDatabase("SELECT last,first,mid,id_number FROM info WHERE id_number=$1",[id])
-    const studentdata=await queryDatabase("SELECT info.last,info.first,info.mid,record.* FROM record JOIN  info ON record.learner_id=info.id_number  WHERE record.id_number=$1 ",[id])
+    const studentdata=await queryDatabase("SELECT info.last,info.first,info.mid,record.* FROM record JOIN  info ON record.learner_id=info.id_number  WHERE record.id_number=$1  AND(record.exc_date>='"+formattedDate1+"' AND record.exc_date<='"+formattedDate2+"') ",[id])
+    
+    console.table(`SELECT info.last,info.first,info.mid,record.* FROM record JOIN  info ON record.learner_id=info.id_number  WHERE record.id_number='${id}'  AND(record.exc_date>='${formattedDate1}' AND record.exc_date<='${formattedDate2}') `)
     const counts = record_type.reduce((acc, record) => {
     acc[record.type] = (acc[record.type] || 0) + 1;
     return acc;
@@ -348,8 +357,15 @@ route.get("/load/graphdata", async (req, res) => {
 });
 route.get("/filter/data", async (req,res)=>{
     const checkbox=req.query.checkbox;
-    const {dec,can,con,mis,id}=JSON.parse(checkbox)
-    let query = "SELECT record.*,info.first,info.last,info.mid FROM record JOIN info ON info.id_number=record.learner_id WHERE (1=1 AND record.id_number='"+id+"')";
+
+    const {dec,can,con,mis,id,sem}=JSON.parse(checkbox)
+    const dates=await queryDatabase(`SELECT sem_name,sem_start,sem_end FROM sem WHERE sem_id='${sem}' `)
+    const date1 = new Date(dates[0].sem_start);
+     const date2 = new Date(dates[0].sem_end); // Format the dates (Example: Convert to ISO string) 
+     const formattedDate1 = `${date1.getFullYear()}-${date1.getMonth()+1}-${date1.getDate()}`;
+      const formattedDate2 = `${date2.getFullYear()}-${date2.getMonth()+1}-${date2.getDate()}`;
+      let query= "SELECT info.last,info.first,info.mid,record.* FROM record JOIN  info ON record.learner_id=info.id_number  WHERE record.id_number='"+id+"'  AND(record.exc_date>='"+formattedDate1+"' AND record.exc_date<='"+formattedDate2+"') "
+    // let query = "SELECT record.*,info.first,info.last,info.mid FROM record JOIN info ON info.id_number=record.learner_id WHERE (1=1 AND record.id_number='"+id+"')";
     let conditions = [];
     if (dec) { 
         conditions.push("type = 'declined'"); }

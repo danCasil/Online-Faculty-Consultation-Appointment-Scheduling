@@ -121,7 +121,7 @@ console.log(checkExistingOTP.length)
             text:mailtxt
         };
         
-        transporter.sendMail(mailOptions, (err) => {
+    transporter.sendMail(mailOptions, (err) => {
             if (err) {
                 console.error(err);
                 res.json( { errorMessage: 'Error sending email.' });

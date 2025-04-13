@@ -293,6 +293,14 @@ route.get('/createPDF', async (req, res) => {
         // Parse the IDs array
         const ids = JSON.parse(req.query.idNum);
         console.log(req.query.idNum);
+        
+        const d = new Date();
+                        const now = d.toLocaleDateString("en-US", {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                        });
+
 
         let pageBreakIndex = 0;
 
@@ -306,12 +314,19 @@ route.get('/createPDF', async (req, res) => {
                 [faculty.id]
             );
 
+
+            const dates=await queryDatabase(`SELECT sem_name,sem_start,sem_end FROM sem WHERE sem_id='${faculty.sem_id}' `)
+            const date1 = new Date(dates[0].sem_start);
+             const date2 = new Date(dates[0].sem_end); // Format the dates (Example: Convert to ISO string) 
+             const formattedDate1 = `${date1.getFullYear()}-${date1.getMonth()+1}-${date1.getDate()}`;
+              const formattedDate2 = `${date2.getFullYear()}-${date2.getMonth()+1}-${date2.getDate()}`;
+
             // Get faculty records
             const facultyRecords = await queryDatabase(
-                "SELECT type, learner_id, consulted_date, consulted_time_in, consulted_time_out, consultation_purpose FROM record WHERE id_number=$1",
+                "SELECT type, learner_id, consulted_date, consulted_time_in, consulted_time_out, consultation_purpose FROM record WHERE id_number=$1 AND type='consulted' AND(record.exc_date>='"+formattedDate1+"' AND record.exc_date<='"+formattedDate2+"')",
                 [faculty.id]
             );
-
+            console.table(facultyRecords);
             // Initialize rows as an array
             let rows = [];
             if (facultyRecords.length > 0) {
@@ -357,8 +372,13 @@ route.get('/createPDF', async (req, res) => {
             body += `
                 ${pageBreak}
                 <img src="data:image/jpeg;base64,${imgBase64}" style="width:100%;height:130px">
-                <p style="font-size:13px"><b>ID:</b> ${faculty.id} <br> <b>NAME:</b> ${facultyNames[0].name}</p>
-                <center>
+<div style="display:flex">
+  <p style="font-size:15px;margin-right:10px ;"><b>ID:</b> <br> <b>NAME:</b> </p>
+    <p  style="font-size:15px"> ${faculty.id}<br>${facultyNames[0].name}</p>
+    <p style="font-size:15px;margin-left:30% ;margin-right:10px ;"><b>Semester:</b>  <br> <b>Date:</b></p>
+    <p  style="font-size:15px;">${dates[0].sem_name}<br> ${now}</p>
+
+</div>  <center>
                     <h3>Consultation Record</h3>
                 </center>
                 <table border="1" style="width: 100%; border-collapse: collapse;">

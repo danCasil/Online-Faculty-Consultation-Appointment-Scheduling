@@ -1,12 +1,13 @@
 var ids=[];
 const mainPrint=document.getElementById("mainPrint");
 mainPrint.disabled=true;
+var sem="1"
 
 function checkbxClicked(value,id){
   mainPrint.disabled=true;
  
   if(value==true){
-    ids.push({id:id});
+    ids.push({id:id,sem_id:sem});
   }else{
     const itemIndex = ids.findIndex(item => item.id === id); // Find index of the object with the matching id
     if (itemIndex > -1) {
@@ -34,7 +35,10 @@ const s1=document.getElementById("section1")
 const s2=document.getElementById("section2")
 const s3=document.getElementById("section3")
 document.addEventListener("DOMContentLoaded",function(e){
-  
+ 
+  getSem()
+
+
   showThis(1)
     getfaculty()
  
@@ -75,7 +79,8 @@ function getfaculty(){
       form_control.classList.add("form-control", "mybtn");
   
       // Attach the show() function to the button click
-      form_control.onclick = () => show(element.id_number);
+      form_control.onclick = () => {show(element.id_number)
+      printThis(element.id_number)};
   
       // Create the column div
       const col_sm = document.createElement("div");
@@ -135,13 +140,16 @@ function show(id){
  showThis(2)
     
   document.getElementById("ofcasLoad").style.display = ""
-fetch(`/load/record?id=${id}`).then(response=>response.json()).then(data=>{
+fetch(`/load/record?id=${id}&&sem=${sem}`).then(response=>response.json()).then(data=>{
      document.getElementById("ofcasLoad").style.display = "none"
   console.table(data)
 const countdata=data.counts
 const userD=data.user_data[0]
 
-facultydetail.innerHTML=`<div class="row" style="margin-top:30px;width:55%">
+facultydetail.innerHTML=`
+<button id="Print" onclick='print()' class="btn btn-success" style="position: relative;padding-left: 30px;color:white;margin-top:10px"><img src="../img/printer.png" class="mybtn-icon" alt="" >Download Copy</button>
+<div class="row" style="margin-top:30px;width:55%">
+
 <h5>${userD.last}, ${userD.first} ${userD.mid}</h5>
 <h6 id="id_holder">${userD.id_number}</h6>
 </div>
@@ -203,7 +211,7 @@ ${countdata.declined}
 </div>
 
 </div>
-<button type=button id="back" class="form-control btn-primary" onclick="showThis(1)"><img src="../img/Back.png" class="mybtn-icon" alt="">Back</button>
+<button type=button id="back" class="form-control btn-primary" onclick="window.location.reload()"><img src="../img/Back.png" class="mybtn-icon" alt="">Back</button>
 `
 const studentList=document.getElementById("LIST")
 
@@ -264,35 +272,52 @@ showgraph.addEventListener("click",(e)=>{
   if(showgraph.textContent=='Back'){
     showgraph.onclick=window.location.reload()
   }else{
-  getSem()
+
+  graph(sem)
     showThis(3)
-    forDate.show()
+  
   }
 })
 function getSem(){
+    // forDate.show()
   fetch("/getSem")
   .then(response=>response.json())
   .then(data=>{
-    const holder=document.getElementById("sem-holder")
-    holder.innerHTML=""
+    // const holder=document.getElementById("sem-holder")
+    // holder.innerHTML=""
+    const sem_names = document.getElementById("sem_names")
+    sem_names.innerHTML=""
     data.sem.forEach(item=>{
-    const row=document.createElement("div")
-    const control=document.createElement("button")
-    control.textContent=item.sem_name
-    control.type="button"
-    control.classList.add("form-control")
-    row.style.marginBottom="5px"
-    row.classList.add("row")
-    row.onclick=()=>{
-      graph(item.sem_id)
-    }
-    row.appendChild(control)
-    holder.appendChild(row)
+      const options=document.createElement("option")
+      options.value=item.sem_id
+      options.textContent=item.sem_name
+      sem_names.appendChild(options)
+     
+    // const row=document.createElement("div")
+    // const control=document.createElement("button")
+    // control.textContent=item.sem_name
+    // control.type="button"
+    // control.classList.add("form-control")
+    // row.style.marginBottom="5px"
+    // row.classList.add("row")
+    // row.onclick=()=>{
+    // 
+    //    forDate.hide()
+    // }
+    // row.appendChild(control)
+    // holder.appendChild(row)
   })
   }).catch(err=>{
     console.log("err")
   })
 }
+sem_names.addEventListener("change",function(e){
+  const id=e.target.value
+  sem=id
+  ids.forEach(el=>{
+    el.sem_id=sem
+  })
+})
 function graph(id){
  
    document.getElementById("ofcasLoad").style.display = ""
@@ -421,7 +446,8 @@ dec:  getE('de').checked,
 can:getE('ca').checked,
 con:getE('co').checked,
 mis:getE('mi').checked,
-id:id_holder.textContent
+id:id_holder.textContent,
+sem:sem
 }
 const check =JSON.stringify(checkbox);
 fetch(`/filter/data?checkbox=${check}`)
@@ -522,6 +548,11 @@ fetch(`/sort?param1=${a}&&param2=${b}`)
 }).catch(err=>{
 
 })
+}
+function printThis(idNum){
+  ids=[]
+  ids.push({id:idNum,sem_id:sem})
+  console.table(ids)
 }
 function print(){
   const jsonString = JSON.stringify(ids);
