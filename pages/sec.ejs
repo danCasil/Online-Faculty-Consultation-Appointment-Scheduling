@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" style="overflow: hidden;">
+<html lang="en" style="overflow: hidden;" >
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -36,15 +36,22 @@
         <h4>Online Faculty Consultation Appointment Scheduling</h4>
        </header>
 <body>
-  
-<div class="container-fluid">
-  <div class="form-control"id="TheContainer" >
+<div id="onCp" style="margin-left: 30%;margin-top: 15%;">
+  <h5>Please use a wider screen to continue</h5>
+</div>
+<div class="container-fluid" id="onPc">
+  <div class="form-control"id="TheContainer" style="overflow-y: auto;">
     
   
     
      <div id="section1">
       <h5 style="position: sticky;top: 0;backdrop-filter: blur(5px);" id="collegeName">College of Computing Studies, Information and Communication Technology </h5>
-      <select name="sem_names" id="sem_names" style="float:right"></select>
+      <div style="display:flex;float:right; ">
+        <select name="sem_names" id="sem_names" style="margin-right: 5px;height: 30px;"></select><div style="position: relative;" title="Add Semester" id="semAdd"   type="button"
+        
+        data-bs-toggle="modal"
+        data-bs-target="#semModal"><img src="../img/plus.png" style="width: 20px;top: 0;" alt=""></div>
+      </div>
       <button id="mainPrint" onclick='print()' class="btn btn-success" style="position: relative;padding-left: 30px;color:white"><img src="../img/printer.png" class="mybtn-icon" alt="" >Download Copy</button>
       <button id="showgraph" class="btn-primary btn " ><img src="../img/chart.png" class="mybtn-icon" alt="">Show Report</button>
     <button type="button" id="logout" class="btn-danger btn" ><img src="../img/logout.png" class="mybtn-icon" alt="">Logout</button>
@@ -62,19 +69,25 @@
     </div>
       
      <div id="section3">
-<div class="container-fluid">
+<div class="container-fluid" >
+  <img src="../img/header.jpg"style="
+  width: 90%;
+  margin-right:auto;
+  margin-top:5px;
+  margin-left:auto;display:block" 
+  alt="">
   <div class="row">
-    <div class="col-sm-4">
+    <div class="col-sm-5">
  
-        <canvas id="myChart" width="400" height="400"></canvas>
+        <div id="myChart"style="width:100%; max-width:600px; height:500px;"></div>
 
     </div>
     <div class="col-sm-2">
 
     </div>
-    <div class="col-sm-6">
+    <div class="col-sm-5">
      
-      <canvas id="myCharts" width="400" height="400"></canvas>
+      <canvas id="myCharts" width="400" height="300px"></canvas>
 
     </div>
   </div>
@@ -135,8 +148,84 @@
 </div>
 
 
+
+
+<div
+  class="modal fade"
+  id="semModal"
+  tabindex="-1"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  
+  role="dialog"
+  aria-labelledby="modalTitleId"
+  aria-hidden="true"
+>
+  <div
+    class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg"
+    role="document"
+>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalTitleId">
+          Add Semester
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body"   style="height:300px " class="container-fluid">
+<form method="post" action="/sem/add" id="semAdderForm">
+  
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-11">
+    <div class="input-group ">
+                  <span class="input-group-text">Semester</span>
+                  <select name="semName"class="form-select" id="semName">
+                    <option value="First">First</option>
+                    <option value="Second">Second</option>
+                  </select>
+                  <span class="input-group-text" >Semester Scope</span>
+                  <input type="date" id="semFromDate" name="semFromDate" class="form-control"> 
+                  <span class="input-group-text" > - </span> 
+                  <input type="date" id="semToDate" name="semToDate" class="form-control">
+   </div>    
+   </div>
+   <div class="col-1">
+    <button class="btn btn-success" id="addSemBTN" type="submit">ADD</button>
+   </div>
+  </div>
+</div>
+        
+</form>
+  <hr>
+  <div id="sem_Container" class="container">
+
+  </div>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-bs-dismiss="modal"
+          id="semClose"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script src="../chart/googleChart.js"></script>
 <script src="../bootjs/boostrap.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="../sec_script.js"></script>
+<script src="../add_sem_script.js"></script>
 </body>
 </html>

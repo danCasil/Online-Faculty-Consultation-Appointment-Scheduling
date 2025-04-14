@@ -36,8 +36,6 @@ const s2=document.getElementById("section2")
 const s3=document.getElementById("section3")
 document.addEventListener("DOMContentLoaded",function(e){
  
-  getSem()
-
 
   showThis(1)
     getfaculty()
@@ -278,39 +276,7 @@ showgraph.addEventListener("click",(e)=>{
   
   }
 })
-function getSem(){
-    // forDate.show()
-  fetch("/getSem")
-  .then(response=>response.json())
-  .then(data=>{
-    // const holder=document.getElementById("sem-holder")
-    // holder.innerHTML=""
-    const sem_names = document.getElementById("sem_names")
-    sem_names.innerHTML=""
-    data.sem.forEach(item=>{
-      const options=document.createElement("option")
-      options.value=item.sem_id
-      options.textContent=item.sem_name
-      sem_names.appendChild(options)
-     
-    // const row=document.createElement("div")
-    // const control=document.createElement("button")
-    // control.textContent=item.sem_name
-    // control.type="button"
-    // control.classList.add("form-control")
-    // row.style.marginBottom="5px"
-    // row.classList.add("row")
-    // row.onclick=()=>{
-    // 
-    //    forDate.hide()
-    // }
-    // row.appendChild(control)
-    // holder.appendChild(row)
-  })
-  }).catch(err=>{
-    console.log("err")
-  })
-}
+
 sem_names.addEventListener("change",function(e){
   const id=e.target.value
   sem=id
@@ -330,8 +296,7 @@ function graph(id){
 
   fetch(`/load/graphdata?id=${id}`).then(response=>response.json()).then(data=>{
     document.getElementById("ofcasLoad").style.display = "none"
-
-    createGraph(data.yroles,data.xroles,data.xValues, data.yValues,data.sem_name,data.count2)
+createGraph(data.yroles,data.xroles,data.xValues, data.yValues,data.sem_name,data.count2);
  document.getElementById("ofcasLoad").style.display = "none"
   }).catch(err=>{
     console.log(err)
@@ -349,95 +314,125 @@ if(data.logout==true){
 })
 
 
-function createGraph(yroles,xroles,xValues, yValues,sem_name,count2){
-  
+
+function createGraph(yroles, xroles, xValues, yValues, sem_name, count2) {
   const barColors = [];
-  if(xValues.length == 0){
-  xValues=["No Record"]
-  yValues=[1]
-  barColors.push("Gray")
-  }else{
-  forDate.hide()
+  
+  // Handle cases where xValues is empty
+  if (xValues.length === 0) {
+    xValues = ["No Record"];
+    yValues = [1];
+    barColors.push("Gray");
+  } else {
+ 
+   var arr=[]
+    for (let i = 0; i < xValues.length; i++) {
+       arr.push([xValues[i], parseInt(yValues[i])]); // Ensure values are added correctly
+     }
+     var  graphData= [['Contry', 'Mhl'],...arr];
+  
 
-  xValues.forEach(x=>{
+     google.charts.load('current', { packages: ['corechart'] });
+    google.charts.setOnLoadCallback(() => {
+        const data = google.visualization.arrayToDataTable(graphData);
 
-    switch(x){
-      case "consulted":
-        barColors.push("green")
-        break
-      case "missed":
-        barColors.push("red")
-        break
-      case "declined":
-        barColors.push("blue")
-        break
-      case "cancelled":
-        barColors.push("orange")
-        break
-    }
-   
-  })
-}
-  new Chart("myChart", {
-    type: "pie",
-    data: {
-        labels: xValues,
-        datasets: [{
-            backgroundColor: barColors,
-            data: yValues
-            
-        }]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: {
-                display: true,
-                position: 'top' 
-            },
-            title: {
-                display: true,
-                text: `${sem_name} Consultation Status`,
-                font: {
-                    size: 18,
-                    weight: 'bold'
-                }
-            }
-        }
-    }
-});
+        const options = {
+            title:`Consultation Status for ${sem_name} `,
+            hAxis: { title: 'Categories' },
+            vAxis: { title: 'Values' },
+            colors:barColors
+        };
 
-new Chart("myCharts", {
-  type: "pie",
-  data: {
-      labels: xroles,
-      datasets: [{
-          backgroundColor: ["green","blue"],
-          data: yroles
-          
-      }]
-  },
-  options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-          legend: {
-              display: true,
-              position: 'top' 
-          },
-          title: {
-              display: true,
-              text: `Student and Teacher Engagement for this Month`,
-              font: {
-                  size: 18,
-                  weight: 'bold'
-              }
-          }
+        const chart = new google.visualization.PieChart(document.getElementById('myChart'));
+        chart.draw(data, options);
+    });
+
+    // Assign colors based on xValues
+    xValues.forEach(x => {
+      switch (x) {
+        case "consulted":
+          barColors.push("green");
+          break;
+        case "missed":
+          barColors.push("red");
+          break;
+        case "declined":
+          barColors.push("blue");
+          break;
+        case "cancelled":
+          barColors.push("orange");
+          break;
+        case "unsuccessful":
+            barColors.push("lightgreen");
+            break;
       }
+    });
+
   }
-});
+
+//   new Chart("myChart", {
+//     type: "pie",
+//     data: {
+//         labels: xValues,
+//         datasets: [{
+//             backgroundColor: barColors,
+//             data: yValues
+            
+//         }]
+//     },
+//     options: {
+//         responsive: true,
+//         maintainAspectRatio: false,
+//         plugins: {
+//             legend: {
+//                 display: true,
+//                 position: 'top' 
+//             },
+//             title: {
+//                 display: true,
+//                 text: `${sem_name} Consultation Status`,
+//                 font: {
+//                     size: 18,
+//                     weight: 'bold'
+//                 }
+//             }
+//         }
+//     }
+// });
+
+// new Chart("myCharts", {
+//   type: "pie",
+//   data: {
+//       labels: xroles,
+//       datasets: [{
+//           backgroundColor: ["green","blue"],
+//           data: yroles
+          
+//       }]
+//   },
+//   options: {
+//       responsive: true,
+//       maintainAspectRatio: false,
+//       plugins: {
+//           legend: {
+//               display: true,
+//               position: 'top' 
+//           },
+//           title: {
+//               display: true,
+//               text: `Student and Teacher Engagement for this Month`,
+//               font: {
+//                   size: 18,
+//                   weight: 'bold'
+//               }
+//           }
+//       }
+//   }
+// });
+
+
 }
+
 
 function filterData(){
   
@@ -530,15 +525,8 @@ const formattedDate = `${months[parseInt(month, 10) - 1]} ${parseInt(day, 10)}, 
 return formattedDate
 
 }
-const sorted=document.getElementById("sorter")
-const ordered=document.getElementById("order")
-sorted.addEventListener("change", (e)=>{
-  sorter(e.target.value,ordered.value)
-})
-ordered.addEventListener("change", (e)=>{
 
-  sorter(sorted.value,e.target.value)
-})
+
 function sorter(a,b){
 console.log(a+""+b)
 fetch(`/sort?param1=${a}&&param2=${b}`)

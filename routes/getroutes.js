@@ -446,7 +446,9 @@ route.get('/createPDF', async (req, res) => {
         res.status(500).send("An error occurred while generating the PDF.");
     }
 });
-
+route.get("/add/sem",async (req, res) => {
+    res.render("add_sem")
+})    
 
 
 function formatTimeToHourMinute(timeString,isLast) {

@@ -482,7 +482,33 @@ type="notif"
          console.error('Failed to fetch records:', err);
       }
 }
+route.post("/sem/add",async (req, res) => {
+   console.table(req.body)
+   const {semName,semFromDate,semToDate}=req.body
+   const year1=(semName=="First")?new Date(semFromDate).getFullYear():new Date(semToDate).getFullYear()-1
+    const year2=(semName=="First") ? new Date(semFromDate).getFullYear()+1 : new Date(semToDate).getFullYear()
+    const name=`${semName} Semester, ${year1}-${year2}`
+   await queryDatabase("INSERT INTO sem (sem_name,sem_start,sem_end) VALUES($1,$2,$3)",[name,semFromDate,semToDate])
 
+   res.redirect("/getSem")
+})
+route.post("/sem/edit",async (req, res) => {
+   
+    const {id,semName,semFromDate,semToDate}=req.body
+    const year1=(semName=="First")?new Date(semFromDate).getFullYear():new Date(semToDate).getFullYear()-1
+     const year2=(semName=="First") ? new Date(semFromDate).getFullYear()+1 : new Date(semToDate).getFullYear()
+     const name=`${semName} Semester, ${year1}-${year2}`
+    await queryDatabase("UPDATE sem SET sem_name=$1,sem_start=$2,sem_end=$3 WHERE sem_id=$4",[name,semFromDate,semToDate,id])
+ 
+    res.redirect("/getSem")
+ })
+route.post("/sem/delete",async (req,res) => {
+const {id,start,end}=JSON.parse(req.query.data)
+const dStart=new Date(start)
+const dEnd=new Date(end)
+await queryDatabase("DELETE FROM sem WHERE sem_id=$1 AND sem_start=$2 AND sem_end=$3",[id,dStart,dEnd])
+res.redirect("/getSem")
+})
 function formatThis(d){
     const originalDate = new Date(d); 
     const options = { 
