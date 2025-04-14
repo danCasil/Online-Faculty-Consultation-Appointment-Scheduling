@@ -1,3 +1,4 @@
+
 var ids=[];
 const mainPrint=document.getElementById("mainPrint");
 mainPrint.disabled=true;
@@ -215,6 +216,7 @@ const studentList=document.getElementById("LIST")
 
 data.studentdata.forEach(element=>{
   const row=document.createElement("div")
+  
   const row2=document.createElement("div")
   row2.style.fontSize="13.5px"
   row2.style.fontWeight="500"
@@ -296,7 +298,7 @@ function graph(id){
 
   fetch(`/load/graphdata?id=${id}`).then(response=>response.json()).then(data=>{
     document.getElementById("ofcasLoad").style.display = "none"
-createGraph(data.yroles,data.xroles,data.xValues, data.yValues,data.sem_name,data.count2);
+createGraph(data.yroles,data.xroles,data.xValues, data.yValues,data.sem_name,data.count2,data.finished,data.semDate,data.forBarChart);
  document.getElementById("ofcasLoad").style.display = "none"
   }).catch(err=>{
     console.log(err)
@@ -315,9 +317,13 @@ if(data.logout==true){
 
 
 
-function createGraph(yroles, xroles, xValues, yValues, sem_name, count2) {
+function createGraph(yroles, xroles, xValues, yValues, sem_name, count2,finished,semDate,forBarChart) {
+  const TheContainer=document.getElementById("TheContainer");
+  const finishedConsultaion=document.getElementById("finishedConsultaion")
+  const finishValue=(finished.length==1)?finished[0].count:0
+  finishedConsultaion.textContent=finishValue+" Finished Consultation"
   const barColors = [];
-  
+  const chart1Legend=document.getElementById("chart1Legend")
   // Handle cases where xValues is empty
   if (xValues.length === 0) {
     xValues = ["No Record"];
@@ -327,7 +333,56 @@ function createGraph(yroles, xroles, xValues, yValues, sem_name, count2) {
  
    var arr=[]
     for (let i = 0; i < xValues.length; i++) {
-       arr.push([xValues[i], parseInt(yValues[i])]); // Ensure values are added correctly
+     var x=""; 
+     const customLegend=document.createElement("div")
+     const legendText=document.createElement("div")
+      const legendColor=document.createElement("div")
+     switch (xValues[i]) {
+      case "consulted":
+        barColors.push("green");
+
+        break;
+      case "missed":
+        barColors.push("red");
+        break;
+      case "declined":
+        barColors.push("blue");
+        break;
+      case "cancelled":
+        barColors.push("orange");
+        break;
+      case "unsuccessful":
+          barColors.push("lightgreen");
+          break;
+    }
+      for(var incre=0;incre<xValues[i].length;incre++) {
+       
+        if(incre==0){
+          x+=xValues[i].charAt(incre).toUpperCase()
+        }else{
+          x+=xValues[i].charAt(incre)
+        }
+      }
+      legendText.innerHTML=`${x}<br>${yValues[i]}`
+      legendColor.style.backgroundColor=barColors[i]
+      legendColor.style.width="10px"
+      legendColor.style.height="10px"
+      legendColor.style.borderRadius="100%"
+
+      legendColor.style.position="absolute"
+      legendColor.style.top="7px"
+      customLegend.style.display="flex"
+      customLegend.style.position="relative"
+      
+      legendText.style.marginLeft="15px"
+      legendText.style.fontSize="15px"
+      legendText.style.fontWeight="bold"
+      legendText.style.color="gray"
+      customLegend.appendChild(legendColor)
+      customLegend.appendChild(legendText)
+      
+     chart1Legend.appendChild(customLegend)
+       arr.push([x, parseInt(yValues[i])]); // Ensure values are added correctly
      }
      var  graphData= [['Contry', 'Mhl'],...arr];
   
@@ -336,40 +391,88 @@ function createGraph(yroles, xroles, xValues, yValues, sem_name, count2) {
     google.charts.setOnLoadCallback(() => {
         const data = google.visualization.arrayToDataTable(graphData);
 
-        const options = {
-            title:`Consultation Status for ${sem_name} `,
+        const options = { 
+              title:``,
+              chartArea:{
+                top:10,
+                bottom:10
+              },
             hAxis: { title: 'Categories' },
             vAxis: { title: 'Values' },
-            colors:barColors
-        };
+            colors:barColors,
+            legend: 'none' 
+          };
 
-        const chart = new google.visualization.PieChart(document.getElementById('myChart'));
+        const chart = new google.visualization.PieChart(document.getElementById('myChart1'));
         chart.draw(data, options);
     });
+    document.getElementById("chart1Title").innerHTML = `      
+            <h4 style="margin-bottom:0"><b>Consultation Overview </b></h4>
+            <p>${sem_name}</p>`;
+   
 
-    // Assign colors based on xValues
-    xValues.forEach(x => {
-      switch (x) {
-        case "consulted":
-          barColors.push("green");
-          break;
-        case "missed":
-          barColors.push("red");
-          break;
-        case "declined":
-          barColors.push("blue");
-          break;
-        case "cancelled":
-          barColors.push("orange");
-          break;
-        case "unsuccessful":
-            barColors.push("lightgreen");
-            break;
-      }
-    });
 
   }
 
+  if(count2.length>0&&count2.length==1){
+    if(count2[0].scheduler_role=="student"){
+      count2.push({scheduler_role:"faculty",count:0})
+    }else{
+      count2.push({scheduler_role:"student",count:0})
+    }
+  }
+  if(count2.length>0){
+  
+    count2.forEach(data=> {
+    if(data.scheduler_role=="student"){
+      if(data.count>0){
+        document.getElementById("engageStudent").innerHTML =`${data.count} Student Engagement`;
+      }else{
+        document.getElementById("engageStudent").innerHTML =`0 Student Engagement`;
+      }
+    }else{
+      if(data.count>0){
+        document.getElementById("engageFaculty").innerHTML =`${data.count} Faculty Engagement`;
+      }else{
+        document.getElementById("engageFaculty").innerHTML =`0 Faculty Engagement`;
+      }
+    }
+  })
+  }else{
+    document.getElementById("engageStudent").innerHTML =`0 Student Engagement`;
+    document.getElementById("engageFaculty").innerHTML =`0 Faculty Engagement`;
+  }
+
+  const barData=[]
+  const dasd = countByMonth(forBarChart);
+  Object.entries(dasd).forEach(([index, value]) => {
+    barData.push([new Date(index), value]); // Push the date and value into barData
+  });
+
+  google.charts.load('current', { packages: ['line'] });
+  google.charts.setOnLoadCallback(() => {
+    var hackdog = new google.visualization.DataTable();
+    hackdog.addColumn('date', 'Month');
+  
+    hackdog.addColumn('number', "Number of Consultations");
+  
+    hackdog.addRows([
+      [new Date(`${new Date(semDate[0]).getFullYear()}-${new Date(semDate[0]).getMonth()+1}`),0],
+      ...barData
+    ]);
+    var classicOptions = {
+      chart: {
+        title: 'Overall Consultation Appointment',
+        subtitle:sem_name
+      },
+      chartArea:{
+        width:100
+      },
+    };
+      const chart = new google.charts.Line(document.getElementById('myChart2'));
+      chart.draw(hackdog, classicOptions);
+  });
+  
 //   new Chart("myChart", {
 //     type: "pie",
 //     data: {
@@ -433,6 +536,24 @@ function createGraph(yroles, xroles, xValues, yValues, sem_name, count2) {
 
 }
 
+
+function countByMonth(data) {
+  const monthCounts = {};
+
+  data.forEach(date => {
+      const parsedDate = new Date(date.exc_date);
+      const monthYear = `${parsedDate.getFullYear()}-${parsedDate.getMonth() + 1}`; // Format: YYYY-MM
+
+      if (monthCounts[monthYear]) {
+          monthCounts[monthYear] += 1;
+
+      } else {
+          monthCounts[monthYear] = 1;
+      }
+  });
+
+  return monthCounts;
+}
 
 function filterData(){
   

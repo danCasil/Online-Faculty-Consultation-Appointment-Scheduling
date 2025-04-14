@@ -323,20 +323,27 @@ route.get("/load/graphdata", async (req, res) => {
     const college = 'CCSICT';
     const dates=await queryDatabase(`SELECT sem_name,sem_start,sem_end FROM sem WHERE sem_id='${id}' `)
     console.table(dates)
+    
     const date1 = new Date(dates[0].sem_start);
      const date2 = new Date(dates[0].sem_end); // Format the dates (Example: Convert to ISO string) 
      const formattedDate1 = `${date1.getFullYear()}-${date1.getMonth()+1}-${date1.getDate()}`;
       const formattedDate2 = `${date2.getFullYear()}-${date2.getMonth()+1}-${date2.getDate()}`;
     let xValues = [];
     let yValues = [];
-  
+    const currentDate = new Date()
+    const thisMonthEnd=new Date(currentDate.getFullYear(), currentDate.getMonth()+2,1)
+    const thisMonthStart =new Date(currentDate.getFullYear(), currentDate.getMonth()+1,1)
+    const start = `${thisMonthStart.getFullYear()}-${thisMonthStart.getMonth()}-${thisMonthStart.getDate()}`;
+    const end = `${thisMonthEnd.getFullYear()}-${thisMonthEnd.getMonth()}-${thisMonthEnd.getDate()}`;
+    
     try {
-        
-            const count2=await queryDatabase(`SELECT sched.scheduler_role, COUNT(sched.scheduler_role) AS count FROM sched JOIN info ON sched.nagsched=info.id_number OR sched.nasched=info.id_number WHERE info.college='${college}' Group by sched.scheduler_role`)
-           
+            const finshedCon=await queryDatabase(`SELECT count(type) FROM record WHERE type='consulted' AND(exc_date>='${start}'AND exc_date<'${end}')`)
+            const count2=await queryDatabase(`SELECT sched.scheduler_role, COUNT(sched.scheduler_role) AS count FROM sched JOIN info ON sched.nagsched=info.id_number OR sched.nasched=info.id_number WHERE (sched.date>='${start}'AND sched.date<'${end}') AND info.college='${college}' Group by sched.scheduler_role`)
+
             const counts = await queryDatabase("SELECT type, COUNT(*) AS Count FROM record JOIN info on info.id_number=record.id_number WHERE info.college='"+college+"'  AND(exc_date>='"+formattedDate1+"' AND exc_date<='"+formattedDate2+"') Group by type;") 
+            const forBarChart= await queryDatabase(`SELECT exc_date FROM record WHERE type='consulted' AND(exc_date>='${formattedDate1}'AND exc_date<'${formattedDate2}')`) 
             console.table(counts)
-           
+           const semDate=[date1,date2]
            counts.forEach(element => {
             xValues.push(element.type)
             yValues.push(element.count)
@@ -347,9 +354,9 @@ route.get("/load/graphdata", async (req, res) => {
             xroles.push(element.scheduler_role)
             yroles.push(element.count)
            });
-
+           console.table(forBarChart)
    
-        res.json({yroles,xroles,date1, xValues: xValues, yValues: yValues,sem_name:dates[0].sem_name });
+        res.json({yroles,xroles,date1, xValues: xValues, yValues: yValues,sem_name:dates[0].sem_name,count2:count2,finished:finshedCon,semDate:semDate,forBarChart:forBarChart});
     }catch (err) { 
         console.error('Failed to fetch records:', err);
         res.status(500).json({ error: 'Failed to fetch records' }); 
@@ -711,7 +718,7 @@ function generateOTP(count) {
 
 route.get("/getSem",async (req, res) => {
 try{
-const sem=await queryDatabase("SELECT * FROM sem");
+const sem=await queryDatabase("SELECT * FROM sem ORDER BY sem_end");
 console.table(sem);
 res.json({ sem });
 
