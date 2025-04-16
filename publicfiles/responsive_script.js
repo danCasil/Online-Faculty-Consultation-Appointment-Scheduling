@@ -80,9 +80,9 @@ window.addEventListener("resize", function(e) {
  
   });
 
-document.getElementById("student_notifier").addEventListener("click",function zIndex(){
-    sidenavbar.style.zIndex="1"
-})
+// document.getElementById("student_notifier").addEventListener("click",function zIndex(){
+//     sidenavbar.style.zIndex="1"
+// })
 function notif_close(){
     sidenavbar.style.zIndex="50000000"
 }
@@ -169,9 +169,9 @@ editBtn.style.marginTop=innerHeight-230+"px"
 }
 var myModalEl = document.getElementById('Notifmodal');
 var notifModal =new bootstrap.Modal(myModalEl);
-document.getElementById("student_notifier").addEventListener("click", ()=>{
-    notifModal.show()
-})
+// document.getElementById("student_notifier").addEventListener("click", ()=>{
+//     notifModal.show()
+// })
 
   document.getElementById("notif_sender").addEventListener("submit",function(e){
     e.preventDefault()

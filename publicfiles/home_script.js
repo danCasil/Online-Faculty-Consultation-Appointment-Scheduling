@@ -1,12 +1,13 @@
 
-
+const showMore = new bootstrap.Modal(document.getElementById("showMore"));
+const showMoreBody=document.getElementById("showMoreBody");
 const yesORnoModal = new bootstrap.Modal(document.getElementById("confirmationModal"));
 const editTxt = document.getElementById("msgForConfirm")
 
 const finisherModal = new bootstrap.Modal(
   document.getElementById("Finisher"),
 );
-
+var iterate=0;
 
 document.addEventListener("DOMContentLoaded", function (e) {
 
@@ -390,10 +391,15 @@ async function loadschedule(datas, role, rec, curr_id) {
         }
       }
     }
-
+    
     row.appendChild(col4)
     if (over) {
       row.appendChild(over)
+    }
+    row.id=`row${iterate++}`
+    row.onclick = ()=> {
+      showMoreContent(data)
+      showMore.show()
     }
     row.style.textAlign = "center"
     tbody.appendChild(row)
@@ -409,6 +415,38 @@ async function loadschedule(datas, role, rec, curr_id) {
   })
 
 }
+
+function showMoreContent(data){
+
+  showMoreBody.innerHTML = ""
+console.table(data)
+const divDate=document.createElement("div")
+const divName=document.createElement("div")
+const divStatus=document.createElement("div")
+const divPurpose=document.createElement("div")
+const divTime=document.createElement("div")
+const date=formatThisDate(data.date)
+divDate.innerHTML=`<b>Date: </b>${date}`
+divTime.innerHTML=`<b>Time:</b> ${formatTime(data.time_in)} - ${formatTime(data.time_out)}`
+
+const middle=data.mid
+divName.innerHTML=`<b>Name: </b>${data.last}, ${data.first} ${middle.charAt(0)}.`
+divPurpose.innerHTML=`<b>Purpose: </b>${data.purpose}`
+showMoreBody.appendChild(divDate)
+showMoreBody.appendChild(divTime)
+showMoreBody.appendChild(divName)
+showMoreBody.appendChild(divPurpose)
+}
+function formatThisDate(input){
+  const date = new Date(input);
+    if (isNaN(date.getTime())) {
+        throw new Error('Invalid date input');
+    }
+    
+    const options = { month: 'short', day: '2-digit', year: 'numeric' };
+    return date.toLocaleDateString('en-US', options).replace(',', ',');
+}
+
 function create_Button(txt) {
   const btn = document.createElement("button")
   if (txt == 'Finish' || txt == 'Track Schedule') {

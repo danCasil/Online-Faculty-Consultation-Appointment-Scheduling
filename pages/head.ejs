@@ -1,184 +1,198 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="currentpg">HOME</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="currentpg">HOME</title>
 
-      <link rel="icon" type="image/png" sizes="32x32" href="../img/OCAS-icon.png" >
+  <link rel="icon" type="image/png" sizes="32x32" href="../img/OCAS-icon.png">
 
-    <link rel="stylesheet" href="../bootcss/bootstrap.min.css"></link>
+  <link rel="stylesheet" href="../bootcss/bootstrap.min.css">
+  </link>
 
-    <link rel="stylesheet" href="../mycss.css">
+  <link rel="stylesheet" href="../mycss.css">
 </head>
 <style>
-  .profileCol{
+  .profileCol {
     cursor: pointer;
-height: 40px;
-background-color: white;
-transition:height .25s;
-z-index: 1000;
+    height: 40px;
+    background-color: white;
+    transition: height .25s;
+    z-index: 1000;
 
   }
-  .profileCol.collapsed{
-height: 135px;
 
-z-index: 1000;
-transition: height .25s ;
+  .profileCol.collapsed {
+    height: 135px;
+
+    z-index: 1000;
+    transition: height .25s;
   }
-#profileContainerPC{
-  top:5%;
-  color:black;
-  position: absolute;
-  right: 1%;
-  border: #375623 solid 2px;
-  padding: 5px;
-  border-radius: 5px;
-width: fit-content;
-  overflow: hidden;
-}
-.profileCol>a:hover{
-background-color: red;
-}
-#dropIcon{
-  transition: rotate 1s;
-}
-.profBTN:hover{
-color: white;
-background-color: #375623;
-}
-a{
-  overflow: hidden;
-}
+
+  #profileContainerPC {
+    top: 5%;
+    color: black;
+    position: absolute;
+    right: 1%;
+    border: #375623 solid 2px;
+    padding: 5px;
+    border-radius: 5px;
+    width: fit-content;
+    overflow: hidden;
+  }
+
+  .profileCol>a:hover {
+    background-color: red;
+  }
+
+  #dropIcon {
+    transition: rotate 1s;
+  }
+
+  .profBTN:hover {
+    color: white;
+    background-color: #375623;
+  }
+
+  a {
+    overflow: hidden;
+  }
 </style>
+
 <body>
   <div id="ofcasLoad" style="z-index: 100000000000000000;"> <img src="../img/loading.gif" alt=""></div>
   <header style="position: relative;">
-   <h4 id="heading">Online Faculty Consultation Appointment Scheduling</h4>
-<div id="pcMode">
-     <div id="profileContainerPC"  class="profileCol" onclick="toggleProf()">
-      <img  src="../img/profile_normal.png"  style="width: 30px;height: 30px;display: inline;margin-right: 5px;"alt="">
-      <div id="currentUser" style="display: inline; ">
-     
-      </div>
-      
-    </div>
-</div>
-    <span type="button" id="menu" >
-    <img src="../img/open_menu.png" id="menuBTN" alt="">
-   </span>
-</header>
+    <h4 id="heading">Online Faculty Consultation Appointment Scheduling</h4>
+    <div id="pcMode">
+      <div id="profileContainerPC" class="profileCol" onclick="toggleProf()">
+        <img src="../img/profile_normal.png" style="width: 30px;height: 30px;display: inline;margin-right: 5px;" alt="">
+        <div id="currentUser" style="display: inline; ">
 
-<div class="container-fluid">
+        </div>
+
+      </div>
+    </div>
+    <span type="button" id="menu">
+      <img src="../img/open_menu.png" id="menuBTN" alt="">
+    </span>
+  </header>
+
+  <div class="container-fluid">
     <div class="row">
-    <div class="col-2" id="sidenavbar">
-    <div class="form-control" id="navbar" >
-     
-      <center>
-        <img src="../img/OCAS-logo.png" alt="Apps Logo"  id="OFCASlogo">
-      </center>
-   
+      <div class="col-2" id="sidenavbar">
+        <div class="form-control" id="navbar">
 
-      <a href="/home"class="form-control " id="sched"><img src="" id="icon1" class="navbaricon" alt="">Home</a>
+          <center>
+            <img src="../img/OCAS-logo.png" alt="Apps Logo" id="OFCASlogo">
+          </center>
 
-     
-      <a href="/notification" class="form-control"id="notif"><img src=" "class="navbaricon"id="icon2" alt="">Notification</a>
 
-      <a href="/change" class="form-control" id="change"><img src=""id="icon3"class="" alt="">Add Consultation Hour</a>
+          <a href="/home" class="form-control " id="sched"><img src="" id="icon1" class="navbaricon" alt="">Home</a>
 
-      <!-- <a  class="form-control " style="margin-bottom: 10%;"  type="button"
+
+          <a href="/notification" class="form-control" id="notif"><img src=" " class="navbaricon" id="icon2"
+              alt="">Notification</a>
+
+          <a href="/change" class="form-control" id="change"><img src="" id="icon3" class="" alt="">Add Consultation
+            Hour</a>
+
+          <!-- <a  class="form-control " style="margin-bottom: 10%;"  type="button"
      id="student_notifier"><img src="../img/notifier_normal.png"id="icon4"class="navbaricon" alt="" >Notify A Student</a> -->
-    
-<div id="pcFormat">
-  <hr>
-       <a class="form-control" id="changepasswordbtn1">
-        <img src="../img/resetPass_normal.png"id="icon10"class="navbaricon" alt="">Change Password</a>
-       <a href="/logout" class="form-control"><img src="../img/logout_normal.png"id="icon5"class="navbaricon" alt="">Logout</a>
-</div>
-     <div id="cp">
-      <img  src="../img/profile_normal.png"  style="width: 20px;height: 20px;display: inline;margin-right: 5px;margin-left: 8px;"alt="">
-      <div id="currentUsername" style="display: inline; ">
 
+          <div id="pcFormat">
+            <hr>
+            <a class="form-control" id="changepasswordbtn1">
+              <img src="../img/resetPass_normal.png" id="icon10" class="navbaricon" alt="">Change Password</a>
+            <a href="/logout" class="form-control"><img src="../img/logout_normal.png" id="icon5" class="navbaricon"
+                alt="">Logout</a>
+          </div>
+          <div id="cp">
+            <img src="../img/profile_normal.png"
+              style="width: 20px;height: 20px;display: inline;margin-right: 5px;margin-left: 8px;" alt="">
+            <div id="currentUsername" style="display: inline; ">
+
+            </div>
+            <hr>
+            <a class="form-control" id="changepasswordbtn"><img src="../img/resetPass_normal.png" id="icon5"
+                class="navbaricon" alt="">Change Password</a>
+            <a href="/logout" class="form-control"><img src="../img/logout_normal.png" id="icon5" class="navbaricon"
+                alt="">Logout</a>
+          </div>
+
+        </div>
       </div>
-      <hr>
-      <a  class="form-control" id="changepasswordbtn"><img src="../img/resetPass_normal.png"id="icon5"class="navbaricon" alt="">Change Password</a>
-      <a href="/logout" class="form-control"><img src="../img/logout_normal.png"id="icon5"class="navbaricon" alt="">Logout</a>
-     </div>
-      
-    </div>
-    </div>
 
-  <script>
-    var isCollapse=false
-    function toggleProf(){
-const pC=document.getElementById('profileContainerPC')
-const drp=document.getElementById('dropIcon')
-isCollapse = !isCollapse;
-if(isCollapse){
-  drp.style.transform = "rotate(180deg)";
+      <script>
+        var isCollapse = false
+        function toggleProf() {
+          const pC = document.getElementById('profileContainerPC')
+          const drp = document.getElementById('dropIcon')
+          isCollapse = !isCollapse;
+          if (isCollapse) {
+            drp.style.transform = "rotate(180deg)";
 
-pC.classList.add('collapsed')}else{
-  drp.style.transform = "rotate(0deg)";
+            pC.classList.add('collapsed')
+          } else {
+            drp.style.transform = "rotate(0deg)";
 
-  pC.classList.remove('collapsed')
-}
-}
-    function getElm(id){
-      return document.getElementById(id)
-    }
-
-   
-
-    document.addEventListener("DOMContentLoaded",function(e){
-    
-      const SN=document.getElementById("student_notifier")
-      const chg=document.getElementById("change")
-      fetch("/load/pg_role").then(response=>response.json()).then(data=>{
-        if(window.innerWidth<500){
-        document.getElementById('profileContainerPC').style.display="none"
-    const cp=document.getElementById('cp')
-    cp.style.display=""
-    document.getElementById('pcFormat').style.display="none" 
-
-    document.getElementById('changepasswordbtn').onclick=()=>{
-      window.location.href=`/secure/${data.id}`}
-      
-     
-    document.getElementById('currentUsername').textContent=data.name
-       }else{
-        document.getElementById('changepasswordbtn1').onclick=()=>{
-
-        window.location.href=`/secure/${data.id}`}
-        const cp=document.getElementById('cp')
-    cp.style.display="none"
-    document.getElementById('pcFormat').style.display="" 
-             document.getElementById('profileContainerPC').style.display=""
-        getElm('currentUser').innerHTML= `${data.name}`
-      }
-      
-         if(data.role=='student'){
-       
-        if(window.location.pathname=='/change'){
-        chg.innerHTML=''
-        chg.classList.remove('form-control')
-      
-
-      }else{
-        chg.classList.remove('form-control')
-        chg.innerHTML=''
+            pC.classList.remove('collapsed')
+          }
+        }
+        function getElm(id) {
+          return document.getElementById(id)
         }
 
 
-        SN.style.display="none"
-        
-      }
-      }).catch((err)=>{
 
-      })
-    })
-    
-  </script>
+        document.addEventListener("DOMContentLoaded", function (e) {
 
-      
-    
-    
+          const SN = document.getElementById("student_notifier")
+          const chg = document.getElementById("change")
+          fetch("/load/pg_role").then(response => response.json()).then(data => {
+            if (window.innerWidth < 500) {
+              document.getElementById('profileContainerPC').style.display = "none"
+              const cp = document.getElementById('cp')
+              cp.style.display = ""
+              document.getElementById('pcFormat').style.display = "none"
+
+              document.getElementById('changepasswordbtn').onclick = () => {
+                window.location.href = `/secure/${data.id}`}
+
+
+
+                document.getElementById('currentUsername').textContent = data.name
+              }else {
+              document.getElementById('changepasswordbtn1').onclick = () => {
+
+                  window.location.href = `/secure/${data.id}`
+                }
+                const cp = document.getElementById('cp')
+                cp.style.display = "none"
+                document.getElementById('pcFormat').style.display = ""
+                document.getElementById('profileContainerPC').style.display = ""
+                getElm('currentUser').innerHTML = `${data.name}`
+              }
+
+              if (data.role == 'student') {
+
+                if (window.location.pathname == '/change') {
+                  chg.innerHTML = ''
+                  chg.classList.remove('form-control')
+
+
+                } else {
+                  chg.classList.remove('form-control')
+                  chg.innerHTML = ''
+                }
+
+
+                SN.style.display = "none"
+
+              }
+            }).catch((err) => {
+
+            })
+        })
+
+      </script>

@@ -72,12 +72,12 @@
       }
     }
 
-#thead>div{
+#thead>.col-3{
   text-align: center;
   padding: 5px;
   font-weight: bold;
   color: black;
-  font-size: 16px;
+  font-size: 14px;
 }
     @media (min-width:500px) {
 
@@ -94,8 +94,8 @@
       }
     }
     #schedule_maker{
-      position: fixed;
-      bottom: 7.5%;   
+      position: absolute;
+      bottom: 3%;   
       @media (max-width:500px) {
        bottom: 4%;   
       }
@@ -164,7 +164,7 @@
 
 
   <div class="col-10" id="content">
-    <div class="form-control" id="maincontent" style=" padding: 20px;">
+    <div class="form-control" id="maincontent" style=" padding: 10px;position: relative;">
 
       <div id="section1">
         <div class="btn btn-success" id="schedule_maker"><img
@@ -284,7 +284,29 @@
   </div>
   </div>
 
+<div class="modal fade" id="showMore" tabindex="-1" data-bs-backdrop="true" data-bs-keyboard="false" role="dialog"
+aria-labelledby="modalTitleId" aria-hidden="true">
+<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="showMoreTitle">
+        Consultation Details
+      </h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
 
+      <div class="modal-body" id="showMoreBody">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>
+</div>
   <div class="modal fade" id="finishForm" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog"
     aria-labelledby="modalTitleId" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
@@ -393,7 +415,8 @@ opacity: 50%;
       </div>
     </div>
   </div>
-
+</div>
+</div>
   <input type="hidden" id="loginDate" value=<%=date %>>
 
   <input type="hidden" id="loginRole" value=<%=role %>>
@@ -707,6 +730,10 @@ aria-labelledby="modalTitleId" aria-hidden="true">
   </div>
 </div>
 </div>
+
+
+
+
 
 <script>
   document.addEventListener("DOMContentLoaded",function(){

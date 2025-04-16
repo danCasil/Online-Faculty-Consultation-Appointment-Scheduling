@@ -44,7 +44,9 @@ const checkLogSession = (req, res, next) => {
 
 route.get("/",checkLogSession, (req, res)=>{
     //res.send("UNDERMAINTENANCE")
-    res.render("login")
+    // res.render("login")
+
+    res.redirect("/test/login/f")
 })
 
 //start development

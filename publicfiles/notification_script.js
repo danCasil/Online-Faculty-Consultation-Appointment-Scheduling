@@ -21,7 +21,6 @@ function formatDate(dateString) {
 
 
 document.addEventListener("DOMContentLoaded",function(e){
-  
     fetch("/load/pg_role").then(response=>response.json()).then(respo=>{
      
         if(respo.role!='faculty'){
@@ -31,8 +30,26 @@ document.addEventListener("DOMContentLoaded",function(e){
     }).catch(err=>{
 
     })
-    e.preventDefault()
-   
+    loadNotification()
+})
+function vote(voted_id,vote){
+
+    fetch(`/vote?voted=${voted_id}&vote=${vote}`,{
+        method:"PATCH"
+    })
+    .then(response=>response.json())
+    .then(data=>{
+
+        window.location.reload()
+    
+    }
+    ).catch(err=>{
+        console.error("", err);
+    })
+
+}
+
+function loadNotification(){
 fetch(`/load/notification`).then(response => response.json())
 .then(status => {
       document.getElementById("ofcasLoad").style.display = "none"
@@ -89,22 +106,8 @@ create_notif_table(status.result)
     console.error('Error fetching notification data:', err);
 
 })
-})
-function vote(voted_id,vote){
-
-    fetch(`/vote?voted=${voted_id}&vote=${vote}`,{
-        method:"PATCH"
-    })
-    .then(response=>response.json())
-    .then(data=>{
-
-        window.location.reload()
-    
-    }
-    ).catch(err=>{
-        console.error("", err);
-    })
 }
+
 const MainContent=document.getElementById("accordionExample");
 function create_notif_table(data){
     let msg
@@ -173,18 +176,30 @@ function create_notif_table(data){
 async function DeleteNotif(id) {
 
     try {
-        const response = await fetch(`/update/remove_notif?id=${id}`, { method: "PATCH" });
-        const data = await response.json();
         
+        fetch(`/update/remove_notif?id=${id}`, { method: "PATCH" })
+        .then(response=>response.json())
+        .then(stats=>{
+            if(stats.status=='success'){
+            
+            const selectFilter=document.getElementById("selectFilter").value;
+         
+          
+                filter(selectFilter)
+            
         const toastLiveExample = document.getElementById('liveToast');
         const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
         menu.style.zIndex=0 
         if(window.innerWidth<500){
-        toastLiveExample.style.zIndex=1000} 
+        toastLiveExample.style.zIndex=1000
+    } 
          toastBootstrap.show();
-      
-        await new Promise(resolve => setTimeout(resolve, 3000)); 
-        window.location.reload()
+            }
+
+        }).catch(err=>{
+
+
+    })
         
     } catch (err) {
         console.error("", err);
@@ -203,6 +218,7 @@ if(data.update=='updated'){
     notif.classList.remove("new")
     notif.classList.add("old")
     loadnewnotif()
+
 }
 }).catch((err)=>{
     console.error("", err);

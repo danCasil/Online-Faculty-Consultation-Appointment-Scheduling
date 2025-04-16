@@ -435,7 +435,7 @@ res.json({status:false})
 
 async function user_sched(id,callback){
 try{
-        const A=await queryDatabase(`SELECT * FROM (SELECT info.first, info.last, sched.* FROM info JOIN sched ON info.id_number = sched.nagsched WHERE sched.nasched = '${id}'UNION SELECT info.first, info.last,  sched.* FROM info JOIN sched ON info.id_number = sched.nasched WHERE sched.nagsched = '${id}') AS combined_results ORDER BY date DESC;
+        const A=await queryDatabase(`SELECT * FROM (SELECT info.first, info.last,info.mid,sched.* FROM info JOIN sched ON info.id_number = sched.nagsched WHERE sched.nasched = '${id}'UNION SELECT info.first, info.last, info.mid, sched.* FROM info JOIN sched ON info.id_number = sched.nasched WHERE sched.nagsched = '${id}') AS combined_results ORDER BY date DESC;
 `)
         callback(null, A);
  }catch (err) { 
