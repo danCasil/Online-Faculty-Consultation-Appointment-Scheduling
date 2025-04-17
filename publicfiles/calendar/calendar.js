@@ -245,31 +245,14 @@ fetch(`/load/availabletime?data=${encodeURIComponent(data)}`).then(response=>res
 
           </div>
          </div> `
-   target_name=`${data.result2[0].last},${data.result2[0].first} ${data.result2[0].mid}`
-   console.log(data.result3)
-  data.result1.forEach(async element=>{
-
-  if(data.result3.length>0) {
+   target_name=`${data.targetName[0].last},${data.targetName[0].first} ${data.targetName[0].mid}`
+   console.log(target_name)
+   console.table(data.availableSched)
+  data.availableSched.forEach(sched=>{
+    btncreator(sched,rawdata)
+  })
   
-    data.result3.forEach(checker =>{
-      if((element.day==day)&&(element.timein!=checker.time_in&&element.timeout!=checker.time_out)){
-        btncreator(element,rawdata)
-      
- }
-})
-}else{
-  const diff = await dateDifference(`${year}-${month+1}-${date}`, new Date(), element.timein)
-  const dN=new Date()
- 
-console.log(diff.hours,element.timein,month)
-  if(element.day==day){
-    if(date==dN.getDate()&&month==dN.getMonth()&&dN.getFullYear()==year){
-      if(diff.hours>2){btncreator(element,rawdata)}
-    }else{
-   btncreator(element,rawdata)}
-}
-}
-})
+  
 
   myModal.show()
 }).catch((err)=>{
@@ -278,8 +261,9 @@ console.log(diff.hours,element.timein,month)
 
 }
 function btncreator(element,rawdata){
+  console.log(element.timeIn)
   let TimeContainer
-  const [hours,min,sec]=element.timein.split(":")
+  const [hours,min,sec]=element.timeIn.split(":")
 
 if(parseInt(hours)>6){
   TimeContainer =document.getElementById("morning")   
@@ -287,8 +271,8 @@ if(parseInt(hours)>6){
   TimeContainer =document.getElementById("afternoon")
 }
 
-  rawdata.timein=element.timein
-  rawdata.timeout=element.timeout
+  rawdata.timein=element.timeIn
+  rawdata.timeout=element.timeOut
   const data = JSON.stringify(rawdata);
 fetch(`/load/conflict?data=${encodeURIComponent(data)}`).then((response)=>response.json()).then(data=>{
 
@@ -297,9 +281,8 @@ fetch(`/load/conflict?data=${encodeURIComponent(data)}`).then((response)=>respon
   row.classList.add("row")
   const btn=document.createElement("button")
     const datas={
-      timeidx:element.indx,
-      timein:element.timein,
-      timeout:element.timeout,
+      timein:element.timeIn,
+      timeout:element.timeOut,
       month:rawdata.month+1,
       year:rawdata.year,
       date:rawdata.date,
@@ -312,8 +295,8 @@ if(data.isConflict){
   btn.onclick=()=>setTime(datas)
 }
 
-  const Tin = element.timein;
-  const Tout=element.timeout
+  const Tin = element.timeIn;
+  const Tout=element.timeOut
   const formattedTimeIn = convertToAMPM(Tin,'in');
   const formattedTimeOut = convertToAMPM(Tout,'out');
   btn.id=`time${element.indx}`
@@ -343,7 +326,8 @@ if(data.length==1){
 
 
 
-function convertToAMPM(time,txt) { const [hours, minutes, seconds] = time.split(':'); let period; if (hours >= 1 && hours < 6) { period = 'PM'; } else if (hours >= 8 && hours < 12) { period = 'AM'; } else if (hours == 12) { period = 'PM'; } else { period = hours >= 12 ? 'PM' : 'AM'; } const formattedHours = hours % 12 || 12; return `${formattedHours}:${minutes} ${period}`; }
+function convertToAMPM(time,txt) { 
+  const [hours, minutes, seconds] = time.split(':'); let period; if (hours >= 1 && hours < 6) { period = 'PM'; } else if (hours >= 8 && hours < 12) { period = 'AM'; } else if (hours == 12) { period = 'PM'; } else { period = hours >= 12 ? 'PM' : 'AM'; } const formattedHours = hours % 12 || 12; return `${formattedHours}:${minutes} ${period}`; }
 let timeidx,timein,timeout,month,year,date;
 
 function setTime(datas){

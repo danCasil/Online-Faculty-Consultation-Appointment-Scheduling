@@ -394,6 +394,7 @@ route.post("/createSchedule",async(req,res)=>{
     }else{
           remark=`new`
     }
+    console.log(PreferredTin,PreferredTout+"dsadsad")
 if(reSched==''){
     try {  
         const result= await queryDatabase("SELECT sched_id FROM sched WHERE time_in=$1 AND time_out=$2 AND date=$3 AND nasched=$4 AND remark='new'",[PreferredTin,PreferredTout,PreferredDate,ScheduledID]);

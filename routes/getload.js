@@ -228,30 +228,58 @@ route.get("/load/availabletime",async(req,res)=>{
     const information=JSON.parse(req.query.data)
 const {date,month,day,target_id,year} = information
 let target
-
-
-console.log(target)
 const targetdate=new Date(year, month, day)
-let table
+let table='facultytime'
+
+//forPostman
+// req.session.role='faculty'
+
 if(req.session.role!='faculty'){
-table='facultytime'
 target=target_id
 }else{
-    table='facultytime'
-    target=req.session.user_id
+//for postman
+// target='54321'
+//for Running
+target=req.session.user_id
 }
 
 try{
-    const result1=await queryDatabase("SELECT * FROM "+table+" WHERE id=$1 ORDER BY timein asc",[target])
-    get_name(target,async(err, result2) => {
+    const consultHour=await queryDatabase("SELECT * FROM "+table+" WHERE id=$1 AND day=$2 ORDER BY timein asc",[target,day])
+    get_name(target,async(err, targetName) => {
         if (err) {
             console.error(err);
             res.status(500).send('Database error');
             return;
-        }      
+        }
+    
     const formatdate=`${year}-${month+1}-${date}` 
-    const result3=await queryDatabase("SELECT * FROM sched JOIN  "+table+" ON sched.time_in= "+table+".timein AND sched.time_out= "+table+".timeout WHERE (nasched=$1 OR nagsched=$2 )AND date=$3 AND remark='accepted' ",[target,target,formatdate])
-        res.json({result1,result2,result3,month:month,date:date})  
+    const existingSched=await queryDatabase("SELECT * FROM sched JOIN  "+table+" ON sched.time_in= "+table+".timein AND sched.time_out= "+table+".timeout WHERE (nasched=$1 OR nagsched=$2 )AND date=$3 AND remark='accepted' ",[target,target,formatdate])
+ 
+    var availableSched=[]
+
+    consultHour.forEach(hour => {
+    if(existingSched.length>0){     
+    existingSched.forEach(sched => {
+            if((sched.time_in!=hour.timein)&&(sched.time_out!=hour.timeout)) {
+                availableSched.push({timeIn:hour.timein,timeOut:hour.timeout})
+            }
+        })}
+    else{
+        availableSched.push({timeIn:hour.timein,timeOut:hour.timeout})
+        }        
+    })
+     availableSched = availableSched.filter((value, index, self) => 
+        index === self.findIndex((item) => item.timeIN === value.timeIN && item.timeOut === value.timeOut)
+    );
+
+
+
+
+
+
+    console.table(consultHour)
+    console.table(availableSched)
+        res.json({availableSched,consultHour,targetName,existingSched,month:month,date:date})  
     })
 }catch (err) { 
         console.error('Failed to fetch records:', err);
@@ -266,7 +294,7 @@ route.get("/load/conflict", async(req,res)=>{
     console.log(timein+" "+timeout)
      const formatdate=`${year}-${month+1}-${date}`
     try{
-        const result4=await queryDatabase(`SELECT sched.*,info.last,info.first,info.mid FROM sched JOIN info ON info.id_number=sched.nasched WHERE nagsched=$1 AND date=$2 AND ( remark='accepted' OR remark='new') AND (( time_in >= '${timein}' AND time_in < '${timeout}' )OR (time_out >'${timein}'  AND time_out <='${timeout}') OR (time_in <= '${timein}' AND time_out >= '${timeout}'))`,[req.session.user_id,formatdate])
+        const result4=await queryDatabase(`SELECT sched.*,info.last,info.first,info.mid FROM sched JOIN info ON info.id_number=sched.nasched WHERE nagsched=$1 AND date=$2 AND ( remark='accepted' OR remark='new') AND (( time_in >= '${timein}' AND time_in < '${timeout}' )OR (time_out >'${timein}'  AND time_out <='${timeout}') OR (time_in <= '${timein}' AND time_out >= '${timeout}')) ORDER BY sched.time_in`,[req.session.user_id,formatdate])
         console.table(result4)
         if(result4&&result4.length>0){
             const sched=result4

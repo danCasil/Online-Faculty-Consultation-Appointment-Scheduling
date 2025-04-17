@@ -194,7 +194,7 @@ async function loadschedule(datas, role, rec, curr_id) {
     col_6B.classList.add('col-sm-6')
     const A = create_Button("Accept")
     const B = create_Button("Decline")
-    console.table(diff)
+
     if (data.remark == 'new') {
 
       if ((diff.days>1)||(diff.days == 0 && diff.hours >= 2)) {
@@ -419,7 +419,7 @@ async function loadschedule(datas, role, rec, curr_id) {
 function showMoreContent(data){
 
   showMoreBody.innerHTML = ""
-console.table(data)
+
 const divDate=document.createElement("div")
 const divName=document.createElement("div")
 const divStatus=document.createElement("div")
@@ -772,7 +772,7 @@ function dateDifference(dateStr, date2, time) {
 
   const diffMinutes = Math.floor((diffTime % (1000 * 60 * 60)) / (1000 * 60));
   const diffSeconds = Math.floor((diffTime % (1000 * 60)) / 1000);
-  console.log(date1.getMinutes(), date1.getHours())
+  
   return {
     days: diffDays, hours: diffHours, minutes: diffMinutes, seconds: diffSeconds
   };
