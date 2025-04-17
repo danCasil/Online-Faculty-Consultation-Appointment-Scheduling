@@ -292,7 +292,7 @@ course=`course != 'faculty'`
     course=`course = 'faculty'`
    }
    
-console.log(course)
+
     if (lastChar=='-'||!isNaN(firstChar)) {
     try{
         const results=await queryDatabase(`SELECT id_number, id_number, last, mid, first FROM info WHERE id_number LIKE '${txt}%' AND ${course}`)
