@@ -37,11 +37,12 @@ const activeicon='_active.png'
 const normalicon='_normal.png'
 
      switch(page){
-         case "/report":
-       currentpg.textContent="OFCAS - Reports";
+        case "/report":
+        currentpg.textContent="OFCAS - Reports";
         report.classList.toggle("active")
         break;
         case "/home":
+        case "/home/view":
             document.getElementById("icon1").src=`${imgsrc[1]}${activeicon}`
             document.getElementById("icon2").src=`${imgsrc[2]}${normalicon}`
             document.getElementById("icon3").src=`${imgsrc[3]}${normalicon}`
@@ -76,8 +77,8 @@ const normalicon='_normal.png'
 
 
 window.addEventListener("resize", function(e) {
-   responsive()
- 
+
+    this.location.reload()
   });
 
 // document.getElementById("student_notifier").addEventListener("click",function zIndex(){
@@ -125,7 +126,7 @@ fetch("/load/new_notification").then(response=>response.json()).then(data=>{
     console.log(err)
 })
 
-     if(window.innerWidth<500){
+     if(window.innerWidth<865){
         nav.classList.remove("form-control")
         maincontent.classList.remove("col-10")
         maincontent.classList.remove("col-12")
@@ -139,7 +140,7 @@ fetch("/load/new_notification").then(response=>response.json()).then(data=>{
     const calendar = document.getElementById('calendar-body');
     if(calendar){
         let column_witdh, col_day
-        if(window.innerWidth<=500) {
+        if(window.innerWidth<865) {
             const theW=main.offsetWidth-48
 
             column_witdh=theW/7
@@ -156,7 +157,7 @@ fetch("/load/new_notification").then(response=>response.json()).then(data=>{
     if(editBtn){
 editBtn.style.marginTop=innerHeight-230+"px"
     }
-    if(window.innerWidth>500){
+    if(window.innerWidth>864){
     
     main.style.minHeight=innerHeight-75+"px"
    main.style.maxHeight=innerHeight-75+"px"

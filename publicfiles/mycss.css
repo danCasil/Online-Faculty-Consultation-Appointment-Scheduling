@@ -148,7 +148,7 @@ body{
         }
 
 
-        @media (max-width:500px) { 
+        @media (max-width:864px) { 
           /*  #myChart{
                 min-height: 300px;
             }*/
@@ -160,28 +160,43 @@ body{
             }
             #menu{
                 position: absolute;
-                top:10px;
-               right: 5px;
+                top:5px;
+                right: 20px;
                 padding:.25px 5px .25px 5px;
                 font-size: 30px;
                 border-radius: 10px;
                 width: 60px;
                 display: "";
          }
+         #heading{
+            align-self: center;
+             margin-right: 80px;
+            margin-left: 10px;
+           
+         }
          header{
-            padding-right: 40px;
+            position: relative;
+            padding-top: 15px;
+            word-wrap: break-word;
             color: #dbe5d4 ;
-            height: fit-content;
+
+            height: 70px;
+            
             text-align: center;
-            padding-bottom: 10px;
-            padding-top: 5px;
             margin-bottom: 10px;
             background: radial-gradient(circle, #538135  , #375623 );  
            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.354);
+         
         }
-      
+        @media (max-width:626px) {
+            #menu{
+                top:16px;
             }
-            @media (min-width:500px) {
+            header {height: 85px;}
+            }
+           
+            }
+        @media (min-width:865px) {
                 #OFCASlogo
                 {
                     width: 90%;height: auto;
@@ -200,7 +215,7 @@ body{
                    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.354);
                 }
                 #sidenavbar{
-                    height: 87vh;
+                    height: 88vh;
                 }
                 #navbar{height: 100%;}
          #menu{display: none;}
@@ -210,7 +225,7 @@ body{
         position: relative;
         height: 80vh;
     }
-          
+ 
     #Searcher{
         position: absolute;
         top: 20%;
@@ -290,3 +305,11 @@ body{
         left: 50%;
         font-weight: bold;
       }
+      @keyframes selectedSched {
+        0% { border-bottom-color: #dbe5d4; } /* Start with the base color */
+        25% { border-bottom-color: #375623; } /* Transition to the new color */
+        50% { border-bottom-color: #a7cda0; } /* Switch to a deeper green */
+        75% { border-bottom-color: #375623; } /* Transition back to the new color */
+        100% { border-bottom-color: #dbe5d4; } /* Reset to the base color */
+    }
+    

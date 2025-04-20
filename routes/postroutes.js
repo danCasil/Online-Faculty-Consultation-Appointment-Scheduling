@@ -397,15 +397,15 @@ route.post("/createSchedule",async(req,res)=>{
     console.log(PreferredTin,PreferredTout+"dsadsad")
 if(reSched==''){
     try {  
-        const result= await queryDatabase("SELECT sched_id FROM sched WHERE time_in=$1 AND time_out=$2 AND date=$3 AND nasched=$4 AND remark='new'",[PreferredTin,PreferredTout,PreferredDate,ScheduledID]);
-        if(result&&result.length>0){
-            res.json({status:false})
-        }else{
+        // const result= await queryDatabase("SELECT sched_id FROM sched WHERE time_in=$1 AND time_out=$2 AND date=$3 AND nasched=$4 AND remark='new'",[PreferredTin,PreferredTout,PreferredDate,ScheduledID]);
+        // if(result&&result.length>0){
+        //     res.json({status:false})
+        // }else{
     await queryDatabase("INSERT INTO sched(nagsched, nasched, time_in, time_out, date, remark,scheduler_role,purpose) VALUES ($1,$2,$3,$4,$5,'"+remark+"','"+role+"',$6)",[scheduler_id,ScheduledID,PreferredTin,PreferredTout,PreferredDate,purpose]);
     commitAndPush()
     notif(data,'new Sched')
     res.json({status:true}); 
-        } 
+        // } 
     } catch (err) { 
          console.error('Failed to fetch records:', err);
          res.status(500).json({ error: 'Failed to fetch records' });
@@ -510,6 +510,26 @@ const dEnd=new Date(end)
 await queryDatabase("DELETE FROM sem WHERE sem_id=$1 AND sem_start=$2 AND sem_end=$3",[id,dStart,dEnd])
 res.redirect("/getSem")
 })
+route.post("/endpoint",async (req,res)=>{
+    const id=req.body;
+    var sched_id=""
+    const last=id.length-1
+for(var i=0 ;i<id.length;i++){
+    if(i==last){
+    sched_id=sched_id+id[i].sched_id  
+    }else{
+    sched_id+=id[i].sched_id+","
+    }
+}
+//Okay na problema lang is may slash kaya error sya
+
+    req.session.viewSched=sched_id
+    const encrypted=await encryptThis("ViewExistingSchedule")
+    res.send({encrypt:encrypted})
+})
+
+
+
 function formatThis(d){
     const originalDate = new Date(d); 
     const options = { 

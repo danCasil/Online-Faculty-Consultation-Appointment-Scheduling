@@ -70,6 +70,11 @@ async function loadschedule(datas, role, rec, curr_id) {
 
   const tbody = document.getElementById("tablebd");
   tbody.innerHTML = "";
+  var iter=0
+
+
+
+
   datas.forEach(async (data, index) => {
 
     const dbDate = new Date(data.date);
@@ -84,6 +89,9 @@ async function loadschedule(datas, role, rec, curr_id) {
     const toastTt = document.getElementById("toasttitle")
     const Formattedtimein = formatTime(data.time_in)
     const Formattedtimeout = formatTime(data.time_out)
+
+ 
+
     if (diff.days < 3 && diff.days >= 0 && data.remark == 'accepted') {
       const dbDate = new Date(data.date);
       const toastContainer = document.getElementById('toastContainer');
@@ -103,10 +111,27 @@ async function loadschedule(datas, role, rec, curr_id) {
 
       }
       const toastId = `liveToast${index}`;
-      const toastHtml = ` <div id="${toastId}" class="toast" role="alert" aria-live="assertive" aria-atomic="true" style="border:solid black 1px;border-radius: 2.5;"> <div class="toast-header bg-light"> <strong class="me-auto">Attention</strong> <small>${dayIndicator} </small> <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button> </div> <div class="toast-body bg-light"> You've got an upcoming meeting with ${data.last}, ${data.first} from ${data.Formattedtimein} to ${data.Formattedtimeout} on ${months[dbDate.getMonth()]} ${dbDate.getDate()}/${dbDate.getFullYear()} </div> </div>`;
+      const toastHtml = ` <div id="${toastId}" class="toast" role="alert" aria-live="assertive" aria-atomic="true" style="border:solid black 1px;border-radius: 2.5;"> <div class="toast-header bg-light"> <strong class="me-auto">Attention</strong> <small>${dayIndicator} </small> <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button> </div> <div class="toast-body bg-light"> You've got an upcoming meeting with ${data.last}, ${data.first} from ${Formattedtimein} to ${Formattedtimeout} on ${months[dbDate.getMonth()]} ${dbDate.getDate()}/${dbDate.getFullYear()} </div> </div>`;
       toastContainer.insertAdjacentHTML('beforeend', toastHtml);
-      const toastEl = document.getElementById(toastId); const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastEl); toastBootstrap.show();
+       const toastEl=document.getElementById(toastId)
+      
+      
+       setTimeout(() => {
+        const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastEl);
+        toastBootstrap.show();
+    }, 1000 * iter++);
+    setTimeout(() => {
+      const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastEl);
+      toastBootstrap.hide();
+  }, 2500 * iter++);  // Delay each toast based on its index
+
+
+
     }
+
+
+
+
     const rawdate = new Date(data.date)
     let month, day, year
     if (!rawdate.getMonth() > 9) {
@@ -122,7 +147,10 @@ async function loadschedule(datas, role, rec, curr_id) {
     }
 
     year = rawdate.getFullYear();
-
+    const currentDate=new Date()
+    const newDate=new Date(currentDate.getFullYear(),currentDate.getMonth(),currentDate.getDate()-3) 
+    console.log(`${rawdate.getMonth()} > ${newDate.getMonth()}`)
+   if(rawdate>newDate){ 
     const finaldate = month + "/" + day + "/" + year
     const declinebtn = document.createElement("button");
     const acceptbtn = document.createElement("button");
@@ -190,8 +218,8 @@ async function loadschedule(datas, role, rec, curr_id) {
       scheduler_role: data.scheduler_role
     }
 
-    col_6A.classList.add('col-sm-6')
-    col_6B.classList.add('col-sm-6')
+    col_6A.classList.add('col-md-6')
+    col_6B.classList.add('col-md-6')
     const A = create_Button("Accept")
     const B = create_Button("Decline")
 
@@ -206,7 +234,7 @@ async function loadschedule(datas, role, rec, curr_id) {
               cancelSched(schedinfo)
             }
             c.style.width = '50%'
-            if (window.innerWidth < 500) {
+            if (window.innerWidth < 617) {
               c.style.width = '100%'
 
             }
@@ -396,11 +424,25 @@ async function loadschedule(datas, role, rec, curr_id) {
     if (over) {
       row.appendChild(over)
     }
-    row.id=`row${iterate++}`
+    if(scheds!=null){
+      const schedList=splitStringWithDelimiter(scheds)
+     
+      schedList.forEach(sched => {
+        if(sched==data.sched_id){
+         row.style.animationName = "selectedSched"
+         row.style.animationDuration = "2s";
+         row.style.borderBottomWidth="5px"
+         row.style.animationIterationCount = "infinite"; 
+        }
+      })
+      }
+    row.id=`row${data.sched_id}`
     row.onclick = ()=> {
       showMoreContent(data)
       showMore.show()
     }
+
+
     row.style.textAlign = "center"
     tbody.appendChild(row)
     overLays = document.querySelectorAll('.overLay');
@@ -412,10 +454,20 @@ async function loadschedule(datas, role, rec, curr_id) {
 
       });
     })
+   
+  }
   })
+  
+
+
+
+ 
 
 }
-
+function splitStringWithDelimiter(inputString) {
+  const parts = inputString.split(",");
+  return parts;
+}
 function showMoreContent(data){
 
   showMoreBody.innerHTML = ""

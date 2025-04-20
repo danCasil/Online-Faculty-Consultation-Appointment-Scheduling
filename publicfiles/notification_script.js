@@ -143,7 +143,7 @@ function create_notif_table(data){
       
   
         const row=document.createElement("div");
- 
+        console.table(data)
    
      
         row.innerHTML=`<div class="accordion-item" style="margin-bottom:20px">
@@ -165,6 +165,8 @@ function create_notif_table(data){
               <div id="notif${datas.notif_id}" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                   <div class="accordion-body">
                     ${datas.notif_text}
+                    <br>
+                
                   </div>
               </div>
           </div>`

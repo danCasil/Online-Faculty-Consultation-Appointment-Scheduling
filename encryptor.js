@@ -13,12 +13,12 @@ function queryDatabase(query, params = []) {
 
 async function encryptThis(password) {
   const saltRounds = 10;
+  
   const hashedPassword = await bcrypt.hash(password, saltRounds);
   return hashedPassword;
 }
 async function verifyThis(plainPassword, hashedPassword) { 
 const match = await bcrypt.compare(plainPassword, hashedPassword);
-console.log( match);
 return match;
     }
 

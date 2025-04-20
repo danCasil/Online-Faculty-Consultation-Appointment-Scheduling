@@ -164,6 +164,8 @@
 
 
   <div class="col-10" id="content">
+<script> const scheds = "<%= schedsID %>";</script>
+ 
     <div class="form-control" id="maincontent" style=" padding: 10px;position: relative;">
 
       <div id="section1">
@@ -307,6 +309,30 @@ aria-labelledby="modalTitleId" aria-hidden="true">
   </div>
 </div>
 </div>
+
+<div class="modal fade" id="studentNewSched" tabindex="-1" data-bs-backdrop="true" data-bs-keyboard="false" role="dialog"
+aria-labelledby="modalTitleId" aria-hidden="true">
+<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="showMoreTitle">
+        Alert
+      </h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+      <div class="modal-body" id="studentNewSchedBody">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="studentNewSchedClose">
+          Close
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>
+</div>
+
   <div class="modal fade" id="finishForm" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog"
     aria-labelledby="modalTitleId" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">

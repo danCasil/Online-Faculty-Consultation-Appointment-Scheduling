@@ -150,7 +150,7 @@
           const SN = document.getElementById("student_notifier")
           const chg = document.getElementById("change")
           fetch("/load/pg_role").then(response => response.json()).then(data => {
-            if (window.innerWidth < 500) {
+            if (window.innerWidth < 865) {
               document.getElementById('profileContainerPC').style.display = "none"
               const cp = document.getElementById('cp')
               cp.style.display = ""

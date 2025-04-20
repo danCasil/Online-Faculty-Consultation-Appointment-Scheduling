@@ -1,4 +1,4 @@
-
+const studentNewSched = new bootstrap.Modal(document.getElementById("studentNewSched"));
 
 const calendar = document.getElementById('calendar-body');
 const makeSched=new bootstrap.Modal(document.getElementById("makeSched"))
@@ -281,15 +281,19 @@ fetch(`/load/conflict?data=${encodeURIComponent(data)}`).then((response)=>respon
   row.classList.add("row")
   const btn=document.createElement("button")
     const datas={
+      timeidx:element.indx,
       timein:element.timeIn,
       timeout:element.timeOut,
       month:rawdata.month+1,
       year:rawdata.year,
       date:rawdata.date,
     }
+    console.table(element)
 btn.classList.add("timeAvailable")
-
-if(data.isConflict){
+if(data.isConflict==true&&data.existingSched.length>0){
+  btn.onclick=()=>existing(element,rawdata,data.existingSched)
+ 
+}else if(data.isConflict==true){
   btn.onclick=()=>conflict(element.indx,data.sched)
 }else{
   btn.onclick=()=>setTime(datas)
@@ -319,12 +323,59 @@ if(data.length==1){
       btn.textContent = `Conflict with your schedule with ${data[0].last}, ${data[0].first} ${midInit}.`;
     }else{
       btn.textContent = `Conflict with your schedule.`; 
-    }
- 
-            
+    }  
       }
+function existing(element,rawdata,data){
+  
+
+myModal.hide()
+setTimeout(1000,studentNewSched.show())
+const  body = document.getElementById("studentNewSchedBody");
+body.innerHTML=""
+const close=document.getElementById("studentNewSchedClose");
+//mag dodoble kapag dalawa ah existing so iisip ka pa ng sulution then tulog ko muna
 
 
+
+const row=document.createElement("div");
+const btnView=document.createElement("div");
+const btnContinue=document.createElement("div");
+const para=document.createElement("p");
+para.style.textAlign="center";
+para.style.fontSize="12px";
+para.textContent="It seems that a student already has a schedule at your chosen time. Please select an action below."
+row.classList.add("row")
+btnView.textContent="View Existing Schedules"
+btnContinue.textContent="Proceed to create a schedule, Then Decline Existing Schedules"
+btnContinue.style.fontSize="11px";
+btnView.classList.add("form-control","btn-primary")
+btnView.style.marginBottom="10px"
+btnView.style.fontSize="11px";
+btnContinue.classList.add("form-control","btn-danger")
+
+
+btnView.onclick=()=>{
+    viewThis(data)
+}
+body.appendChild(para)
+body.appendChild(btnView)
+body.appendChild(btnContinue)
+body.appendChild(row)
+}
+function viewThis(sched_id){
+  fetch('/endpoint', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(sched_id),
+  }).then(response => response.json())
+  .then(data => 
+    {
+      window.location.href=`/home/view?data=${data.encrypt}`
+    }
+  );
+}
 
 function convertToAMPM(time,txt) { 
   const [hours, minutes, seconds] = time.split(':'); let period; if (hours >= 1 && hours < 6) { period = 'PM'; } else if (hours >= 8 && hours < 12) { period = 'AM'; } else if (hours == 12) { period = 'PM'; } else { period = hours >= 12 ? 'PM' : 'AM'; } const formattedHours = hours % 12 || 12; return `${formattedHours}:${minutes} ${period}`; }
