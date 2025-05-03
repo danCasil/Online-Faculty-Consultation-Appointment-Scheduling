@@ -90,6 +90,7 @@ const OTP_data=JSON.parse(OTP_params)
 
 const checkExistingOTP=await queryDatabase("SELECT * FROM terminator WHERE expid=$1 ",[`Login:${req.session.email}`])
 console.table(checkExistingOTP)
+console.log("hackdogh")
 console.log(checkExistingOTP.length)
    let rawOTP
     if(OTP_status=='send'&&(checkExistingOTP.length==0)){
