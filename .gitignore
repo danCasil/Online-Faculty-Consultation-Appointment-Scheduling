@@ -1,5 +1,4 @@
 node_modules/
 *.env
-/postdb.js
-*postdb.js
+
 postdb.js
