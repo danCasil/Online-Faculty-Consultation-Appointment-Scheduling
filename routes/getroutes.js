@@ -112,12 +112,14 @@ route.get("/creator/logout", (req, res) => {
 route.get("/grouper", async (req, res) => {
     updater()
     const id = req.session.user_id
+    await queryDatabase("DELETE FROM terminator WHERE expid=$1 ",[`Login:${req.session.email}`])
     try {
         const role = await queryDatabase("SELECT course FROM info WHERE id_number=$1", [id])
 
         if (role[0].course == "secretary") {
             res.redirect("/home/sec")
         } else {
+
             res.redirect("/home")
         }
     }
