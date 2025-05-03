@@ -81,7 +81,7 @@
                         <select name="timeout" id="time2am"onchange="checkconflict()" class="form-select" >
 
                          
-                          <option value="9:00">9:00</option>
+                          <option value="8:30">8:30</option>
                        
                          
                         </select>
@@ -118,20 +118,29 @@
                     .custom-scrollbar::-webkit-scrollbar-thumb:hover {
                       background: #555;
                     }
+                    #table_head_fixed{
+                      height:fit-content;
+                      background-color: #dbe5d4 ;
+                      overflow-y: hidden;
+                      width: 100%;
+                      position: sticky;
+                      top: 0;
+                      border-bottom: solid black 0;
+                    }
                   </style>
                   <div class="container mt-5">
                     <div class="custom-scrollbar" style="height: 180px; overflow-y: scroll;">
                       <center>
                         <div id="scrowablebodya">
                           <table class="table table-striped" id="data-table"> 
-                            <thead>
-                              <tr>
+                            <thead style="border:0;"id="data_table_header">
+                              <tr  id="table_head_fixed">
                                 <th style="text-align: center;">Day</th>
                                 <th style="text-align: center;">Time</th>
                           
                               </tr>
                             </thead>
-                            <tbody id="tbodys">
+                            <tbody id="tbodys" >
                               <!-- Data will be inserted here -->
                             </tbody>
                           </table>

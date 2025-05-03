@@ -159,7 +159,7 @@ route.get("/test", (req, res) => {
 
     res.render("test")
 })
-route.get("/change", authenticate, (req, res) => {
+route.get("/change",test, authenticate, (req, res) => {
     updater()
     const id = req.session.user_id
     res.render("change_sched")
@@ -176,6 +176,10 @@ route.get("/student/reg", (req, res) => {
 route.get('/secure/:id', async (req, res) => {
     updater()
     const status = await encryptThis('change')
+    const linktime = new Date()
+
+    linktime.setMinutes(linktime.getMinutes() + 5);
+    await queryDatabase("INSERT INTO terminator (expid,exptime,expcode) values ($1,$2,$3)", [`Change:${id}`, linktime, secret])
     res.redirect(`/resetPass?type=change&secret=${status}`)
 })
 const transporter = require('../emailConfig');
@@ -226,7 +230,7 @@ route.get("/resetPass", async (req, res) => {
     const id = req.query.id
     const secret = req.query.secret
     const type = req.query.type
-    const linktime = await queryDatabase("SELECT exptime FROM terminator WHERE expid=$1", [`Login:${id}`])
+    const linktime = await queryDatabase(`SELECT exptime FROM terminator WHERE expid="Login:${id}" OR expid="Change=${id}"`)
     console.table(linktime)
     if (linktime && linktime.length > 0) {
         if (req.session.user_id) {
