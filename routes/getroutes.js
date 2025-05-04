@@ -58,7 +58,7 @@ const test = (req, res, next) => {
     next()
 }
 const test2 = (req, res, next) => {
-    req.session.user_id = '21-01811'
+    req.session.user_id = '21-01298'
     req.session.role = 'Bachelor of Science in Information Technology'
     req.session.college = '0'
     next()
@@ -179,10 +179,15 @@ route.get('/secure/:id', async (req, res) => {
     updater()
     const status = await encryptThis('change')
     const linktime = new Date()
-
+    const id = req.params.id
+    const secret = await encryptThis('change')
     linktime.setMinutes(linktime.getMinutes() + 5);
+    const existingChangeAction=await queryDatabase(`SELECT * FROM terminator WHERE expid='Change:${id}'`)
+    if(existingChangeAction.length==0){
     await queryDatabase("INSERT INTO terminator (expid,exptime,expcode) values ($1,$2,$3)", [`Change:${id}`, linktime, secret])
-    res.redirect(`/resetPass?type=change&secret=${status}`)
+    }
+
+    res.redirect(`/resetPass?id=${id}&type=change&secret=${status}`)
 })
 const transporter = require('../emailConfig');
 const { parseJSON } = require("date-fns");
@@ -229,11 +234,13 @@ route.get('/forgot', async (req, res) => {
 })
 route.get("/resetPass", async (req, res) => {
     updater()
-    const id = req.query.id
+
+    const id = req.query.id 
+       
     const secret = req.query.secret
     const type = req.query.type
-    const linktime = await queryDatabase(`SELECT exptime FROM terminator WHERE expid="Login:${id}" OR expid="Change=${id}"`)
-    console.table(linktime)
+    const linktime = await queryDatabase(`SELECT * FROM terminator WHERE expid='Login:${id}' OR expid='Change:${id}'`)
+  
     if (linktime && linktime.length > 0) {
         if (req.session.user_id) {
             req.session.userPass = req.session.user_id
@@ -249,7 +256,7 @@ route.get("/resetPass", async (req, res) => {
 
         res.render('reset', { secretToken: secret, changepass: tok })
     } else {
-        res.send("LINK EXPIRED")
+        res.send("LINK EXPIRED"+id)
     }
 
 })
