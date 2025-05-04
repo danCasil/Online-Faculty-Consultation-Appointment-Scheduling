@@ -161,7 +161,7 @@ route.get("/test", (req, res) => {
 
     res.render("test")
 })
-route.get("/change",test, authenticate, (req, res) => {
+route.get("/change", authenticate, (req, res) => {
     updater()
     const id = req.session.user_id
     res.render("change_sched")
